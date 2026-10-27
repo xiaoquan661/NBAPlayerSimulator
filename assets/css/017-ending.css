@@ -1,0 +1,28 @@
+/* ============================================================
+ * 自建球员结局章：名字的回声
+ * 退役页顶部结局正文 / 下半场选择 / 最终回声
+ * ============================================================ */
+.retired-card .ending-top{margin:14px 0 4px;padding:16px 16px 14px;border-radius:20px;background:linear-gradient(145deg,#1b2028,#151a21)!important;border:1px solid #ffd23f33!important;border-left:3px solid #ffd23f!important;color:#e8ecf1!important;box-shadow:0 12px 30px #00000055}
+.retired-card .ending-kicker{display:block;color:#ffd23f!important;letter-spacing:2px;font-size:9px;font-weight:900}
+.retired-card .ending-tag{display:inline-block;margin-top:8px;padding:3px 9px;border-radius:999px;background:#ffd23f;color:#101318!important;font-size:9px;font-weight:900}
+.retired-card .ending-title{font-size:21px;line-height:1.35;color:#ffffff!important;margin:9px 0 10px;font-weight:900}
+.retired-card .ending-top p{font-size:11.5px;line-height:1.95;color:#c9d1dc!important;margin:0 0 9px}
+.retired-card .ending-top p:last-child{margin-bottom:0}
+.retired-card .ending-reflect{margin-top:12px;padding:10px 12px;border-radius:14px;background:#212730!important;border:1px solid #2f3742!important;font-size:10.5px;line-height:1.85;color:#9aa3b2!important}
+.retired-card .ending-reflect b{display:block;margin-bottom:3px;color:#ffd23f!important;font-size:9.5px;letter-spacing:1px}
+.retired-card .afterlife{margin:12px 0;padding:14px 16px;border-radius:20px;background:#1c2129!important;border:1px solid #2f3742!important;color:#e8ecf1!important}
+.retired-card .afterlife h3{font-size:14px;color:#ffffff!important;margin:0 0 5px}
+.retired-card .afterlife>p{font-size:10.5px;line-height:1.7;color:#9aa3b2!important;margin:0}
+.retired-card .afterlife-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:11px}
+.retired-card .afterlife-card{display:block;width:100%;text-align:left;padding:10px 11px;border-radius:14px;border:1px solid #2f3742!important;background:#212730!important;color:#e8ecf1!important;cursor:pointer}
+.retired-card .afterlife-card:hover{border-color:#ffd23f!important}
+.retired-card .afterlife-card b{display:block;font-size:11.5px;color:#ffffff!important}
+.retired-card .afterlife-card span{display:block;margin-top:3px;font-size:9px;line-height:1.55;color:#9aa3b2!important}
+.retired-card .afterlife-card.locked{opacity:.45;cursor:default}
+.retired-card .afterlife-card.locked:hover{border-color:#2f3742!important}
+.retired-card .afterlife-card.locked span{color:#6b7484!important}
+.retired-card .afterlife-text{margin-top:10px;padding:11px 12px;border-radius:14px;background:#212730!important;border:1px solid #2f3742!important}
+.retired-card .afterlife-text p{font-size:11px;line-height:1.9;color:#d6dbe3!important;margin:0}
+.retired-card .ending-echo{margin-top:11px;padding:12px 13px;border-radius:14px;background:linear-gradient(135deg,#241f12,#1c2129)!important;border:1px solid #ffd23f44!important;font-size:11px;line-height:1.85;color:#ffe6a0!important}
+.retired-card .ending-echo b{color:#ffd23f!important}
+@media(max-width:420px){.retired-card .afterlife-grid{grid-template-columns:1fr}}

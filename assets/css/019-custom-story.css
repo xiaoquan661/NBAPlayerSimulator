@@ -1,0 +1,213 @@
+/* ============================================================
+ * 019 · 自建事件系统 · 三幕弹窗 / 结果卡 / 主线页
+ * 深色底、浅色字，选项后果直接可读。
+ * ============================================================ */
+
+.v167-overlay .v167-sheet,
+.v167-overlay .v167-outcome{
+  background:#1c2129!important;
+  border:1px solid #313a46!important;
+  color:#e8ecf1!important;
+  box-shadow:0 24px 70px rgba(0,0,0,.55)!important;
+}
+
+.v167-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.v167-top small{display:block;font-size:9px;letter-spacing:.16em;color:#ffd23f!important;font-weight:900}
+.v167-top h2{font-size:22px;line-height:1.3;margin:5px 0 0;color:#ffffff!important}
+.v167-top>span{font-size:11px;font-weight:900;color:#ffd23f!important;white-space:nowrap;padding-top:5px}
+
+.v167-scene{margin-top:9px;font-size:9px;letter-spacing:.08em;color:#8fa1b5!important}
+.v167-copy{margin-top:7px}
+.v167-body{font-size:12.5px;line-height:1.8;color:#dbe4ee!important;margin:0 0 7px}
+
+/* 只保留一句后果提示：不再套“这次选择会改变什么”的卡片 */
+.v167-stakes{margin:9px 0 0;padding:0;background:none!important;border:0!important;font-size:10.5px;line-height:1.65;color:#91a1b4!important}
+
+.v167-choices{margin-top:12px}
+.v167-choice{
+  display:block;width:100%;text-align:left;margin:0 0 9px;padding:12px 13px;
+  background:#232b35!important;border:1px solid #3a4655!important;border-radius:14px;
+  color:#e8ecf1!important;font-family:inherit;cursor:pointer;
+  transition:border-color .15s,background .15s,transform .15s;
+}
+.v167-choice:hover{border-color:#ffd23f!important;background:#2a3340!important;transform:translateY(-1px)}
+.v167-choice b{display:block;font-size:12.5px;line-height:1.45;color:#ffffff!important}
+.v167-choice span{display:block;margin-top:5px;font-size:10px;line-height:1.55;color:#aebdd0!important}
+
+.v167-foot{display:flex;justify-content:flex-end;gap:8px;margin-top:8px;padding-top:8px;border-top:1px solid #2f3742;font-size:8.5px;color:#7f8b9b!important}
+
+/* 主事件里的出身 / 自白透镜：卡片保留，文案只留一句 */
+.v167-lens{margin-top:10px;padding:9px 11px;border-radius:12px;background:#171d25!important;border:1px solid #2e3947!important}
+.v167-lens-tags{display:flex;flex-wrap:wrap;gap:5px}
+.v167-lens-tags span{font-size:8px;font-weight:900;color:#ffd23f!important;background:#2a261b!important;border:1px solid #5b4728!important;border-radius:999px;padding:3px 7px}
+.v167-lens p{margin:6px 0 0;font-size:10.5px;line-height:1.65;color:#aebdd0!important}
+
+.v167-outcome{padding-top:4px}
+.v167-outcome .v167-kicker{display:block;font-size:9px;letter-spacing:.16em;color:#ffd23f!important;font-weight:900}
+.v167-outcome h2{font-size:22px;line-height:1.3;margin:6px 0 10px;color:#ffffff!important}
+.v167-pick{font-size:12px;color:#aebdd0!important;margin:0 0 9px}
+.v167-pick b{color:#ffffff!important}
+.v167-effect{padding:11px 12px;border-radius:13px;background:#26313d!important;border:1px solid #3c4a5c!important;font-size:11.5px;line-height:1.65;color:#dce8f6!important}
+.v167-echo{margin-top:10px;padding:11px 12px;border-radius:13px;background:#2d2619!important;border:1px solid #5b4728!important}
+.v167-echo b{display:block;font-size:9px;letter-spacing:.1em;color:#ffd23f!important;margin-bottom:4px}
+.v167-echo span{display:block;font-size:11px;line-height:1.6;color:#f0dcb2!important}
+.v167-echo em{display:block;margin-top:4px;font-size:8.5px;font-style:normal;color:#c9a86a!important}
+.v167-next{margin-top:10px;font-size:9.5px;color:#8fa1b5!important}
+.v167-continue{width:100%;margin-top:14px}
+
+/* ---------- 赛季页的三幕卡片 ---------- */
+
+.v167-mainline-now{
+  background:#1c2129!important;
+  border:1px solid #3a4655!important;
+  border-radius:16px!important;
+  color:#e8ecf1!important;
+}
+.v167-mainline-now header small{color:#ffd23f!important}
+.v167-mainline-now header span{color:#ffd23f!important;font-weight:900}
+.v167-mainline-now h3{color:#ffffff!important}
+.v167-mainline-now p{color:#c6d2df!important}
+.v167-mainline-now p b{color:#ffd23f!important}
+.v167-mainline-now .mainline-progress{background:#2b333e!important}
+.v167-mainline-now .mainline-progress i{background:linear-gradient(90deg,#4d8dff,#ffd23f)!important}
+.v167-mainline-now .mainline-meta b{color:#aebdd0!important}
+.v167-mainline-now .mainline-meta button{color:#ffd23f!important;border-color:#5b4728!important;background:#2a261b!important}
+
+/* ---------- 主线页 ---------- */
+
+.v167-story-view{padding:18px 14px 28px;max-width:760px;margin:0 auto}
+.v167-story-head small{display:block;font-size:9px;letter-spacing:.18em;color:#4d8dff!important;font-weight:900}
+.v167-story-head h2{font-size:26px;line-height:1.2;margin:6px 0 7px;color:#ffffff!important}
+.v167-story-head p{font-size:11.5px;line-height:1.7;color:#9aa3b2!important;margin:0 0 16px}
+
+.v167-destiny-card{margin:0 0 12px;padding:14px;border-radius:16px;background:linear-gradient(135deg,#2a261b,#1c2129)!important;border:1px solid #5b4728!important}
+.v167-destiny-card small{display:block;font-size:8px;letter-spacing:.16em;color:#ffd23f!important;font-weight:900}
+.v167-destiny-card h3{margin:5px 0 6px;font-size:15px;line-height:1.4;color:#ffffff!important}
+.v167-destiny-card p{margin:0;font-size:11px;line-height:1.75;color:#e8dcb2!important}
+.v167-destiny-card span{display:block;margin-top:7px;font-size:9px;color:#c9a86a!important}
+
+.v167-main-list{display:grid;gap:10px}
+.v167-main-act{padding:13px 14px;border-radius:16px;background:#1c2129!important;border:1px solid #2f3742!important;opacity:.62}
+.v167-main-act.active{opacity:1;border-color:#4d8dff66!important;box-shadow:0 0 0 1px #4d8dff22 inset}
+.v167-main-act.done{opacity:1;border-color:#ffd23f44!important}
+.v167-main-act-top{display:flex;align-items:baseline;gap:8px}
+.v167-main-act-top small{font-size:8.5px;letter-spacing:.12em;color:#8fa1b5!important;font-weight:900}
+.v167-main-act-top b{font-size:15px;color:#ffffff!important}
+.v167-main-act-top span{margin-left:auto;font-size:8.5px;font-weight:900;color:#ffd23f!important}
+.v167-main-act p{font-size:10.5px;line-height:1.65;color:#aeb7c4!important;margin:6px 0 0}
+.v167-main-act em{display:block;margin-top:6px;font-size:9.5px;font-style:normal;color:#d3a66f!important}
+
+.v167-origin-card{margin-top:13px;padding:14px;border-radius:16px;background:#20262e!important;border:1px dashed #3b4654!important}
+.v167-origin-card.on{border-style:solid;border-color:#ffd23f66!important;background:#2a261b!important}
+.v167-origin-card small{display:block;font-size:8px;letter-spacing:.16em;color:#8fa1b5!important;font-weight:900}
+.v167-origin-card b{display:block;font-size:15px;margin-top:4px;color:#ffffff!important}
+.v167-origin-card p{font-size:10.5px;line-height:1.65;color:#c6d2df!important;margin:6px 0 0}
+.v167-origin-card span{display:block;margin-top:5px;font-size:9px;color:#d3a66f!important}
+.v167-origin-card-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.v167-origin-card-top em{flex:none;font-style:normal;font-size:8.5px;font-weight:900;letter-spacing:.04em;color:#ffd23f!important;background:rgba(255,210,63,.10);border:1px solid rgba(255,210,63,.30);border-radius:999px;padding:3px 7px}
+.v167-origin-card.on .v167-origin-card-top em{color:#7ee2a8!important;background:rgba(47,189,115,.10);border-color:rgba(47,189,115,.30)}
+.v167-origin-card.locked{background:#1b2129!important}
+.v167-origin-card.locked p{color:#9fadbd!important}
+
+.v167-log{margin-top:14px}
+.v167-log h3{font-size:12px;color:#ffffff!important;margin:0 0 7px}
+.v167-log-row{display:grid;grid-template-columns:74px minmax(0,1fr);gap:8px;padding:8px 0;border-top:1px solid #2b333e}
+.v167-log-row b{font-size:8.5px;color:#8fa1b5!important}
+.v167-log-row span{font-size:10px;line-height:1.55;color:#dbe4ee!important}
+.v167-log-row em{grid-column:2;font-size:9px;font-style:normal;color:#d3a66f!important}
+
+/* ---------- 天赋页出身卡 ---------- */
+
+.v167-origin-btn{
+  display:block;width:100%;border:0;border-radius:14px;padding:12px 10px;
+  font-size:11.5px;font-weight:1000;color:#1a1408!important;
+  background:linear-gradient(135deg,#ffd23f,#f0a92e)!important;
+  font-family:inherit;cursor:pointer;
+}
+.v167-origin-note{
+  margin:10px 0 2px;padding:12px 13px;border-radius:15px;
+  background:#20262e!important;border:1px solid #3a4655!important;
+}
+.v167-origin-note small{display:block;font-size:8px;letter-spacing:.16em;color:#4d8dff!important;font-weight:900}
+.v167-origin-note b{display:block;font-size:14px;margin-top:4px;color:#ffffff!important}
+.v167-origin-note p{font-size:10px;line-height:1.6;color:#aeb7c4!important;margin:5px 0 0}
+.v167-origin-note em{display:block;margin-top:5px;font-size:9px;font-style:normal;line-height:1.55;color:#d3a66f!important}
+
+/* ---------- 结局回响 ---------- */
+
+.v167-epilogue{margin:16px 0 0;padding:16px 15px;border-radius:18px;background:#1c2129!important;border:1px solid #3a4655!important}
+.v167-epilogue>small{display:block;font-size:8.5px;letter-spacing:.18em;color:#ffd23f!important;font-weight:900}
+.v167-destiny-final{margin-top:10px;padding:11px 12px;border-radius:13px;background:#242b35!important;border:1px solid #39434f!important}
+.v167-destiny-final p{margin:0;font-size:10.5px;line-height:1.75;color:#dbe4ee!important}
+.v167-epilogue .v167-act{margin-top:10px;padding-top:10px;border-top:1px solid #2b333e}
+.v167-epilogue .v167-act b{display:block;font-size:11px;color:#ffffff!important}
+.v167-epilogue .v167-act p{font-size:10.5px;line-height:1.65;color:#c6d2df!important;margin:4px 0 0}
+.v167-origin-end{margin-top:11px;padding:10px 11px;border-radius:13px;background:#2a261b!important;border:1px solid #5b4728!important}
+.v167-origin-end b{display:block;font-size:10px;color:#ffd23f!important}
+.v167-origin-end p{font-size:10px;line-height:1.6;color:#f0dcb2!important;margin:4px 0 0}
+.v167-origin-end em{display:block;margin-top:3px;font-style:normal;color:#c9a86a!important}
+.v167-final{margin:12px 0 0;font-size:11px;line-height:1.7;color:#e8ecf1!important;font-weight:800}
+
+/* ---------- 退役结算页：深色主题统一 ---------- */
+
+.retired .v81-retire{
+  grid-column:1/-1!important;
+  width:auto!important;
+  background:#12151a!important;
+  border-color:#2f3742!important;
+  box-shadow:none!important;
+}
+.retired .v81-hero{background:transparent!important}
+.retired .v81-total{
+  background:linear-gradient(145deg,#2a313b,#1c2129)!important;
+  border:1px solid #3a4655!important;
+  color:#e8ecf1!important;
+}
+.retired .v81-total small{color:#9aa3b2!important}
+.retired .v81-total strong{color:#ffd23f!important}
+.retired .v81-grade{
+  background:#2a261b!important;
+  border-color:#5b4728!important;
+  color:#ffd23f!important;
+}
+.retired .v81-outcome{gap:8px!important}
+.retired .v81-oc{
+  background:#212730!important;
+  border-color:#2f3742!important;
+  color:#e8ecf1!important;
+}
+.retired .v81-oc small{color:#9aa3b2!important}
+.retired .v81-oc b{color:#ffffff!important}
+.retired .v81-oc b.none,
+.retired .v81-oc b.hof-no{color:#ffd23f!important}
+.retired .v81-oc span{color:#9aa3b2!important}
+.retired .v81-parts{
+  background:#1c2129!important;
+  border-color:#2f3742!important;
+}
+.retired .v81-parts header b{color:#ffffff!important}
+.retired .v81-parts header small{color:#9aa3b2!important}
+.retired .v81-parts header span{color:#9aa3b2!important}
+.retired .v81-bar>span{color:#9aa3b2!important}
+.retired .v81-bar>i{background:#2b333e!important}
+.retired .v81-bar>em{color:#ffd23f!important}
+.retired .v81-stats>div{
+  background:#212730!important;
+  border-color:#2f3742!important;
+}
+.retired .v81-stats b{color:#ffffff!important}
+.retired .v81-stats span{color:#9aa3b2!important}
+.retired .v81-honors{
+  background:#212730!important;
+  border-color:#2f3742!important;
+  color:#e8dcb2!important;
+}
+.retired .v81-honors small{color:#ffd23f!important}
+
+@media(max-width:420px){
+  .v167-top h2,.v167-outcome h2{font-size:19px}
+  .v167-body{font-size:11.5px}
+  .v167-choice b{font-size:11.5px}
+  .retired .v81-hero{grid-template-columns:1fr 1.08fr;gap:7px}
+  .retired .v81-total strong{font-size:30px}
+}

@@ -1,0 +1,1234 @@
+[
+    {
+        "type":  "style",
+        "order":  1,
+        "id":  "",
+        "file":  "assets/css/001-style.css",
+        "chars":  121
+    },
+    {
+        "type":  "script",
+        "order":  1,
+        "id":  "",
+        "file":  "assets/js/001-inline.js",
+        "chars":  203
+    },
+    {
+        "type":  "script",
+        "order":  2,
+        "id":  "v129-storage-codec",
+        "file":  "assets/js/002-v129-storage-codec.js",
+        "chars":  6383
+    },
+    {
+        "type":  "style",
+        "order":  2,
+        "id":  "",
+        "file":  "assets/css/002-style.css",
+        "chars":  31522
+    },
+    {
+        "type":  "style",
+        "order":  3,
+        "id":  "v22-worldline-style",
+        "file":  "assets/css/003-v22-worldline-style.css",
+        "chars":  11750
+    },
+    {
+        "type":  "style",
+        "order":  4,
+        "id":  "v221-patch-style",
+        "file":  "assets/css/004-v221-patch-style.css",
+        "chars":  6350
+    },
+    {
+        "type":  "style",
+        "order":  5,
+        "id":  "v164-presentation",
+        "file":  "assets/css/005-v164-presentation.css",
+        "chars":  3155
+    },
+    {
+        "type":  "style",
+        "order":  6,
+        "id":  "colorbox-selection-styles",
+        "file":  "assets/css/006-colorbox-selection-styles.css",
+        "chars":  135
+    },
+    {
+        "type":  "script",
+        "order":  3,
+        "id":  "",
+        "file":  "assets/js/003-inline.js",
+        "chars":  85781
+    },
+    {
+        "type":  "style",
+        "order":  7,
+        "id":  "v23-flow-style",
+        "file":  "assets/css/007-v23-flow-style.css",
+        "chars":  3210
+    },
+    {
+        "type":  "script",
+        "order":  4,
+        "id":  "v23-flow-script",
+        "file":  "assets/js/004-v23-flow-script.js",
+        "chars":  22976
+    },
+    {
+        "type":  "style",
+        "order":  8,
+        "id":  "v24-feedback-style",
+        "file":  "assets/css/008-v24-feedback-style.css",
+        "chars":  5812
+    },
+    {
+        "type":  "script",
+        "order":  5,
+        "id":  "v24-feedback-script",
+        "file":  "assets/js/005-v24-feedback-script.js",
+        "chars":  23233
+    },
+    {
+        "type":  "style",
+        "order":  9,
+        "id":  "v25-immersion-style",
+        "file":  "assets/css/009-v25-immersion-style.css",
+        "chars":  12061
+    },
+    {
+        "type":  "script",
+        "order":  6,
+        "id":  "v25-immersion-script",
+        "file":  "assets/js/006-v25-immersion-script.js",
+        "chars":  44687
+    },
+    {
+        "type":  "style",
+        "order":  10,
+        "id":  "v25-extra-style",
+        "file":  "assets/css/010-v25-extra-style.css",
+        "chars":  133
+    },
+    {
+        "type":  "script",
+        "order":  7,
+        "id":  "v25-extra-script",
+        "file":  "assets/js/007-v25-extra-script.js",
+        "chars":  4209
+    },
+    {
+        "type":  "style",
+        "order":  11,
+        "id":  "v25-layout-fix",
+        "file":  "assets/css/011-v25-layout-fix.css",
+        "chars":  898
+    },
+    {
+        "type":  "style",
+        "order":  12,
+        "id":  "v26-balance-style",
+        "file":  "assets/css/012-v26-balance-style.css",
+        "chars":  8668
+    },
+    {
+        "type":  "script",
+        "order":  8,
+        "id":  "v26-balance-script",
+        "file":  "assets/js/008-v26-balance-script.js",
+        "chars":  116396
+    },
+    {
+        "type":  "style",
+        "order":  13,
+        "id":  "v29-style",
+        "file":  "assets/css/013-v29-style.css",
+        "chars":  4084
+    },
+    {
+        "type":  "script",
+        "order":  9,
+        "id":  "v29-script",
+        "file":  "assets/js/009-v29-script.js",
+        "chars":  90289
+    },
+    {
+        "type":  "style",
+        "order":  14,
+        "id":  "",
+        "file":  "assets/css/014-style.css",
+        "chars":  4553
+    },
+    {
+        "type":  "script",
+        "order":  10,
+        "id":  "",
+        "file":  "assets/js/010-inline.js",
+        "chars":  17019
+    },
+    {
+        "type":  "style",
+        "order":  15,
+        "id":  "v214-cover-style",
+        "file":  "assets/css/015-v214-cover-style.css",
+        "chars":  3082
+    },
+    {
+        "type":  "script",
+        "order":  11,
+        "id":  "v216-global-compat",
+        "file":  "assets/js/011-v216-global-compat.js",
+        "chars":  951
+    },
+    {
+        "type":  "script",
+        "order":  12,
+        "id":  "v217-stage-story-fix",
+        "file":  "assets/js/012-v217-stage-story-fix.js",
+        "chars":  10113
+    },
+    {
+        "type":  "script",
+        "order":  13,
+        "id":  "v218-superstar-mvp-fmvp",
+        "file":  "assets/js/013-v218-superstar-mvp-fmvp.js",
+        "chars":  14710
+    },
+    {
+        "type":  "script",
+        "order":  14,
+        "id":  "v220-mvp-story-allstar-talents",
+        "file":  "assets/js/014-v220-mvp-story-allstar-talents.js",
+        "chars":  25694
+    },
+    {
+        "type":  "script",
+        "order":  15,
+        "id":  "v221-final-patch",
+        "file":  "assets/js/015-v221-final-patch.js",
+        "chars":  38991
+    },
+    {
+        "type":  "script",
+        "order":  16,
+        "id":  "v30-legend-engine",
+        "file":  "assets/js/016-v30-legend-engine.js",
+        "chars":  90325
+    },
+    {
+        "type":  "script",
+        "order":  17,
+        "id":  "v31-ui-patch",
+        "file":  "assets/js/017-v31-ui-patch.js",
+        "chars":  10698
+    },
+    {
+        "type":  "script",
+        "order":  18,
+        "id":  "v32-league-patch",
+        "file":  "assets/js/018-v32-league-patch.js",
+        "chars":  54720
+    },
+    {
+        "type":  "script",
+        "order":  19,
+        "id":  "v33-pop-patch",
+        "file":  "assets/js/019-v33-pop-patch.js",
+        "chars":  4741
+    },
+    {
+        "type":  "script",
+        "order":  20,
+        "id":  "v34-rules-patch",
+        "file":  "assets/js/020-v34-rules-patch.js",
+        "chars":  17968
+    },
+    {
+        "type":  "script",
+        "order":  21,
+        "id":  "v35-awards-patch",
+        "file":  "assets/js/021-v35-awards-patch.js",
+        "chars":  11816
+    },
+    {
+        "type":  "script",
+        "order":  22,
+        "id":  "v36-stable-patch",
+        "file":  "assets/js/022-v36-stable-patch.js",
+        "chars":  3255
+    },
+    {
+        "type":  "script",
+        "order":  23,
+        "id":  "v37-tabpause-patch",
+        "file":  "assets/js/023-v37-tabpause-patch.js",
+        "chars":  2777
+    },
+    {
+        "type":  "script",
+        "order":  24,
+        "id":  "v38-mvp-patch",
+        "file":  "assets/js/024-v38-mvp-patch.js",
+        "chars":  5180
+    },
+    {
+        "type":  "script",
+        "order":  25,
+        "id":  "v39-fixes-patch",
+        "file":  "assets/js/025-v39-fixes-patch.js",
+        "chars":  9527
+    },
+    {
+        "type":  "script",
+        "order":  26,
+        "id":  "v40-fixes-patch",
+        "file":  "assets/js/026-v40-fixes-patch.js",
+        "chars":  6818
+    },
+    {
+        "type":  "script",
+        "order":  27,
+        "id":  "v41-neutral-event-patch",
+        "file":  "assets/js/027-v41-neutral-event-patch.js",
+        "chars":  4214
+    },
+    {
+        "type":  "script",
+        "order":  28,
+        "id":  "v42-story-patch",
+        "file":  "assets/js/028-v42-story-patch.js",
+        "chars":  82389
+    },
+    {
+        "type":  "script",
+        "order":  29,
+        "id":  "v43-talents-patch",
+        "file":  "assets/js/029-v43-talents-patch.js",
+        "chars":  7883
+    },
+    {
+        "type":  "script",
+        "order":  30,
+        "id":  "v44-fixes-patch",
+        "file":  "assets/js/030-v44-fixes-patch.js",
+        "chars":  40994
+    },
+    {
+        "type":  "script",
+        "order":  31,
+        "id":  "v45-yao-patch",
+        "file":  "assets/js/031-v45-yao-patch.js",
+        "chars":  22940
+    },
+    {
+        "type":  "script",
+        "order":  32,
+        "id":  "v46-yao-select-fix",
+        "file":  "assets/js/032-v46-yao-select-fix.js",
+        "chars":  9222
+    },
+    {
+        "type":  "script",
+        "order":  33,
+        "id":  "v47-yao-story-gate",
+        "file":  "assets/js/033-v47-yao-story-gate.js",
+        "chars":  2609
+    },
+    {
+        "type":  "script",
+        "order":  34,
+        "id":  "v48-story-dynamic",
+        "file":  "assets/js/034-v48-story-dynamic.js",
+        "chars":  5737
+    },
+    {
+        "type":  "script",
+        "order":  35,
+        "id":  "v48b-wire-yao",
+        "file":  "assets/js/035-v48b-wire-yao.js",
+        "chars":  11849
+    },
+    {
+        "type":  "script",
+        "order":  36,
+        "id":  "v48c-variants-oden-fultz",
+        "file":  "assets/js/036-v48c-variants-oden-fultz.js",
+        "chars":  41321
+    },
+    {
+        "type":  "script",
+        "order":  37,
+        "id":  "v48c-variants-3p",
+        "file":  "assets/js/037-v48c-variants-3p.js",
+        "chars":  57675
+    },
+    {
+        "type":  "script",
+        "order":  38,
+        "id":  "v49-career-fix",
+        "file":  "assets/js/038-v49-career-fix.js",
+        "chars":  7727
+    },
+    {
+        "type":  "script",
+        "order":  39,
+        "id":  "v48d-thin-fill",
+        "file":  "assets/js/039-v48d-thin-fill.js",
+        "chars":  13000
+    },
+    {
+        "type":  "script",
+        "order":  40,
+        "id":  "v50-growth",
+        "file":  "assets/js/040-v50-growth.js",
+        "chars":  6648
+    },
+    {
+        "type":  "script",
+        "order":  41,
+        "id":  "v51-real-attrs",
+        "file":  "assets/js/041-v51-real-attrs.js",
+        "chars":  5978
+    },
+    {
+        "type":  "script",
+        "order":  42,
+        "id":  "v52-usage",
+        "file":  "assets/js/042-v52-usage.js",
+        "chars":  4184
+    },
+    {
+        "type":  "script",
+        "order":  43,
+        "id":  "v54-render-guard",
+        "file":  "assets/js/043-v54-render-guard.js",
+        "chars":  3879
+    },
+    {
+        "type":  "script",
+        "order":  44,
+        "id":  "v55-record-fix",
+        "file":  "assets/js/044-v55-record-fix.js",
+        "chars":  6485
+    },
+    {
+        "type":  "script",
+        "order":  45,
+        "id":  "v56-star-join",
+        "file":  "assets/js/045-v56-star-join.js",
+        "chars":  5255
+    },
+    {
+        "type":  "script",
+        "order":  46,
+        "id":  "v57-compact-ad",
+        "file":  "assets/js/046-v57-compact-ad.js",
+        "chars":  4248
+    },
+    {
+        "type":  "script",
+        "order":  47,
+        "id":  "v58-body-tag-fix",
+        "file":  "assets/js/047-v58-body-tag-fix.js",
+        "chars":  2574
+    },
+    {
+        "type":  "script",
+        "order":  48,
+        "id":  "v59-event-slots",
+        "file":  "assets/js/048-v59-event-slots.js",
+        "chars":  3863
+    },
+    {
+        "type":  "script",
+        "order":  49,
+        "id":  "v60-yao-events",
+        "file":  "assets/js/049-v60-yao-events.js",
+        "chars":  7864
+    },
+    {
+        "type":  "script",
+        "order":  50,
+        "id":  "v61-stat-consistency",
+        "file":  "assets/js/050-v61-stat-consistency.js",
+        "chars":  5860
+    },
+    {
+        "type":  "script",
+        "order":  51,
+        "id":  "v62-real-record",
+        "file":  "assets/js/051-v62-real-record.js",
+        "chars":  14363
+    },
+    {
+        "type":  "script",
+        "order":  52,
+        "id":  "v63-ad-value",
+        "file":  "assets/js/052-v63-ad-value.js",
+        "chars":  18010
+    },
+    {
+        "type":  "script",
+        "order":  53,
+        "id":  "v64-final-score",
+        "file":  "assets/js/053-v64-final-score.js",
+        "chars":  10411
+    },
+    {
+        "type":  "script",
+        "order":  54,
+        "id":  "v65-mvp-world",
+        "file":  "assets/js/054-v65-mvp-world.js",
+        "chars":  27147
+    },
+    {
+        "type":  "script",
+        "order":  55,
+        "id":  "v66-world-port",
+        "file":  "assets/js/055-v66-world-port.js",
+        "chars":  60721
+    },
+    {
+        "type":  "script",
+        "order":  56,
+        "id":  "v67-awards-layout",
+        "file":  "assets/js/056-v67-awards-layout.js",
+        "chars":  10980
+    },
+    {
+        "type":  "script",
+        "order":  57,
+        "id":  "v68-yao-text",
+        "file":  "assets/js/057-v68-yao-text.js",
+        "chars":  5501
+    },
+    {
+        "type":  "script",
+        "order":  58,
+        "id":  "v167-cloud-save",
+        "file":  "assets/js/058-v167-cloud-save.js",
+        "chars":  12125
+    },
+    {
+        "type":  "script",
+        "order":  59,
+        "id":  "v69-host-bridge",
+        "file":  "assets/js/059-v69-host-bridge.js",
+        "chars":  19966
+    },
+    {
+        "type":  "script",
+        "order":  60,
+        "id":  "v70-story-depth",
+        "file":  "assets/js/060-v70-story-depth.js",
+        "chars":  24349
+    },
+    {
+        "type":  "script",
+        "order":  61,
+        "id":  "v71-ui-fixes",
+        "file":  "assets/js/061-v71-ui-fixes.js",
+        "chars":  21385
+    },
+    {
+        "type":  "script",
+        "order":  62,
+        "id":  "v72-pool-text",
+        "file":  "assets/js/062-v72-pool-text.js",
+        "chars":  16893
+    },
+    {
+        "type":  "script",
+        "order":  63,
+        "id":  "v73-trophy-standings",
+        "file":  "assets/js/063-v73-trophy-standings.js",
+        "chars":  14638
+    },
+    {
+        "type":  "script",
+        "order":  64,
+        "id":  "v74-award-consistency",
+        "file":  "assets/js/064-v74-award-consistency.js",
+        "chars":  5039
+    },
+    {
+        "type":  "script",
+        "order":  65,
+        "id":  "v76-select-layout",
+        "file":  "assets/js/065-v76-select-layout.js",
+        "chars":  5730
+    },
+    {
+        "type":  "script",
+        "order":  66,
+        "id":  "v77-no-speed-block",
+        "file":  "assets/js/066-v77-no-speed-block.js",
+        "chars":  1869
+    },
+    {
+        "type":  "script",
+        "order":  67,
+        "id":  "v78-difficulty-awards",
+        "file":  "assets/js/067-v78-difficulty-awards.js",
+        "chars":  11158
+    },
+    {
+        "type":  "script",
+        "order":  68,
+        "id":  "v79-playin-logos",
+        "file":  "assets/js/068-v79-playin-logos.js",
+        "chars":  10807
+    },
+    {
+        "type":  "script",
+        "order":  69,
+        "id":  "v80-seed-ranking",
+        "file":  "assets/js/069-v80-seed-ranking.js",
+        "chars":  3918
+    },
+    {
+        "type":  "script",
+        "order":  70,
+        "id":  "v81-career-score-slots",
+        "file":  "assets/js/070-v81-career-score-slots.js",
+        "chars":  45983
+    },
+    {
+        "type":  "script",
+        "order":  71,
+        "id":  "v82-cloud-leaderboard",
+        "file":  "assets/js/071-v82-cloud-leaderboard.js",
+        "chars":  32806
+    },
+    {
+        "type":  "script",
+        "order":  72,
+        "id":  "v83-mvp-decay-share",
+        "file":  "assets/js/072-v83-mvp-decay-share.js",
+        "chars":  23542
+    },
+    {
+        "type":  "script",
+        "order":  73,
+        "id":  "v84-retire-ux-compare",
+        "file":  "assets/js/073-v84-retire-ux-compare.js",
+        "chars":  11962
+    },
+    {
+        "type":  "script",
+        "order":  74,
+        "id":  "v85-honor-icons-playoff-score",
+        "file":  "assets/js/074-v85-honor-icons-playoff-score.js",
+        "chars":  19289
+    },
+    {
+        "type":  "script",
+        "order":  75,
+        "id":  "v86-hide-mvp-board-harder",
+        "file":  "assets/js/075-v86-hide-mvp-board-harder.js",
+        "chars":  6206
+    },
+    {
+        "type":  "script",
+        "order":  76,
+        "id":  "v87-history-rank-recalib",
+        "file":  "assets/js/076-v87-history-rank-recalib.js",
+        "chars":  9445
+    },
+    {
+        "type":  "script",
+        "order":  77,
+        "id":  "v88-computed-legends",
+        "file":  "assets/js/077-v88-computed-legends.js",
+        "chars":  11777
+    },
+    {
+        "type":  "script",
+        "order":  78,
+        "id":  "v89-jordan-first",
+        "file":  "assets/js/078-v89-jordan-first.js",
+        "chars":  7310
+    },
+    {
+        "type":  "script",
+        "order":  79,
+        "id":  "v90-lineup-difficulty",
+        "file":  "assets/js/079-v90-lineup-difficulty.js",
+        "chars":  8950
+    },
+    {
+        "type":  "script",
+        "order":  80,
+        "id":  "v91-yao-fmvp-fixes",
+        "file":  "assets/js/080-v91-yao-fmvp-fixes.js",
+        "chars":  15847
+    },
+    {
+        "type":  "script",
+        "order":  81,
+        "id":  "v92-yao-round2",
+        "file":  "assets/js/081-v92-yao-round2.js",
+        "chars":  12849
+    },
+    {
+        "type":  "script",
+        "order":  82,
+        "id":  "v93-world-fixes",
+        "file":  "assets/js/082-v93-world-fixes.js",
+        "chars":  15337
+    },
+    {
+        "type":  "script",
+        "order":  83,
+        "id":  "v94-stat-consistency",
+        "file":  "assets/js/083-v94-stat-consistency.js",
+        "chars":  4998
+    },
+    {
+        "type":  "script",
+        "order":  84,
+        "id":  "v95-data-integrity",
+        "file":  "assets/js/084-v95-data-integrity.js",
+        "chars":  22463
+    },
+    {
+        "type":  "script",
+        "order":  85,
+        "id":  "v96-fmvp-costar-zh",
+        "file":  "assets/js/085-v96-fmvp-costar-zh.js",
+        "chars":  12753
+    },
+    {
+        "type":  "script",
+        "order":  86,
+        "id":  "v98-stuck-regular-heal",
+        "file":  "assets/js/086-v98-stuck-regular-heal.js",
+        "chars":  1506
+    },
+    {
+        "type":  "script",
+        "order":  87,
+        "id":  "v99-blank-diagnostics",
+        "file":  "assets/js/087-v99-blank-diagnostics.js",
+        "chars":  4423
+    },
+    {
+        "type":  "script",
+        "order":  88,
+        "id":  "v101-contract-team-brief",
+        "file":  "assets/js/088-v101-contract-team-brief.js",
+        "chars":  2674
+    },
+    {
+        "type":  "script",
+        "order":  89,
+        "id":  "v102-dpoy-honor",
+        "file":  "assets/js/089-v102-dpoy-honor.js",
+        "chars":  1970
+    },
+    {
+        "type":  "script",
+        "order":  90,
+        "id":  "v103-career-id",
+        "file":  "assets/js/090-v103-career-id.js",
+        "chars":  1584
+    },
+    {
+        "type":  "script",
+        "order":  91,
+        "id":  "v104-cover-cta-dock",
+        "file":  "assets/js/091-v104-cover-cta-dock.js",
+        "chars":  2918
+    },
+    {
+        "type":  "script",
+        "order":  92,
+        "id":  "v105-rookie-role-cap",
+        "file":  "assets/js/092-v105-rookie-role-cap.js",
+        "chars":  1867
+    },
+    {
+        "type":  "script",
+        "order":  93,
+        "id":  "v106-blank-screen-and-slot-guard",
+        "file":  "assets/js/093-v106-blank-screen-and-slot-guard.js",
+        "chars":  6406
+    },
+    {
+        "type":  "script",
+        "order":  94,
+        "id":  "v107-live-telemetry",
+        "file":  "assets/js/094-v107-live-telemetry.js",
+        "chars":  3359
+    },
+    {
+        "type":  "script",
+        "order":  95,
+        "id":  "v108-rose",
+        "file":  "assets/js/095-v108-rose.js",
+        "chars":  13630
+    },
+    {
+        "type":  "script",
+        "order":  96,
+        "id":  "v108b-rose-story",
+        "file":  "assets/js/096-v108b-rose-story.js",
+        "chars":  20285
+    },
+    {
+        "type":  "script",
+        "order":  97,
+        "id":  "v109-stat-backfill",
+        "file":  "assets/js/097-v109-stat-backfill.js",
+        "chars":  4103
+    },
+    {
+        "type":  "script",
+        "order":  98,
+        "id":  "v110-save-rescue",
+        "file":  "assets/js/098-v110-save-rescue.js",
+        "chars":  5860
+    },
+    {
+        "type":  "script",
+        "order":  99,
+        "id":  "v111-story-loop",
+        "file":  "assets/js/099-v111-story-loop.js",
+        "chars":  2226
+    },
+    {
+        "type":  "script",
+        "order":  100,
+        "id":  "v112-playoff-box-repair",
+        "file":  "assets/js/100-v112-playoff-box-repair.js",
+        "chars":  2983
+    },
+    {
+        "type":  "script",
+        "order":  101,
+        "id":  "v113-build-stamp",
+        "file":  "assets/js/101-v113-build-stamp.js",
+        "chars":  517
+    },
+    {
+        "type":  "script",
+        "order":  102,
+        "id":  "v114-longarc-guard",
+        "file":  "assets/js/102-v114-longarc-guard.js",
+        "chars":  2556
+    },
+    {
+        "type":  "script",
+        "order":  103,
+        "id":  "v115-screen-whitelist",
+        "file":  "assets/js/103-v115-screen-whitelist.js",
+        "chars":  1519
+    },
+    {
+        "type":  "script",
+        "order":  104,
+        "id":  "v117-hang-forensics",
+        "file":  "assets/js/104-v117-hang-forensics.js",
+        "chars":  3238
+    },
+    {
+        "type":  "script",
+        "order":  105,
+        "id":  "v118-never-delete-save",
+        "file":  "assets/js/105-v118-never-delete-save.js",
+        "chars":  2135
+    },
+    {
+        "type":  "script",
+        "order":  106,
+        "id":  "v119-stale-story-guard",
+        "file":  "assets/js/106-v119-stale-story-guard.js",
+        "chars":  2355
+    },
+    {
+        "type":  "script",
+        "order":  107,
+        "id":  "v120-rose-eight-charges",
+        "file":  "assets/js/107-v120-rose-eight-charges.js",
+        "chars":  6693
+    },
+    {
+        "type":  "script",
+        "order":  108,
+        "id":  "v121-rose-story-act1",
+        "file":  "assets/js/108-v121-rose-story-act1.js",
+        "chars":  10123
+    },
+    {
+        "type":  "script",
+        "order":  109,
+        "id":  "v122-rose-blast-fixes",
+        "file":  "assets/js/109-v122-rose-blast-fixes.js",
+        "chars":  3700
+    },
+    {
+        "type":  "script",
+        "order":  110,
+        "id":  "v123-rose-blast-compact",
+        "file":  "assets/js/110-v123-rose-blast-compact.js",
+        "chars":  4015
+    },
+    {
+        "type":  "script",
+        "order":  111,
+        "id":  "v124-rose-blast-ux",
+        "file":  "assets/js/111-v124-rose-blast-ux.js",
+        "chars":  6154
+    },
+    {
+        "type":  "script",
+        "order":  112,
+        "id":  "v125-rose-blast-strong",
+        "file":  "assets/js/112-v125-rose-blast-strong.js",
+        "chars":  10166
+    },
+    {
+        "type":  "script",
+        "order":  113,
+        "id":  "v126-rose-blast-polish",
+        "file":  "assets/js/113-v126-rose-blast-polish.js",
+        "chars":  4433
+    },
+    {
+        "type":  "script",
+        "order":  114,
+        "id":  "v127-rose-blast-v2",
+        "file":  "assets/js/114-v127-rose-blast-v2.js",
+        "chars":  3288
+    },
+    {
+        "type":  "script",
+        "order":  115,
+        "id":  "v128-career-arcs",
+        "file":  "assets/js/115-v128-career-arcs.js",
+        "chars":  11642
+    },
+    {
+        "type":  "script",
+        "order":  116,
+        "id":  "v152-finance",
+        "file":  "assets/js/116-v152-finance.js",
+        "chars":  765
+    },
+    {
+        "type":  "script",
+        "order":  117,
+        "id":  "v153-rosters",
+        "file":  "assets/js/117-v153-rosters.js",
+        "chars":  7280
+    },
+    {
+        "type":  "script",
+        "order":  118,
+        "id":  "v156-names",
+        "file":  "assets/js/118-v156-names.js",
+        "chars":  9373
+    },
+    {
+        "type":  "script",
+        "order":  119,
+        "id":  "v159-real-names",
+        "file":  "assets/js/119-v159-real-names.js",
+        "chars":  90785
+    },
+    {
+        "type":  "script",
+        "order":  120,
+        "id":  "v160-balance",
+        "file":  "assets/js/120-v160-balance.js",
+        "chars":  2657
+    },
+    {
+        "type":  "script",
+        "order":  121,
+        "id":  "v129-league-world",
+        "file":  "assets/js/121-v129-league-world.js",
+        "chars":  672186
+    },
+    {
+        "type":  "script",
+        "order":  122,
+        "id":  "v130-focused-ui",
+        "file":  "assets/js/122-v130-focused-ui.js",
+        "chars":  455001
+    },
+    {
+        "type":  "script",
+        "order":  123,
+        "id":  "v135-player-expansion",
+        "file":  "assets/js/123-v135-player-expansion.js",
+        "chars":  32004
+    },
+    {
+        "type":  "script",
+        "order":  124,
+        "id":  "v153-story-data",
+        "file":  "assets/js/124-v153-story-data.js",
+        "chars":  49935
+    },
+    {
+        "type":  "script",
+        "order":  125,
+        "id":  "v153-story-outcomes",
+        "file":  "assets/js/125-v153-story-outcomes.js",
+        "chars":  7797
+    },
+    {
+        "type":  "script",
+        "order":  126,
+        "id":  "v153-story-branches",
+        "file":  "assets/js/126-v153-story-branches.js",
+        "chars":  3149
+    },
+    {
+        "type":  "script",
+        "order":  127,
+        "id":  "v153-story-details",
+        "file":  "assets/js/127-v153-story-details.js",
+        "chars":  5563
+    },
+    {
+        "type":  "script",
+        "order":  128,
+        "id":  "v158-previous-options",
+        "file":  "assets/js/128-v158-previous-options.js",
+        "chars":  2785
+    },
+    {
+        "type":  "script",
+        "order":  129,
+        "id":  "v135-career-stories",
+        "file":  "assets/js/129-v135-career-stories.js",
+        "chars":  14429
+    },
+    {
+        "type":  "script",
+        "order":  130,
+        "id":  "v140-overwrite-dialog",
+        "file":  "assets/js/130-v140-overwrite-dialog.js",
+        "chars":  2471
+    },
+    {
+        "type":  "script",
+        "order":  131,
+        "id":  "v145-balance-theme",
+        "file":  "assets/js/131-v145-balance-theme.js",
+        "chars":  4943
+    },
+    {
+        "type":  "script",
+        "order":  132,
+        "id":  "v149-career-paths",
+        "file":  "assets/js/132-v149-career-paths.js",
+        "chars":  6501
+    },
+    {
+        "type":  "script",
+        "order":  133,
+        "id":  "v151-playoff-lock",
+        "file":  "assets/js/133-v151-playoff-lock.js",
+        "chars":  735
+    },
+    {
+        "type":  "script",
+        "order":  134,
+        "id":  "v152-season-pacing",
+        "file":  "assets/js/134-v152-season-pacing.js",
+        "chars":  2111
+    },
+    {
+        "type":  "script",
+        "order":  135,
+        "id":  "v152-contract-market",
+        "file":  "assets/js/135-v152-contract-market.js",
+        "chars":  5488
+    },
+    {
+        "type":  "script",
+        "order":  136,
+        "id":  "v153-integration",
+        "file":  "assets/js/136-v153-integration.js",
+        "chars":  1746
+    },
+    {
+        "type":  "script",
+        "order":  137,
+        "id":  "v154-talents",
+        "file":  "assets/js/137-v154-talents.js",
+        "chars":  675
+    },
+    {
+        "type":  "script",
+        "order":  138,
+        "id":  "v155-toast-lifecycle",
+        "file":  "assets/js/138-v155-toast-lifecycle.js",
+        "chars":  1325
+    },
+    {
+        "type":  "script",
+        "order":  139,
+        "id":  "v158-story-ui",
+        "file":  "assets/js/139-v158-story-ui.js",
+        "chars":  3082
+    },
+    {
+        "type":  "script",
+        "order":  140,
+        "id":  "v164-presentation",
+        "file":  "assets/js/140-v164-presentation.js",
+        "chars":  3022
+    },
+    {
+        "type":  "script",
+        "order":  141,
+        "id":  "v167-save-ui",
+        "file":  "assets/js/141-v167-save-ui.js",
+        "chars":  4478
+    },
+    {
+        "type":  "script",
+        "order":  142,
+        "id":  "v168-feedback-fixes",
+        "file":  "assets/js/142-v168-feedback-fixes.js",
+        "chars":  1239
+    },
+    {
+        "type":  "script",
+        "order":  143,
+        "id":  "v173-update-notice",
+        "file":  "assets/js/143-v173-update-notice.js",
+        "chars":  8022
+    },
+    {
+        "type":  "script",
+        "order":  144,
+        "id":  "v174-share-rewards",
+        "file":  "assets/js/144-v174-share-rewards.js",
+        "chars":  8636
+    },
+    {
+        "type":  "script",
+        "order":  145,
+        "id":  "v175-scroll-fix",
+        "file":  "assets/js/145-v175-scroll-fix.js",
+        "chars":  1707
+    },
+    {
+        "type":  "script",
+        "order":  146,
+        "id":  "v178-save-conflicts",
+        "file":  "assets/js/146-v178-save-conflicts.js",
+        "chars":  5334
+    },
+    {
+        "type":  "script",
+        "order":  147,
+        "id":  "v179-offseason-cloud-sync",
+        "file":  "assets/js/147-v179-offseason-cloud-sync.js",
+        "chars":  2666
+    },
+    {
+        "type":  "script",
+        "order":  148,
+        "id":  "",
+        "file":  "assets/js/148-inline.js",
+        "chars":  23955
+    },
+    {
+        "type":  "script",
+        "order":  149,
+        "id":  "",
+        "file":  "assets/js/149-inline.js",
+        "chars":  30463
+    },
+    {
+        "type":  "script",
+        "order":  150,
+        "id":  "",
+        "file":  "assets/js/150-inline.js",
+        "chars":  7864
+    },
+    {
+        "type":  "script",
+        "order":  151,
+        "id":  "",
+        "file":  "assets/js/151-inline.js",
+        "chars":  13618
+    },
+    {
+        "type":  "style",
+        "order":  16,
+        "id":  "rebrand-theme",
+        "file":  "assets/css/016-rebrand-theme.css",
+        "chars":  47926
+    },
+    {
+        "type":  "script",
+        "order":  152,
+        "id":  "",
+        "file":  "assets/js/152-inline.js",
+        "chars":  1928
+    },
+    {
+        "type":  "script",
+        "order":  153,
+        "id":  "",
+        "file":  "assets/js/153-inline.js",
+        "chars":  1889
+    },
+    {
+        "type":  "script",
+        "order":  154,
+        "id":  "",
+        "file":  "assets/js/154-inline.js",
+        "chars":  1372
+    },
+    {
+        "type":  "script",
+        "order":  155,
+        "id":  "",
+        "file":  "assets/js/155-inline.js",
+        "chars":  5387
+    },
+    {
+        "type":  "script",
+        "order":  156,
+        "id":  "",
+        "file":  "assets/js/156-inline.js",
+        "chars":  10105
+    },
+    {
+        "type":  "script",
+        "order":  157,
+        "id":  "",
+        "file":  "assets/js/157-inline.js",
+        "chars":  1830
+    },
+    {
+        "type":  "script",
+        "order":  158,
+        "id":  "",
+        "file":  "assets/js/158-inline.js",
+        "chars":  10748
+    },
+    {
+        "type":  "script",
+        "order":  159,
+        "id":  "vow-ending",
+        "file":  "assets/js/159-vow-ending.js",
+        "chars":  6326
+    },
+    {
+        "type":  "script",
+        "order":  160,
+        "id":  "focus-season-guard",
+        "file":  "assets/js/160-focus-season-guard.js",
+        "chars":  884
+    }
+]

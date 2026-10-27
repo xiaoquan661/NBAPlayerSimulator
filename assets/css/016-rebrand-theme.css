@@ -1,0 +1,892 @@
+
+/* ============================================================
+ * 新游戏《我的名字》· 深夜球场主题 v3 (M2)
+ * 近黑底 / 深卡 / 纯白主字 / 浅灰次字 / 荧光黄强调 / 蓝辅助
+ * 原则：全站背景统一深色，所有文字统一浅色（成对系统）
+ * ============================================================ */
+:root{
+  --bg:#12151a!important; --ink:#ffffff!important; --paper:#1c2129!important;
+  --card:#1c2129!important; --line:#2a3038!important; --red:#ff5a5f!important;
+  --gold:#ffd23f!important; --blue:#4d8dff!important; --muted:#9aa3b2!important;
+  --cream:#1c2129!important;
+}
+html,body{background:#12151a!important;color:#e8ecf1!important}
+#app{background:#12151a!important;color:#e8ecf1!important}
+
+/* ---- 全站文字（全深底环境下安全） ---- */
+h1,h2,h3,h4,b,strong{color:#ffffff!important}
+p,span,li,label{color:#d6dbe3!important}
+small,.tiny{color:#9aa3b2!important}
+.meta{color:#4d8dff!important}
+
+/* ---- 纸张容器 → 深卡 ---- */
+.pre,.sheet,.agent-card,.offer,.cockpit,.season-arena,.mission-strip,
+.season-progress,.news-stage,.add-grid,.contract-grid,.gm-meter{
+  background:#1c2129!important;border-color:#2a3038!important;color:#e8ecf1!important;
+}
+.overlay{background:#0a0c0fcc!important}
+.overlay .sheet{background:#1c2129!important;color:#e8ecf1!important}
+.overlay .sheet h2,.overlay .sheet b{color:#ffffff!important}
+.overlay .sheet p,.overlay .sheet span{color:#d6dbe3!important}
+
+/* ---- 按钮 ---- */
+.btn.primary{background:#ffd23f!important;color:#101318!important;border:0!important;font-weight:800!important}
+.btn.secondary,.btn{background:#1c2129!important;color:#e8ecf1!important;border:1px solid #2a3038!important}
+.sim-main{background:#ffd23f!important;color:#101318!important;font-weight:800!important}
+.speed-btn{background:#1c2129!important;color:#ffd23f!important;border:1px solid #2a3038!important}
+.circle-btn{background:#1c2129!important;color:#ffffff!important;border:1px solid #2a3038!important}
+
+/* ---- 底部导航 ---- */
+nav{background:#151920!important;border-top:1px solid #2a3038!important}
+nav button{color:#8f97a3!important;background:transparent!important}
+nav button.active{color:#ffd23f!important}
+
+/* ---- HUD ---- */
+.career-hud{background:#181c23!important;color:#ffffff!important}
+.career-hud h2{color:#ffffff!important}
+.career-hud small{color:#9aa3b2!important}
+.ovr-orb{background:#ffd23f!important}
+.ovr-orb b,.ovr-orb span{color:#101318!important}
+.three-meters b{color:#ffd23f!important}
+.rel-pill{background:#1c2129!important;border-color:#2f3742!important}
+.rel-pill header b{color:#ffd23f!important}
+.rel-pill header span{color:#d6dbe3!important}
+.rel-pill .tiny{color:#9aa3b2!important}
+.age-badge{background:linear-gradient(145deg,#2a313b,#1c2129)!important;border-color:#2f3742!important}
+.age-badge b{color:#ffd23f!important}
+.age-badge span{color:#9aa3b2!important}
+.hud-meta span{background:#212730!important;border-color:#2f3742!important;color:#d6dbe3!important}
+.v84-hud-retire{background:#212730!important;border-color:#2f3742!important;color:#ffd23f!important}
+
+/* ---- 事件选择 ---- */
+.choice{background:#212730!important;border:1px solid #2f3742!important;color:#e8ecf1!important}
+.choice:hover{border-color:#ffd23f!important}
+.choice b{color:#ffffff!important}
+.choice span{color:#9aa3b2!important}
+.choice.danger{border-color:#ff5a5f66!important}
+
+/* ---- 训练加点 ---- */
+.add-btn{background:#212730!important;color:#e8ecf1!important;border:1px solid #2f3742!important}
+.add-btn i{color:#ffd23f!important}
+
+/* ---- 天赋卡：保留原版品质渐变底，只统一文字 ---- */
+.talent-card{border-color:#2f3742!important;color:#fff!important}
+.talent-card.selected{outline:2px solid #ffd23f!important}
+.talent-card h3{color:#fff!important}
+.talent-card p{color:#e3e8ee!important}
+.talent-card .ghost{color:#ffffff1a!important}
+.talent-card .rarity{color:#fff!important;background:rgba(0,0,0,.42)!important}
+/* 品质底色加深，保证白字可读 */
+.talent-card.q-common{background:linear-gradient(145deg,#2e7d4a,#1e5632)!important}
+.talent-card.q-good{background:linear-gradient(145deg,#2f5fa8,#1c3d73)!important}
+.talent-card.q-rare{background:linear-gradient(145deg,#5a3f9e,#372168)!important}
+.talent-card.q-legend{background:linear-gradient(145deg,#8a6a1a,#5c430c)!important}
+
+/* ---- 专属天赋横幅：深蓝档案卡 ---- */
+.ad-hero{background:linear-gradient(135deg,#182337 0%,#0f1522 100%)!important;color:#fff!important;
+  border:1px solid #2f3742!important;box-shadow:0 12px 32px #00000044!important}
+.ad-hero h3{color:#ffd23f!important}
+.ad-hero p{color:#c3ccd8!important}
+.ad-hero .ad-kicker{color:#ffd23f!important}
+.ad-hero .ad-bonus span{background:#ffffff14!important;color:#d6dbe3!important;border-color:#ffffff22!important}
+.ad-hero button{background:#ffd23f!important;color:#101318!important;font-weight:800!important}
+.ad-hero.unlocked button{background:#ffffff14!important;color:#ffd23f!important}
+
+/* ---- 全部拿下 / 奖励卡 ---- */
+.takeall-ad{background:#1c2129!important;border:1px solid #2f3742!important}
+.takeall-ad small{color:#9aa3b2!important}
+.takeall-ad strong{color:#ffd23f!important}
+.takeall-ad .reward-icon{background:#252c36!important}
+.takeall-ad button{background:transparent!important;border:1px solid #ffd23f66!important;color:#ffd23f!important}
+.reward-card{background:#1c2129!important;border:1px solid #2f3742!important}
+.reward-card small{color:#9aa3b2!important}
+.reward-card strong{color:#e8ecf1!important}
+.reward-card button{color:#ffd23f!important}
+.reward-icon{background:#252c36!important;color:#ffd23f!important}
+.reward-card.exclusive{background:#241a1c!important;border-color:#ff5a5f55!important}
+
+/* ---- 页头/说明 ---- */
+.pre-intro h2{color:#fff!important}
+.pre-intro p{color:#9aa3b2!important}
+.pre-top strong,.pre-top span,.pre-top small{color:#ffffff!important}
+.pre-top{background:rgba(18,21,26,.94)!important;border-bottom:1px solid #2a3038!important;color:#ffffff!important}
+.pre-top button{background:#1c2129!important;border-color:#2f3742!important;color:#ffffff!important}
+.talent-card p{color:#eef2f7!important}
+.talent-card h3{color:#ffffff!important}
+
+/* ---- 进度条 ---- */
+[class*="progress"] i,[class*="bar"] i{background:linear-gradient(90deg,#4d8dff,#ffd23f)!important}
+
+/* ---- 选秀夜：黑场 ---- */
+.draft{background:#0a0c0f!important}
+.draft-text{color:#f2f4f7!important}
+.draft small{color:#9aa3b2!important}
+
+/* ---- 表格 ---- */
+table,th,td{border-color:#2a3038!important;color:#e8ecf1!important}
+th{background:#212730!important}
+
+/* ---- 主页封面（原版米色渐变 → 深夜球场） ---- */
+.cover-v214{background:linear-gradient(180deg,#12151a 0%,#151a21 58%,#12151a 100%)!important;color:#e8ecf1!important}
+.cover-v214:before{background:linear-gradient(112deg,transparent 0 59%,rgba(255,210,63,.05) 59% 61%,transparent 61% 100%)!important}
+.cover-v214:after{border-color:rgba(255,210,63,.12)!important}
+.cover-topline{color:#9aa3b2!important}
+.cover-topline i{background:linear-gradient(90deg,#ffd23f,transparent)!important}
+.cover-title-v214 h1,.cover-title-v214 h1 b{color:#ffffff!important}
+
+/* ---- 天赋页增强层（v63/v221/v71 动态注入样式，原白底/棕渐变） ---- */
+.v221-exclusive-ad{background:linear-gradient(135deg,#182337 0%,#0f1522 100%)!important;border:1px solid #2f3742!important;color:#fff!important;box-shadow:0 12px 32px #00000044!important}
+.v221-exclusive-ad h3,.v221-exclusive-ad b{color:#ffd23f!important}
+.v221-exclusive-ad p,.v221-exclusive-ad span{color:#c3ccd8!important}
+.v221-ad-story{background:#ffffff10!important;border-color:#ffffff22!important}
+.v221-ad-story b{color:#ffd23f!important}
+.v221-takeall-ad{background:#1c2129!important;border:1px solid #2f3742!important}
+.v221-takeall-ad b,.v221-takeall-ad strong{color:#ffd23f!important}
+.v221-takeall-ad small{color:#9aa3b2!important}
+.v221-takeall-ad button{background:transparent!important;border:1px solid #ffd23f66!important;color:#ffd23f!important}
+.v63-drawbar{background:#1c2129!important;border:1px solid #2f3742!important}
+.v63-drawbar b{color:#e8ecf1!important}
+.v63-drawbar small{color:#9aa3b2!important}
+.v63-ad-points{background:#1c2129!important;border:1px solid #2f3742!important}
+.v63-ad-points header b{color:#ffd23f!important}
+.v63-ad-points header span{color:#9aa3b2!important}
+.v63-ad-points p{color:#9aa3b2!important}
+.v63-ad-btn{background:#ffd23f!important;color:#101318!important;font-weight:800!important}
+.v63-ad-btn[disabled]{background:#2a3038!important;color:#6b7280!important}
+.v63-locked{background:#1a2a1f!important;border:1px solid #2f5a3d!important;color:#5fce8a!important}
+.v221-auto-note,.v221-auto-sim,.v221-simctl{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v221-simctl button,.v221-auto-sim button{background:#ffd23f!important;color:#101318!important;font-weight:800!important}
+.v63-enhanced button{color:inherit}
+.v221-boosts,.v221-conf-tag{color:#e8ecf1!important}
+.v221-live-top{color:#ffd23f!important}
+.v71-adline,.v71-adsub{color:#101318!important}
+.v221-exclusive-ad button{background:linear-gradient(135deg,#ffd86e,#f2a936)!important;color:#3a240b!important;border:0!important}
+.v221-exclusive-ad button span,
+.v221-exclusive-ad button .v71-adline,
+.v221-exclusive-ad button .v71-adsub{color:#3a240b!important;opacity:1!important;text-shadow:none!important}
+.v71-winner{color:#ffd23f!important}
+.v221-review,.v221-review-list{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v221-contract-pop{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+
+/* ---- 生涯页 / 训练页（原版米色渐变 + 白卡） ---- */
+.career{background:linear-gradient(180deg,#12151a 0,#0e1116 100%)!important;color:#e8ecf1!important}
+.career-main{background:transparent!important}
+.off-hero{background:linear-gradient(145deg,#1b2028,#141920)!important;border:1px solid #2f3742!important;color:#e8ecf1!important;box-shadow:0 12px 30px #00000055!important}
+.off-hero h2{color:#ffffff!important}
+.off-hero p{color:#9aa3b2!important}
+.off-hero .asset-slot{background:#0f1319!important;border-color:#2f3742!important;color:#6b7484!important}
+.off-points{background:#1c2129!important;border:1px solid #2f3742!important;color:#e8ecf1!important}
+.off-points b{color:#ffffff!important}
+.off-points .tiny{color:#9aa3b2!important}
+.point-orb{background:linear-gradient(145deg,#2a313b,#1c2129)!important}
+.point-orb b{color:#ffd23f!important}
+.point-orb span{color:#9aa3b2!important}
+.off-tabs{background:#151920!important;border:1px solid #2a3038!important}
+.off-tabs button{color:#9aa3b2!important;background:transparent!important}
+.off-tabs button.active{background:#ffd23f!important;color:#101318!important;box-shadow:none!important}
+.off-body{background:transparent!important}
+.add-grid{background:transparent!important}
+.add-btn{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.add-btn span{color:#9aa3b2!important}
+.add-btn b{color:#ffffff!important}
+.add-btn i{background:#2a313b!important;color:#ffd23f!important}
+.contract-grid div{background:#212730!important}
+.contract-grid span{color:#9aa3b2!important}
+.contract-grid b{color:#ffffff!important}
+.agent-card{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.agent-card h3{color:#ffffff!important}
+.agent-card p{color:#9aa3b2!important}
+.gm-state{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.gm-state header b{color:#ffffff!important}
+.gm-state header span{color:#ffd23f!important}
+.gm-state p{color:#9aa3b2!important}
+.v152-contract-scale{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v152-contract-scale small{color:#ffd23f!important}
+.v152-contract-scale b{color:#ffffff!important}
+.v152-contract-scale span{color:#9aa3b2!important}
+.offer{background:#212730!important;border-color:#2f3742!important}
+.offer strong{color:#ffffff!important}
+.offer span{color:#9aa3b2!important}
+.offer button{background:#ffd23f!important;color:#101318!important;font-weight:800!important}
+.gm-meter{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.gm-meter header b{color:#ffd23f!important}
+.gm-meter header span{color:#ffd23f!important}
+.risktrack{background:#2a3038!important}
+.risktrack i{background:linear-gradient(90deg,#4d8dff,#ffd23f)!important}
+.career-archive{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.career-totals div{background:#212730!important;border-color:#2f3742!important}
+.profile-hero{background:#1c2129!important;border-color:#2f3742!important}
+.profile-copy h2{color:#ffffff!important}
+.profile-copy p{color:#9aa3b2!important}
+
+/* ---- 赛季承诺弹窗（v130） ---- */
+.v130-overlay{background:rgba(5,8,12,.72)!important}
+.v130-dialog{background:linear-gradient(145deg,#1b2028,#151a21)!important;color:#e8ecf1!important;border-color:#2f3742!important}
+.v130-dialog>header{background:radial-gradient(ellipse at top right,#ffd23f1a,transparent 65%),#182337!important;color:#ffffff!important;border-color:#2f3742!important}
+.v130-dialog header small{color:#ffd23f!important}
+.v130-dialog h2{color:#ffffff!important}
+.v130-close{background:#212730!important;color:#ffd23f!important;border-color:#2f3742!important}
+.v130-content{background:transparent!important}
+.v130-intro{color:#9aa3b2!important}
+.v130-step{color:#ffd23f!important}
+.v130-step span{color:#d6dbe3!important}
+.v130-option{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v130-option b{color:#ffffff!important}
+.v130-option small{color:#9aa3b2!important}
+.v130-option:hover{border-color:#ffd23f88!important}
+.v130-option.is-selected,.v130-choice:hover{background:#ffd23f14!important;border-color:#ffd23f!important;box-shadow:inset 3px 0 #ffd23f!important;color:#ffffff!important}
+.v130-option.is-selected b,.v130-option.is-selected small{color:#ffffff!important}
+.v130-radio{border-color:#6b7484!important}
+.is-selected .v130-radio{border-color:#ffd23f!important;background:#12151a!important}
+.v130-note{background:#151a21!important;color:#9aa3b2!important;border:1px solid #2f3742!important}
+.v130-primary{background:#ffd23f!important;color:#101318!important}
+.v130-dialog footer{border-top-color:#2f3742!important;color:#9aa3b2!important}
+.v130-goat{background:radial-gradient(ellipse at top,#ffd23f22,transparent),#182337!important;color:#f2f6ff!important;border:1px solid #2f3742!important}
+.v130-goat small{color:#ffd23f!important}
+.v130-goat strong,.v130-goat em{color:#ffffff!important}
+.v130-goat>span{color:#9aa3b2!important}
+.v130-goat>div{color:#8fe0a8!important}
+.v130-goat p{color:#d6dbe3!important}
+.v130-breakdown span{color:#9aa3b2!important}
+.v130-breakdown b{color:#ffffff!important}
+.v130-nearby>div{border-bottom-color:#2f3742!important;color:#e8ecf1!important}
+.v130-nearby b{color:#ffd23f!important}
+.v130-nearby .is-self{background:#212730!important}
+.v130-rule{color:#9aa3b2!important}
+.v130-rule summary{color:#e8ecf1!important}
+.v130-rule p{color:#9aa3b2!important}
+.v130-strip button,.v130-history-link{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v130-strip small{color:#9aa3b2!important}
+.v130-strip span{color:#ffd23f!important}
+.v130-history-link span{color:#9aa3b2!important}
+.v130-history article{background:#212730!important;border-color:#2f3742!important}
+.v130-history small{color:#9aa3b2!important}
+.v130-history strong{color:#ffffff!important}
+.v130-history em{color:#ffd23f!important}
+.v130-history b span{color:#9aa3b2!important}
+.v130-summary h3{color:#ffffff!important}
+.v130-summary p{color:#d6dbe3!important}
+.v130-summary span{color:#ffd23f!important}
+.v130-choice{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v130-choice b{color:#ffffff!important}
+.v130-choice p{color:#9aa3b2!important}
+.v130-choice small{color:#ffd23f!important}
+.v130-story h3{color:#ffffff!important}
+.v130-story p{color:#d6dbe3!important}
+
+/* ---- 休赛期 / 选秀 / 对话弹窗（v28 / v133 / v135，原版 v145 米色层） ---- */
+.v28-sheet,.v133-dialog.sheet,.v135-dialog{background:linear-gradient(145deg,#1b2028,#151a21)!important;color:#e8ecf1!important;border-color:#2f3742!important}
+.v28-scene-top h2,.v133-dialog .v133-section-heading h3,.v133-dialog .v133-player h4,.v133-dialog h3,.v133-dialog h4{color:#ffffff!important}
+.v28-scene-top small,.v133-dialog .v133-section-heading small{color:#ffd23f!important}
+.v28-scene-top>span{background:linear-gradient(120deg,#182337,#0f1522)!important;color:#ffd23f!important;border-color:#2f3742!important}
+.v28-stakes,.v28-sheet .v28-stakes,.v133-dialog .v28-stakes,.v135-status{background:#212730!important;border:1px solid #2f3742!important;color:#e8ecf1!important}
+.v28-cast-tags span{background:#252c36!important;color:#d6dbe3!important}
+.v28-stakes em{color:#ffd23f!important}
+.v28-stakes b,.v28-stakes span,.v28-stakes small{color:#e8ecf1!important}
+.v135-talent-copy{background:linear-gradient(120deg,#182337,#0f1522)!important;color:#ffffff!important;border-color:#2f3742!important}
+.v135-dialog header{background:linear-gradient(120deg,#182337,#0f1522)!important;color:#ffffff!important;border-color:#2f3742!important}
+.v135-dialog header small{color:#ffd23f!important}
+.v135-dialog header button{background:#212730!important;color:#ffd23f!important;border-color:#2f3742!important}
+.v135-skill-strip{background:linear-gradient(110deg,#212730,#1a2028)!important;color:#e8ecf1!important;border-color:#2f3742!important}
+.v135-skill-strip small{color:#9aa3b2!important}
+.v133-dialog .v133-content{background:transparent!important}
+.v133-dialog .v133-plans article,.v133-dialog .v133-player,.v142-moves section,.v133-kpis>div,.v152-draft-summary{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v133-dialog .v133-plans article.is-selected{background:#ffd23f14!important;border-color:#ffd23f!important;box-shadow:inset 0 3px #ffd23f!important}
+.v133-dialog .v133-plans p,.v133-dialog .v133-footnote,.v133-dialog .v133-empty{color:#9aa3b2!important}
+.v133-dialog .v133-plans article>small{color:#ffd23f!important}
+.v133-dialog .v133-plans article>div{color:#ffd23f!important}
+.v141-path span{background:#212730!important;color:#9aa3b2!important}
+.v141-path .current{background:#ffd23f!important;color:#101318!important}
+.v141-path .finished{background:#2a313b!important;color:#ffd23f!important}
+.v141-controls{border-top-color:#2f3742!important}
+.v133-dialog .v133-draft-stage{background:radial-gradient(ellipse at top,#ffd23f22,transparent 65%),linear-gradient(145deg,#152c40,#101820)!important;color:#ffffff!important;border-color:#3a4a5e!important}
+.v133-draft-stage p,.v133-draft-stage>small,.v133-pick-number,.v133-draft-chip{color:#d6dbe3!important}
+.v133-draft-chip{background:#ffffff10!important;border-color:#ffd23f55!important}
+.v133-dialog .v133-avatar{background:linear-gradient(145deg,#2d4b5a,#152d40)!important;border-color:#ffd23f55!important}
+.v133-dialog .v133-rating b{color:#ffd23f!important}
+.v133-dialog .v133-small-button,.v133-dialog button{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v133-dialog .v133-primary,.v133-dialog .btn.primary{background:#ffd23f!important;border-color:#ffd23f!important;color:#101318!important}
+.v152-draft-dialog .v133-draft-heading>b{color:#ffffff!important}
+.v152-draft-dialog .v133-draft-heading>span{color:#ffd23f!important}
+.v152-draft-summary b{color:#ffd23f!important}
+.v28-sheet .v28-scene-top,.v28-scene-top{background:transparent!important}
+.v28-sheet .sheet-handle{background:#3a4350!important}
+
+/* ---- 休赛期选秀弹窗浅色残留（v141 控制区奶油底 / 页脚棕字 / 进度条米色） ---- */
+.v152-draft-dialog>.v141-controls{background:transparent!important;border-top:1px solid #2f3742!important}
+.v152-draft-dialog .v141-controls>.btn.secondary{color:#9aa3b2!important;border-color:#2f3742!important;background:#212730!important}
+.v133-dialog .sheet-footer,.v133-dialog .sheet-footer span{color:#9aa3b2!important}
+.v133-dialog .v133-draft-progress{background:#2a3038!important}
+.v133-dialog .v133-draft-progress i{background:#ffd23f!important}
+.v133-dialog .v133-kpis small{color:#9aa3b2!important}
+.v133-dialog .v133-kpis b{color:#e8ecf1!important}
+.v133-dialog .v133-section-heading p{color:#9aa3b2!important}
+.v133-dialog .v133-player p,.v133-dialog .v133-player-info>small{color:#9aa3b2!important}
+.v133-dialog .v133-details{border-top-color:#2f3742!important}
+.v133-dialog .v133-details summary{color:#e8ecf1!important}
+.v133-dialog .v133-details summary span{color:#9aa3b2!important}
+.v133-dialog .v133-log{color:#9aa3b2!important}
+.v133-dialog .v133-log b{color:#ffd23f!important}
+.v133-dialog .v133-prospects article{border-bottom-color:#2a3038!important}
+.v133-dialog .v133-prospects h4{color:#e8ecf1!important}
+.v133-dialog .v133-draft-result{border-bottom-color:#2a3038!important}
+.v147-own-draft{background:#1c2129!important;border-color:#2f3742!important}
+.v147-own-draft h4{color:#ffd23f!important}
+
+/* ---- 赛季回顾 / 颁奖 / 生涯档案（v24 米白卡片家族，原主题漏网） ---- */
+.awards-stage,.season-recap,.career-archive{background:#1c2129!important;border-color:#2f3742!important}
+.awards-stage small,.season-recap small{color:#ffd23f!important}
+.awards-stage h2,.season-recap h2{color:#ffffff!important}
+.awards-stage p,.season-recap p{color:#9aa3b2!important}
+.recap-grid>div,.career-totals div{background:#212730!important;border:1px solid #2f3742!important}
+.recap-grid b,.career-totals b{color:#ffd23f!important}
+.recap-grid span,.career-totals span{color:#9aa3b2!important}
+.recap-growth{background:#212730!important;border-color:#2f3742!important}
+.recap-growth b{color:#e8ecf1!important}
+.recap-growth strong{color:#4ade80!important}
+.recap-growth p{color:#9aa3b2!important}
+.award-spotlight{background:#212730!important;border-color:#2f3742!important}
+.award-spotlight .medal{background:linear-gradient(145deg,#ffd23f,#c9962a)!important;color:#101318!important;box-shadow:none!important}
+.award-spotlight b{color:#ffffff!important}
+.award-spotlight span{color:#9aa3b2!important}
+.award-card{background:#212730!important;border-color:#2f3742!important}
+.award-card.win{background:#ffd23f12!important;border-color:#ffd23f55!important}
+.award-card.nom{background:#1c2129!important;border-color:#2f3742!important}
+.award-card .award-label{color:#9aa3b2!important}
+.award-card b{color:#ffffff!important}
+.award-card p{color:#9aa3b2!important}
+.award-card strong{color:#ff8a8f!important}
+.record-wall div{background:#1c2129!important;border-color:#2f3742!important}
+.record-wall small{color:#9aa3b2!important}
+.record-wall b{color:#ffffff!important}
+.story-mission{background:#1c2129!important;border-color:#2f3742!important}
+.story-mission small{color:#ffd23f!important}
+.story-mission h3{color:#ffffff!important}
+.story-mission p{color:#9aa3b2!important}
+.story-log .log-item{background:#1c2129!important;border-color:#2f3742!important}
+.story-log .log-item small{color:#9aa3b2!important}
+.story-log .log-item b{color:#ffffff!important}
+.story-log .log-item p{color:#9aa3b2!important}
+
+/* ---- 首页公告栏 + 封面补丁 ---- */
+.cover-hero-caption{background:linear-gradient(180deg,rgba(10,13,18,.10),rgba(10,13,18,.88))!important;box-shadow:0 8px 24px #00000055!important}
+.cover-hero-caption strong{color:#ffffff!important}
+.cover-hero-caption span{color:#d6dbe3!important}
+.cover-title-v214 p{color:#9aa3b2!important}
+.cover-title-v214 h1 em{color:#ffd23f!important}
+.cover-title-v214 h1 em:after{background:#ffd23f!important}
+.cover-story-strip{grid-template-columns:repeat(4,1fr)!important}
+.cover-story-strip span{background:#1c2129!important;border-color:#2f3742!important;color:#d6dbe3!important}
+.cover.cover-v214 .cover-actions{background:linear-gradient(180deg,rgba(18,21,26,0),rgba(18,21,26,.94) 22%,#12151a 62%)!important;border-top-color:#2a3038!important;box-shadow:0 -12px 26px #00000066!important}
+.cover-v214 .asset-slot{background:#0f1319!important;color:#6b7484!important}
+.ng-notice{position:relative;z-index:3;margin:18px 0 16px;padding:16px 18px;border:1px solid #2f3742;border-radius:18px;background:linear-gradient(135deg,#1c2129,#151a21);color:#e8ecf1;box-shadow:0 12px 32px #00000055}
+.ng-notice .ng-label{display:inline-block;font-size:10px;letter-spacing:2px;color:#ffd23f;border:1px solid #ffd23f55;border-radius:5px;padding:3px 8px;margin-bottom:10px}
+.ng-notice h3{margin:0 0 8px;font-size:16px;color:#ffffff}
+.ng-notice p{margin:0;font-size:12px;line-height:1.75;color:#9aa3b2}
+.ng-notice .ng-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.ng-notice .ng-tags span{font-size:10.5px;color:#d6dbe3;background:#212730;border:1px solid #2f3742;border-radius:20px;padding:4px 10px}
+.ng-notice .ng-foot{margin-top:10px;font-size:10px;color:#9aa3b2}
+
+/* ---- 全服排行榜（原版棕金渐变卡） ---- */
+.v82-lb{background:linear-gradient(160deg,#1b2430,#151a21 58%,#1f2833)!important;color:#e8ecf1!important;border:1px solid #2f3742!important;box-shadow:0 10px 26px #00000055!important}
+.v82-lb header b{color:#ffffff!important}
+.v82-lb header small{color:#ffd23f!important}
+.v82-lb-more{background:#ffd23f14!important;border-color:#ffd23f66!important;color:#ffd23f!important}
+.v82-lb-row{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v82-lb-row b,.v82-lb-main b{color:#ffffff!important}
+.v82-lb-row small,.v82-lb-main small{color:#9aa3b2!important}
+.v82-lb-score{color:#ffd23f!important}
+.v82-lb-empty{color:#d6dbe3!important}
+.v82-lb-me{background:#212730!important;border-color:#ffd23f66!important;color:#e8ecf1!important}
+
+/* ---- 球员页（原版白卡 + 白字） ---- */
+.v26-live-talents{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v26-live-talents header b{color:#ffffff!important}
+.v26-live-talents header span{color:#9aa3b2!important}
+.v26-live-talent{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v26-live-talent b{color:#ffffff!important}
+.v26-live-talent small,.v26-live-talent span{color:#9aa3b2!important}
+/* 球员页天赋卡：底色跟随稀有度 */
+.v26-live-talent.q-common{background:linear-gradient(145deg,#1e4a30,#153524)!important;border-color:#3a7d55!important}
+.v26-live-talent.q-common small{color:#8fe0a8!important}
+.v26-live-talent.q-good{background:linear-gradient(145deg,#1f3a66,#142a4d)!important;border-color:#3d6fbf!important}
+.v26-live-talent.q-good small{color:#a9c8ff!important}
+.v26-live-talent.q-rare{background:linear-gradient(145deg,#3a2a63,#241a44)!important;border-color:#6b4fd0!important}
+.v26-live-talent.q-rare small{color:#cdb5ff!important}
+.v26-live-talent.q-legend{background:linear-gradient(145deg,#4a3a12,#2e240b)!important;border-color:#b8862b!important}
+.v26-live-talent.q-legend small{color:#ffd98a!important}
+.attr{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.attr header span{color:#9aa3b2!important}
+.attr header b{color:#ffffff!important}
+.attr>i{background:#2a3038!important}
+.attr>i b{background:#4d8dff!important}
+
+/* ---- 世界线页（原版米色面板） ---- */
+.v28-story-intro{background:linear-gradient(145deg,#1b2028,#151a21)!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v28-story-intro h2{color:#ffffff!important}
+.v28-story-intro p{color:#9aa3b2!important}
+.v28-story-intro small{color:#ffd23f!important}
+.v128-panel{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v128-panel h3{color:#ffffff!important}
+.v128-panel p{color:#9aa3b2!important}
+.v128-panel b{color:#ffd23f!important}
+.story-lock{background:linear-gradient(145deg,#1b2028,#151a21)!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.story-lock h2{color:#ffffff!important}
+.story-lock p{color:#9aa3b2!important}
+.story-lock small{color:#ffd23f!important}
+.story-lock .lock-icon{background:linear-gradient(145deg,#2a313b,#1c2129)!important;color:#ffd23f!important;border-color:#2f3742!important}
+.v30-legend.v30-locked-note{background:linear-gradient(145deg,#1b2028,#151a21)!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v30-legend.v30-locked-note small{color:#ffd23f!important}
+.v30-legend.v30-locked-note p{color:#d6dbe3!important}
+
+/* ---- 联盟页（原版白卡 + 白字） ---- */
+.league-stage,.league-team-hero,.v129-card,.v129-list,.standings,.headline{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.league-stage h2,.league-team-hero h2,.v129-card h3,.v129-card h2,.headline b,.standing strong,.v34-rank-row b{color:#ffffff!important}
+.league-team-hero small,.v129-card p,.v129-card small,.standing span,.headline p,.v34-rank-row span{color:#9aa3b2!important}
+.v129-tabs button{background:#212730!important;border-color:#2f3742!important;color:#d6dbe3!important}
+.v129-tabs button:disabled,.v129-tabs button[disabled]{background:#ffd23f!important;color:#101318!important}
+.v129-list>div{border-color:#2f3742!important;background:#212730!important;color:#e8ecf1!important}
+.v129-list b{color:#ffffff!important}
+.v129-list strong{color:#ffd23f!important}
+.standing{border-color:#2f3742!important}
+.standing i{color:#ffd23f!important}
+.v34-rank-row{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v34-rank-row:nth-child(even){background:#212730!important}
+.v34-rk{color:#ffd23f!important}
+.v34-rt{color:#9aa3b2!important}
+.v34-rs{color:#ffffff!important}
+
+/* ---- 生涯档案页（原版白色数据卡） ---- */
+.v29-section,.v26-archive-section,.v211-contracts,.v29-honor-showcase{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v29-section header h3,.v29-section h3,.v26-archive-section h3,.v29-honor-showcase header h2{color:#ffffff!important}
+.v29-section header span,.v29-section .tiny,.v26-archive-section .tiny{color:#9aa3b2!important}
+.v29-core-grid>div,.v29-record,.v29-stat-grid>div,.v29-big3>div{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v29-core-grid b,.v29-record b,.v29-stat-grid b,.v29-big3 b{color:#ffffff!important}
+.v29-core-grid span,.v29-record span,.v29-stat-grid span,.v29-big3 span{color:#9aa3b2!important}
+.v29-core-grid .hero{background:linear-gradient(145deg,#2a313b,#1c2129)!important;border-color:#ffd23f44!important}
+.v29-record.primary{background:linear-gradient(145deg,#2a313b,#1c2129)!important;border-color:#ffd23f55!important}
+.v29-record.primary b{color:#ffd23f!important}
+.career-archive{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.honor-wall .honor{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.career-archive .season-line,.career-archive .season-table,.career-archive .trend-chart{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.career-archive .season-line b,.career-archive .season-line span,.career-archive .season-line p{color:#e8ecf1!important}
+
+/* ---- 常规赛 / 全明星页（原版白卡） ---- */
+.season-brief-art{background:#0f1319!important}
+.season-brief-art .asset-slot{background:#0f1319!important}
+.season-brief-score{background:#0f1319cc!important;border:1px solid #ffffff22!important}
+.season-brief-score b{color:#ffd23f!important}
+.season-brief-score span{color:#d6dbe3!important}
+.season-brief-copy h2,.season-brief-copy p,.season-brief-copy small{color:#ffffff!important}
+.season-brief-bottom{background:#2a3038!important;border-top-color:#2f3742!important}
+.season-brief-bottom>div{background:#1c2129!important}
+.season-brief-bottom b{color:#ffffff!important}
+.season-brief-bottom span{color:#9aa3b2!important}
+.stage-card,.v221-allstar-card{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.stage-copy h2{color:#ffffff!important}
+.stage-copy p{color:#9aa3b2!important}
+.stage-copy .result-label{background:#212730!important;color:#ffd23f!important;border-color:#2f3742!important}
+.stage-copy .big-icon{background:linear-gradient(145deg,#2a313b,#1c2129)!important;color:#ffd23f!important;border-color:#2f3742!important}
+.v26-bean-card,.v26-statbox,.v26-season-totals,.v26-big3,.v26-detail-grid,.v30-route-card,.v73-col{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v26-season-totals>div,.v26-detail-grid>div,.v26-big3>div{background:#212730!important;border-color:#2f3742!important}
+.v26-season-totals b,.v26-detail-grid b,.v26-big3 b,.v73-row b,.v30-route-card b{color:#ffffff!important}
+.v26-season-totals span,.v26-detail-grid span,.v26-big3 span,.v73-row span,.v30-route-card span{color:#9aa3b2!important}
+.v26-bean-head b{color:#ffffff!important}
+.v26-bean-head span{color:#9aa3b2!important}
+.functional-node{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.functional-node b{color:#ffffff!important}
+.functional-node.on{background:#ffd23f!important;color:#101318!important}
+.functional-node.on b,.functional-node.on span,.functional-node.on i{color:#101318!important}
+.functional-node i{color:#9aa3b2!important}
+.functional-line .functional-node{background:#212730!important}
+.functional-line .functional-node.on{background:#ffd23f!important;color:#101318!important}
+.functional-line .functional-node.on b,.functional-line .functional-node.on span,.functional-line .functional-node.on i{color:#101318!important}
+.functional-node i{background:transparent!important}
+.functional-node:not(.on) i{color:#9aa3b2!important}
+.v73-logo-wrap{background:#2a313b!important;border-color:#2f3742!important}
+.v73-logo-wrap i{color:#ffd23f!important}
+.v73-logo-wrap > i{background:transparent!important;color:#ffd23f!important}
+.v73-logo{background:transparent!important;border-color:#2f3742!important}
+.v73-logo-miss{background:#2a313b!important;color:#ffd23f!important}
+.v73-row{background:#1c2129!important;border-color:#2f3742!important}
+.v73-row.me{background:#ffd23f14!important;border-color:#ffd23f55!important}
+.v73-row.me b{color:#ffe08a!important}
+.v30-route-card{background:linear-gradient(145deg,#1b2028,#151a21)!important}
+.v52-usage{background:#1c2129!important;border-color:#2f3742!important;color:#d6dbe3!important}
+.v52-usage b,.v52-usage strong{color:#ffffff!important}
+.season-command,.season-brief{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.season-command .go,.season-command .sim-main{background:#ffd23f!important;color:#101318!important}
+.v170-save-button{background:#212730!important;border-color:#2f3742!important;color:#ffd23f!important}
+.rv.win{background:#15261c!important;border-color:#2f5a3d!important;color:#e8ecf1!important}
+.rv.loss{background:#2a1a1c!important;border-color:#5a2f35!important;color:#e8ecf1!important}
+.rv b,.rv strong{color:#ffffff!important}
+.rv.win .wl{background:#1e3d2a!important;color:#8fe0a8!important}
+.rv.loss .wl{background:#3d1e22!important;color:#ff9aa0!important}
+.v174-share-btn{background:#1c2129!important;border-color:#2f3742!important;color:#ffd23f!important}
+
+/* ---- 联盟页补充（历史地位榜单内部白卡） ---- */
+.v34-rank-card{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v34-rank-card header h3{color:#ffffff!important}
+.v34-rank-card header small,.v34-rank-card header span{color:#9aa3b2!important}
+.v34-me-line{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v34-me-line b{color:#ffffff!important}
+.v34-me-line span{color:#9aa3b2!important}
+.v34-me-line em{color:#ffd23f!important}
+.v34-goat-note{color:#9aa3b2!important}
+.standing{background:#212730!important;border-color:#2f3742!important}
+.standing strong{color:#ffffff!important}
+.standing span{color:#9aa3b2!important}
+.standing i{color:#ffd23f!important}
+.stamp{background:#ffd23f!important;color:#101318!important}
+
+/* ---- 生涯档案补丁 ---- */
+.retire-box{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.retire-box b{color:#ffffff!important}
+.retire-box p{color:#9aa3b2!important}
+.transaction-list,.injury-list{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.transaction-list .tiny,.injury-list .tiny{color:#9aa3b2!important}
+.transaction-list div,.injury-list div{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.transaction-list span,.injury-list span{color:#9aa3b2!important}
+
+/* ---- 退役报告页（原版全白卡） ---- */
+.retired{background:#12151a!important;color:#e8ecf1!important}
+.retired-card,.v32-report,.v30-ending,.v81-oc,.v81-outcome,.v81-parts,.v81-bar,.v81-stats,.story-outcome,.legacy-score{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.retired-card h1,.retired-card h2,.retired-card h3,.v32-report h3,.v30-ending h3,.v81-parts b{color:#ffffff!important}
+.retired-card p,.v32-report p,.v30-ending p,.v81-outcome span,.v81-bar span,.v81-stats span{color:#9aa3b2!important}
+.v32-report b,.v81-stats b,.v32-report-grid b,.final-grid b,.legacy-score b,.legacy-score strong{color:#ffffff!important}
+.v32-report-grid>div,.final-grid>div,.v81-stats>div{background:#212730!important;border-color:#2f3742!important}
+.legacy-score{background:linear-gradient(145deg,#2a313b,#1c2129)!important;border-color:#ffd23f55!important}
+.legacy-score b,.legacy-score strong{color:#ffd23f!important}
+.story-outcome{background:#212730!important;border-color:#2f3742!important}
+.v81-oc .none,.v81-oc .hof-no{color:#ffd23f!important}
+.v32-report-honors,.v32-report-route,.v32-report-reason{background:#212730!important;border-color:#2f3742!important;color:#d6dbe3!important}
+.v32-report-honors b,.v32-report-route b,.v32-report-reason b{color:#ffd23f!important}
+.v81-bar em{color:#ffd23f!important}
+.v81-total small{color:#d6dbe3!important}
+.v64-score small,.v64-honor-line,.v64-rule{color:#d6dbe3!important}
+.retired-card .v64-honor-line,.retired-card .v64-rule{color:#d6dbe3!important}
+.injury-card,.injury-card .alert{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.injury-card h2{color:#ffffff!important}
+.injury-card p{color:#9aa3b2!important}
+.alert small{color:#ffd23f!important}
+.injury-icon{background:#2a1a1c!important;color:#ff8a8f!important;border-color:#ff5a5f55!important}
+.confirm-row .ok{background:#ffd23f!important;color:#101318!important}
+.confirm-row .cancel{background:#212730!important;color:#e8ecf1!important;border-color:#2f3742!important}
+.v147-own-draft{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v147-own-draft h4{color:#ffffff!important}
+.v147-own-draft .v133-footnote{color:#9aa3b2!important}
+.v133-draft-stage h3{color:#ffffff!important}
+.v133-draft-stage p,.v133-draft-stage>small{color:#d6dbe3!important}
+.v141-path span.current{background:#ffd23f!important;color:#101318!important}
+
+/* ---- 全站浅色残留清扫：季后赛页 ---- */
+.po-road div{background:#212730!important;color:#9aa3b2!important}
+.po-road .on{background:#ffd23f!important;color:#101318!important;box-shadow:none!important}
+.po-road .done{background:#16301f!important;color:#6ee7a0!important}
+.po-stage{background:#1c2129!important;border-color:#2f3742!important;box-shadow:none!important}
+.po-stage-top{background:linear-gradient(145deg,#1b2028,#151a21)!important}
+.po-stage-top small{color:#ffd23f!important}
+.po-stage-top h2{color:#ffffff!important}
+.team-box b{color:#e8ecf1!important}
+.vs{color:#6b7484!important}
+.po-game{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.po-game.win{background:#15261c!important;border-color:#2f5a3d!important}
+.po-game.loss{background:#2a1a1c!important;border-color:#5a2f35!important}
+.po-game strong{color:#ffffff!important}
+.po-game small{color:#9aa3b2!important}
+.po-game.dnp strong{color:#9aa3b2!important}
+.po-actions .next{background:#212730!important;border:1px solid #2f3742!important;color:#ffd23f!important}
+.po-actions .auto{background:#ff5a5f!important;color:#ffffff!important}
+.playoff-review{background:linear-gradient(145deg,#1b2028,#151a21)!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.playoff-review small{color:#ffd23f!important}
+.playoff-review h3{color:#ffffff!important}
+.playoff-review p{color:#9aa3b2!important}
+.playoff-review button{background:#ff5a5f!important;color:#ffffff!important}
+
+/* ---- 全站浅色残留清扫：常规赛 / 球员 / 赛季页 ---- */
+.dash-card{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.dash-card h3{color:#ffffff!important}
+.three-meters div{background:#212730!important;border-color:#2f3742!important}
+.three-meters div b{color:#ffd23f!important}
+.three-meters div span{color:#9aa3b2!important}
+.stage-chip{background:#212730!important;border-color:#2f3742!important;color:#ffd23f!important}
+.focus-stats div{background:#1c2129!important;border-color:#2f3742!important}
+.focus-stats b{color:#ffffff!important}
+.focus-stats span{color:#9aa3b2!important}
+.focus-sim{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.compact-game{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.player-scoreboard,.team-scoreboard{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.player-scoreboard b,.team-scoreboard b{color:#ffffff!important}
+.talent-chip{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.main-note{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.flow-chip{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+
+/* ---- 全站浅色残留清扫：故事 / 世界线 / 生涯档案 ---- */
+.story-banner{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.chapter{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.story-scene{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.achievement-item{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.achievement-item>div{min-width:0}
+.achievement-item i{background:#2a313b!important;border:1px solid #3a424e!important;color:#ffd23f!important;font-size:17px!important}
+.achievement-item.award i{background:#3a2f18!important;border-color:#5c4721!important}
+.achievement-item.record i{background:#1e2c3b!important;border-color:#2f4c6b!important;color:#6fa3ff!important}
+.achievement-item.season i{background:#2b2638!important;border-color:#453b5e!important;color:#ffd23f!important}
+.achievement-item small{display:block!important;font-size:7px!important;line-height:1.4!important;color:#aab3c0!important;letter-spacing:.03em!important;margin-bottom:3px!important}
+.achievement-item b{display:block!important;font-size:10.5px!important;line-height:1.4!important;color:#ffffff!important}
+.achievement-item p{color:#aab3c0!important;font-size:8px!important;line-height:1.55!important;margin-top:4px!important}
+.tree-node{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.branch-choices{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v210-story-note{background:#1c2129!important;border-color:#2f3742!important;color:#9aa3b2!important}
+.legacy-stage{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.retire-box button{background:#212730!important;color:#ff8a8f!important}
+.v27-story-card button{background:#212730!important;color:#ffd23f!important}
+.v27-chapter{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v27-choice-history{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v27-choice{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v28-live-bottom button{background:#212730!important;color:#ffd23f!important}
+.v28-branch-status>div{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v28-ch{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v28-history{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v29-winner{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v29-mywin.none{background:#212730!important;border-color:#2f3742!important}
+.v29-aw{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v211-lifelong{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v218-candidate{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v220-story-step{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v129-card button{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v131-load-actions button{background:#212730!important;border-color:#2f3742!important;color:#d6dbe3!important}
+.v135-actions button{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v128-panel select{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+
+/* ---- 全站浅色残留清扫：首页 / 选人 / 选秀 ---- */
+.cover-kicker span{background:#1c2129!important;border-color:#2f3742!important;color:#9aa3b2!important}
+.cover-art-note{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.scenario-card{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.scenario-card.selected{border-color:#ffd23f!important}
+.scenario-card .meta{color:#ffd23f!important}
+.scenario-card h3{color:#ffffff!important}
+.scenario-card p{color:#9aa3b2!important}
+.draft .btn{background:#ffd23f!important;color:#101318!important;border:0!important}
+
+/* ---- 全站浅色残留清扫：颁奖 / 全明星 / 故事结算 ---- */
+.allstar-line div{background:#212730!important;border-color:#2f3742!important}
+.allstar-line b{color:#ffd23f!important}
+.allstar-line span{color:#9aa3b2!important}
+.award-grid{background:transparent!important}
+.story-result-box{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.story-result-box .impact-list span{background:#252c36!important;color:#ffd23f!important}
+.story-result-box .follow{color:#9aa3b2!important}
+.v29-mywin{background:linear-gradient(145deg,#2a2618,#1c2129)!important;border-color:#ffd23f55!important;color:#e8ecf1!important}
+.v29-mywin header small{color:#9aa3b2!important}
+.v29-mywin header b{color:#ffd23f!important}
+.v29-mywin-list>div{background:#212730!important;color:#e8ecf1!important}
+.v29-mywin-list span{color:#9aa3b2!important}
+.v29-aw.mine{background:linear-gradient(145deg,#2a2618,#1c2129)!important;border-color:#ffd23f55!important}
+.v29-aw-top small{color:#9aa3b2!important}
+.v29-aw-top b{color:#ffffff!important}
+.v29-aw-self{color:#ff8a8f!important}
+.v29-aw-list span{background:#212730!important;color:#9aa3b2!important}
+.v29-aw-list span.me{background:#ffd23f!important;color:#101318!important}
+
+/* ---- 全站浅色残留清扫：其余卡片（旧页面 / 弹窗 / 世界线） ---- */
+.case-cover,.case-paper{background:#1c2129!important;color:#e8ecf1!important}
+.case-eyebrow b{background:#252c36!important;color:#ffd23f!important}
+.case-desc,.case-people span{color:#9aa3b2!important}
+.case-people span{background:#212730!important;border-color:#2f3742!important}
+.worldline-head,.timeline-tree,.fork-modal{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.worldline-head h2,.fork-modal h2{color:#ffffff!important}
+.worldline-head p,.fork-modal p{color:#9aa3b2!important}
+/* 分歧弹窗的两张对比卡：深色主题下不能再保留浅底浅字 */
+.fork-modal .fork-compare .old{background:#262d36!important;color:#c9d1dc!important;border:1px solid #39424e!important}
+.fork-modal .fork-compare .new{background:#2d241f!important;color:#ffd98a!important;border:1px solid #5c4632!important}
+.fork-modal .fork-compare b{color:#ffffff!important}
+.fork-modal .fork-compare .old p{color:#aeb7c4!important}
+.fork-modal .fork-compare .new p{color:#f0dcb2!important}
+.fork-modal small{color:#d3a66f!important}
+.next-beat{background:linear-gradient(135deg,#1b2028,#151a21)!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.next-beat i{background:#252c36!important;color:#ffd23f!important}
+.next-beat small,.next-beat p{color:#9aa3b2!important}
+.injury-mini{background:#2a1a1c!important;border-color:#5a2f35!important;color:#ff9aa0!important}
+.injury-mini b{color:#ff8a8f!important}
+.v26-team-card{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v27-story-card,.v27-story-header{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v27-story-card h2,.v27-story-header h2{color:#ffffff!important}
+.v28-perks,.v28-story-live,.v28-chapters{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v28-story-head,.v28-story-intro{background:linear-gradient(145deg,#1b2028,#151a21)!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v28-story-head .v28-cast{background:#252c36!important;color:#ffd23f!important}
+.v28-branch-status small{color:#9aa3b2!important}
+.v28-branch-status b{color:#e8ecf1!important}
+.v211-season-story{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v218-mvp{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v218-title-overlay{background:rgba(5,8,12,.82)!important;color:#e8ecf1!important}
+.v220-ad-stack,.v221-ad-stack{background:transparent!important}
+.v129-search input{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+
+/* ---- 滚动条 ---- */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:#12151a}
+::-webkit-scrollbar-thumb{background:#2f3742;border-radius:3px}
+/* 长标题换行：闯进无人相信的NBA */
+.cover-title-v214 h1{flex-wrap:wrap!important;white-space:normal!important;font-size:40px!important;line-height:1.12!important;letter-spacing:-.04em!important}
+@media(max-width:370px){.cover-title-v214 h1{font-size:34px!important}}
+
+/* ---- 透明 PNG 图标/队徽：去掉白色方块底 ---- */
+.asset-slot.logo.has-img,
+.asset-slot.has-img.logo{background:transparent!important;border:0!important;border-radius:0!important;padding:0!important;min-height:0!important;box-shadow:none!important}
+.asset-slot.logo.has-img img,
+.asset-slot.has-img.logo img{background:transparent!important;border:0!important;border-radius:0!important;padding:0!important;object-fit:contain!important;box-shadow:none!important;filter:drop-shadow(0 2px 5px rgba(0,0,0,.45))}
+.v73-logo-wrap{background:transparent!important;border:0!important;box-shadow:none!important}
+.v73-logo{background:transparent!important;border:0!important;box-shadow:none!important;filter:drop-shadow(0 1px 2px rgba(0,0,0,.45))}
+.v73-logo-wrap > i{background:transparent!important}
+.v73-logo-miss{background:#2a313b!important;border:1px solid #2f3742!important;color:#ffd23f!important}
+/* ---- 荣誉陈列馆：深色卡片，图标直接融进背景 ---- */
+.v29-honor-tile{background:#212730!important;border-color:#2f3742!important}
+.v29-honor-tile .asset-slot{background:transparent!important;border:0!important;padding:0!important;min-height:0!important}
+.v29-honor-tile b{color:#e8ecf1!important}
+.v29-honor-tile span{color:#ffd23f!important}
+.v29-honor-item{background:#212730!important;border-color:#2f3742!important}
+.v29-honor-item b{color:#e8ecf1!important}
+.v29-honor-item span{color:#ffd23f!important}
+.v85-honor-icon{background:transparent!important;border:0!important;filter:drop-shadow(0 2px 4px rgba(0,0,0,.45))!important}
+.v85-honor-empty{color:#9aa3b2!important}
+.v29-honor-showcase .v85-honor-total{color:#9aa3b2!important}
+.v29-honor-showcase .v85-honor-total b{color:#ffd23f!important}
+
+/* ---- 残留米白底清理（原版浅色皮肤遗留） ---- */
+/* 首页封面容器与占位 */
+.cover-hero-v214{background:#0f1319!important;border-color:#2f3742!important;box-shadow:0 20px 55px rgba(0,0,0,.45)!important}
+.cover-hero-v214 .asset-slot{background:#0f1319!important;color:#6b7484!important}
+.cover-hero-v214 .asset-slot b,.cover-hero-v214 .asset-slot div,.cover-hero-v214 .asset-slot span{color:#6b7484!important}
+.cover-hero-caption{border:1px solid #2f3742!important;background:linear-gradient(180deg,rgba(10,13,18,.32),rgba(10,13,18,.92))!important}
+/* 选人页 / 球员页的标签 */
+.scenario-tags span{background:#2a313b!important;border:1px solid #3a4452!important;color:#c9d1dc!important}
+.scenario-tags em{background:#2a1f24!important;border:1px solid #4a2b34!important;color:#ff9ab8!important}
+.v76-group-head em{background:#2a313b!important;border:1px solid #3a4452!important;color:#ffd23f!important}
+/* 主线章节节点 */
+.chapters .chapter .node{background:#2a313b!important;border-color:#3a4452!important;color:#9aa3b2!important}
+.chapters .chapter.done .node{background:#1e3d2a!important;border-color:#2b5c3f!important;color:#8fe0a8!important}
+.chapters .chapter.current .node{background:#ffd23f!important;border-color:#ffd23f!important;color:#101318!important}
+/* 满意度 / 关系条轨道 */
+.mini-track{background:#2a313b!important}
+/* 常规赛 82 场豆子：胜/负/伤停必须有明确颜色，
+   否则会被 [class*="bar"] i 的蓝金渐变覆盖，玩家分不清胜负。 */
+.v26-beans .v26-bean.win{background:linear-gradient(145deg,#63e08e,#1fa55a)!important;box-shadow:inset 0 -2px rgba(0,0,0,.18),0 0 0 1px rgba(120,255,170,.18)!important}
+.v26-beans .v26-bean.loss{background:linear-gradient(145deg,#ff8178,#d62f45)!important;box-shadow:inset 0 -2px rgba(0,0,0,.18),0 0 0 1px rgba(255,130,130,.18)!important}
+.v26-beans .v26-bean.dnp{position:relative;filter:saturate(.8) brightness(.96);box-shadow:inset 0 -2px rgba(0,0,0,.18),0 0 0 1px rgba(0,0,0,.18)!important}
+.v26-beans .v26-bean.dnp::after{content:'';position:absolute;left:50%;top:50%;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;border-radius:50%;background:#d6dde8!important;box-shadow:0 0 0 1px rgba(16,20,26,.65)}
+.v26-bean.pending{background:#2a313b!important;box-shadow:inset 0 0 0 1px #3a4452!important}
+/* 弹窗顶部把手 */
+.sheet-handle{background:#3a4350!important}
+/* 云端排行提交提示 */
+.v82-submit-note{background:#212730!important;border-color:#2f3742!important;color:#9aa3b2!important}
+.v82-submit-note b,.v82-submit-note strong{color:#e8ecf1!important}
+/* 存档位选择 */
+.v82-slot,.v82-slot.empty{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v82-slot.has{background:#212730!important;border-color:#2f3742!important}
+.v82-slot b,.v82-slot strong{color:#ffffff!important}
+.v82-slot small,.v82-slot span{color:#9aa3b2!important}
+.v82-slot-tag{background:#2a313b!important;border:1px solid #3a4452!important;color:#ffd23f!important}
+.v82-slot-ico{background:transparent!important;border-color:#3a4452!important;color:#9aa3b2!important}
+.v82-pick-back,.v82-full-back{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+/* 存档模式标记：模拟明星 / 自建球员 */
+.v81-slot b .v82-slot-mode,.v82-slot b .v82-slot-mode{display:inline-block;margin-left:6px;padding:2px 7px;border-radius:999px;font-size:7.5px;font-style:normal;font-weight:800;line-height:1.4;vertical-align:2px;white-space:nowrap}
+.v82-slot-mode.star{background:#1d3a63!important;border:1px solid #2b4f80!important;color:#a9c8ff!important}
+.v82-slot-mode.custom{background:#3a2f14!important;border:1px solid #6b5420!important;color:#ffd23f!important}
+/* 全屏排行榜 */
+.v82-full{background:#12151a!important;color:#e8ecf1!important}
+.v82-full .v82-lb-row,.v82-full-mine{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v82-full h2,.v82-full b,.v82-full-mine b{color:#ffffff!important}
+.v82-full small,.v82-full span,.v82-full-mine small{color:#9aa3b2!important}
+/* 退役对比卡 */
+.v84-cmp{background:linear-gradient(158deg,#1b2028,#151a21)!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v84-cmp header b{color:#ffffff!important}
+.v84-cmp header small{color:#9aa3b2!important}
+.v84-cmp-row{border-top-color:#2f3742!important}
+.v84-cmp-row>small{color:#9aa3b2!important}
+.v84-cmp-real i,.v84-cmp-mine i{color:#6b7484!important}
+.v84-cmp-real b{color:#c9d1dc!important}
+.v84-cmp-mine b{color:#ffd23f!important}
+.v84-cmp-note{background:#212730!important;border-color:#2f3742!important;color:#9aa3b2!important}
+.v84-real-ending{color:#9aa3b2!important}
+.v84-tier{background:#2a313b!important;color:#ffd23f!important;border:1px solid #3a4452!important}
+.v84-tier.far-above,.v84-tier.above{background:#1e3d2a!important;color:#8fe0a8!important}
+.v84-tier.same{background:#212730!important;color:#c9d1dc!important}
+.v84-tier.below{background:#3a2327!important;color:#ff9a9a!important}
+.v84-top-retire b{color:#ffffff!important}
+.v84-top-retire span{color:#9aa3b2!important}
+/* 国家队赛事弹窗 */
+.v66-overlay{background:rgba(5,8,12,.82)!important}
+.v66-modal{background:#151a21!important;border-color:#2f3742!important;color:#e8ecf1!important;box-shadow:0 22px 60px rgba(0,0,0,.55)!important}
+.v66-head{background:linear-gradient(135deg,#1b2028,#151a21)!important;border-bottom-color:#2f3742!important}
+.v66-title{color:#ffffff!important}
+.v66-sub{color:#9aa3b2!important}
+.v66-close{background:#212730!important;color:#c9d1dc!important}
+.v66-card{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v66-card.gold{background:linear-gradient(135deg,#1f2530,#191e26)!important;border-color:#4a3d22!important}
+.v66-kicker{color:#ffd23f!important}
+.v66-card-title{color:#ffffff!important}
+.v66-muted{color:#9aa3b2!important}
+.v66-chip{background:#212730!important;border-color:#2f3742!important;color:#c9d1dc!important}
+.v66-chip.me{border-color:#ffd23f66!important;color:#ffd23f!important}
+.v66-rating{color:#ffd23f!important}
+.v66-progress{background:#2a313b!important}
+.v66-game,.v66-match,.v66-entry,.v66-rcard,.v66-recap{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v66-rcard.v66-blow{background:linear-gradient(135deg,#1f2530,#191e26)!important;border-color:#4a3d22!important}
+.v66-score{color:#ffffff!important}
+.v66-stat{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v66-stat span{color:#9aa3b2!important}
+.v66-actions button.ghost{background:#212730!important;color:#c9d1dc!important;border-color:#2f3742!important}
+.v66-progcard{background:linear-gradient(135deg,#1f2530,#191e26)!important;border-color:#4a3d22!important}
+.v66-prognum b,.v66-match-stage,.v66-rmark{color:#ffd23f!important}
+.v66-prognum span,.v66-progmeta{color:#9aa3b2!important}
+.v66-rcard b,.v66-side b{color:#ffffff!important}
+.v66-rcard small{color:#9aa3b2!important}
+.v66-vs{color:#6b7484!important}
+.v66-track i{background:#212730!important;color:#9aa3b2!important}
+.v66-track i.done{background:#1e3d2a!important;color:#8fe0a8!important}
+.v66-track i.active{background:linear-gradient(135deg,#e08b2e,#f0b954)!important;color:#101318!important}
+.v66-result-main{color:#ffd23f!important}
+/* 其他原版浅色卡片 */
+.award-row{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.award-row b{color:#ffffff!important}
+.award-row span,.award-row small{color:#9aa3b2!important}
+.v67-mvp-bar{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v67-mvp-bar b{color:#ffffff!important}
+.v67-mvp-bar span,.v67-mvp-bar small{color:#9aa3b2!important}
+.v45-series-tab{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v45-series-tab b{color:#ffffff!important}
+.v45-series-tab span{color:#9aa3b2!important}
+.v81-slot{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v81-slot b{color:#ffffff!important}
+.v81-slot span,.v81-slot small{color:#9aa3b2!important}
+.v81-slot-del{background:#212730!important;border-color:#2f3742!important;color:#9aa3b2!important}
+.v34-me-line{background:#212730!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v28-branch-status>div{background:#212730!important;border-color:#2f3742!important}
+.v28-history{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v28-history h3,.v28-history b{color:#ffffff!important}
+.v28-history small,.v28-history p{color:#9aa3b2!important}
+.v28-history>div{border-top-color:#2f3742!important}
+.v30-ending-meta span{background:#212730!important;border:1px solid #2f3742!important;color:#c9d1dc!important}
+.v221-declined{background:#2a1f24!important;border-color:#4a2b34!important;color:#ff9a9a!important}
+/* 旧版世界赛页（v66 之前） */
+.v65-world{background:linear-gradient(160deg,#1b2028,#151a21)!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v65-world header small{color:#ffd23f!important}
+.v65-world header h2{color:#ffffff!important}
+.v65-world header p{color:#9aa3b2!important}
+.v65-roster,.v65-record>div,.v65-game{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v65-roster b,.v65-game>b{color:#ffffff!important}
+.v65-roster span,.v65-game>span,.v65-game>p{color:#9aa3b2!important}
+.v65-record b{color:#ffd23f!important}
+.v65-record span{color:#9aa3b2!important}
+.v65-final{background:#1c2129!important;border:1px solid #2f3742!important}
+.v65-final b{color:#ffd23f!important}
+/* 动态标签 */
+.wire-tag{background:#3a4350!important;color:#e8ecf1!important}
+.wire-item.team .wire-tag{background:#2f3742!important;color:#c9d1dc!important}
+.wire-item.game .wire-tag{background:#1d3a63!important;color:#a9c8ff!important}
+.wire-item.season .wire-tag{background:#1e3d2a!important;color:#8fe0a8!important}
+/* 附加赛队徽底板：去掉白色方块 */
+.v79-crest{background:transparent!important;border:0!important;box-shadow:none!important}
+.v79-side b{color:#e8ecf1!important}
+.v79-side small{color:#9aa3b2!important}
+.v79-vs{border-top-color:#2f3742!important}

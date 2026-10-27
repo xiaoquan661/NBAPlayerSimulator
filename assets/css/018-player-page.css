@@ -1,0 +1,45 @@
+/* ============================================================
+ * 自建球员页：用「我」代替存档球员 + 与专精页一致的属性条
+ * 蓝条 = 当前能力 / 110，黄色竖线 = 潜力线
+ * ============================================================ */
+.profile-grid.no-portrait{display:none!important}
+.profile-grid .me-portrait{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:150px;height:100%;border-radius:20px;background:linear-gradient(145deg,#1b2028,#151a21)!important;border:1px solid #2f3742!important;box-shadow:inset 0 0 0 1px #ffffff08}
+.profile-grid .me-portrait .me-word{font-size:54px;line-height:1;color:#ffd23f!important;font-weight:900;letter-spacing:2px}
+.profile-grid .me-portrait small{display:block;margin-top:9px;font-size:8px;letter-spacing:3px;color:#9aa3b2!important}
+.profile-copy .me-desc{color:#9aa3b2!important}
+.me-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:9.5px;color:#9aa3b2!important;margin:12px 0 4px}
+.me-legend span{display:flex;align-items:center;gap:5px;color:#9aa3b2!important}
+.me-legend i{display:inline-block;width:10px;height:4px;border-radius:2px;background:#4d8dff}
+.me-legend i.me-lg-pot{width:3px;height:12px;background:#ffd23f;border-radius:2px;box-shadow:0 0 6px #ffd23f99}
+.me-attr-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px;margin-top:6px!important}
+.me-attr-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:5px}
+.me-attr .me-n{font-size:11px;color:#9aa3b2!important}
+.me-attr .me-v{font-size:15px;color:#ffffff!important;font-weight:900;white-space:nowrap}
+.me-attr .me-v small{font-size:9px;color:#6b7484!important;font-weight:600}
+.me-track{position:relative;height:12px;border-radius:7px;background:#212730!important;border:1px solid #2f3742!important;overflow:hidden}
+.me-track .me-fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#2d5be3cc,#4d8dff);z-index:2;transition:width .3s}
+.me-track .me-pot{position:absolute;top:-3px;bottom:-3px;width:3px;background:#ffd23f;border-radius:2px;z-index:4;box-shadow:0 0 6px #ffd23f99}
+.me-attr-foot{display:flex;justify-content:space-between;gap:8px;margin-top:4px;font-size:8.5px}
+.me-attr-foot span{color:#6b7484!important}
+@media(max-width:360px){.me-attr-grid{grid-template-columns:1fr}}
+
+/* ---- 球员页成长加点 ---- */
+.growth-panel{margin-top:14px;padding:14px 13px 13px;border-radius:20px;background:#1c2129!important;border:1px solid #2f3742!important}
+.growth-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
+.growth-head small{display:block;font-size:8px;letter-spacing:2px;color:#4d8dff!important;font-weight:800}
+.growth-head h3{margin:3px 0 0;font-size:17px;line-height:1.2;color:#ffffff!important}
+.growth-pts{flex:none;text-align:right;line-height:1.1}
+.growth-pts b{display:block;font-size:24px;color:#ffd23f!important;font-weight:900}
+.growth-pts span{display:block;margin-top:3px;font-size:8.5px;color:#9aa3b2!important}
+.growth-note{margin:0 0 10px;font-size:11px;line-height:1.65;color:#9aa3b2!important}
+.growth-panel .add-grid{margin-top:0!important}
+.growth-panel .v63-ad-points{margin-top:10px!important}
+.growth-panel .add-btn b{color:#ffffff!important}
+.growth-panel .add-btn:disabled{opacity:.45}
+@media(max-width:360px){.growth-panel{padding:12px 11px 11px}.growth-pts b{font-size:21px}}
+
+/* 赛季页上的加点指引 */
+.growth-hint{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:12px 0 0;padding:11px 12px;border-radius:14px;background:#212730!important;border:1px solid #2f3742!important;font-size:11.5px;color:#c9d1dc!important}
+.growth-hint b{color:#ffd23f!important;font-size:15px}
+.growth-hint button{flex:none;border:1px solid #ffd23f66!important;border-radius:999px;background:#ffd23f18!important;color:#ffd23f!important;font-size:10.5px;font-weight:800;padding:7px 11px;cursor:pointer;font-family:inherit}
+.growth-hint + .off-next{margin-top:10px}

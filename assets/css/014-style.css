@@ -1,0 +1,34 @@
+
+/* Cover rebuilt as a game poster, not a dev/version card */
+.case-cover.v212-cover{background:
+ radial-gradient(circle at 82% 12%,rgba(240,87,66,.17),transparent 30%),
+ radial-gradient(circle at 12% 34%,rgba(244,181,73,.13),transparent 28%),
+ linear-gradient(180deg,#fffaf0 0%,#fff4e5 52%,#f7ead8 100%);padding:16px 16px 26px;min-height:100dvh;overflow:hidden;position:relative}
+.case-cover.v212-cover:before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 0 42%,rgba(255,255,255,.6) 43%,transparent 44%);pointer-events:none;opacity:.38}
+.v212-cover .game-cover-head{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2;margin-bottom:10px}
+.v212-cover .game-cover-head .eyebrow{font-size:9.5px;font-weight:1000;letter-spacing:.18em;color:#b76945}
+.v212-cover .game-cover-head .edition{font-size:8.5px;font-weight:900;color:#9a7b65;background:rgba(255,255,255,.82);padding:6px 9px;border:1px solid #ead7c4;border-radius:999px}
+.v212-cover .game-logo-wrap{position:relative;z-index:4;margin:2px 0 12px;text-align:center}
+.v212-cover .game-logo{white-space:nowrap;margin:0;font-size:43px;line-height:1;font-weight:1000;letter-spacing:-.075em;font-family:"Microsoft YaHei","PingFang SC",sans-serif;position:relative;display:inline-block;padding:7px 4px 12px;color:transparent;background:linear-gradient(180deg,#ff6b50 0%,#d93e38 47%,#8f2328 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-stroke:1px rgba(120,31,34,.08);filter:drop-shadow(0 3px 0 rgba(255,255,255,.95)) drop-shadow(0 8px 16px rgba(167,61,47,.16))}
+.v212-cover .game-logo:after{content:"";position:absolute;left:9%;right:8%;bottom:2px;height:5px;border-radius:999px;background:linear-gradient(90deg,transparent,#e44a3d 16%,#efad45 58%,#e44a3d 84%,transparent);box-shadow:0 3px 10px rgba(216,79,55,.24)}
+.v212-cover .game-logo .gold{color:transparent;background:linear-gradient(180deg,#ffcf72 0%,#d8902e 54%,#a65124 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-stroke:0}
+.v212-cover .game-tagline{margin:0 auto 15px;max-width:320px;text-align:center;font-size:12.5px;line-height:1.7;color:#705f54}
+.v212-cover .game-tagline b{color:#a72f31}
+.v212-cover .cover-poster{position:relative;z-index:2;border-radius:28px;padding:10px;background:linear-gradient(145deg,#fff,#f4dcc1);border:1px solid #ead3bc;box-shadow:0 20px 50px rgba(102,70,47,.12);overflow:hidden}
+.v212-cover .cover-poster .asset-slot{height:292px;border:1px dashed rgba(173,109,74,.3);background:linear-gradient(145deg,rgba(255,255,255,.55),rgba(250,230,210,.42))}
+.v212-cover .poster-footer{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:8px}
+.v212-cover .poster-footer span{font-size:8.5px;text-align:center;padding:7px 2px;border-radius:10px;background:rgba(255,255,255,.72);color:#876d5c;border:1px solid rgba(226,204,184,.72);font-weight:900}
+.v212-cover .cover-promise{position:relative;z-index:2;display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:10px 0}
+.v212-cover .cover-promise div{background:rgba(255,255,255,.78);border:1px solid #eadccc;border-radius:15px;padding:9px 7px;text-align:center;box-shadow:0 6px 14px rgba(107,77,54,.05)}
+.v212-cover .cover-promise b{display:block;font-size:11.5px;color:#9d3431}.v212-cover .cover-promise span{display:block;font-size:7.5px;color:#907969;margin-top:3px;line-height:1.4}
+.v212-cover .case-actions{position:relative;z-index:3;margin-top:8px;display:grid;gap:8px}
+.v212-cover .case-actions .primary{font-size:14.5px;min-height:50px;background:linear-gradient(135deg,#e65043,#b92f36);box-shadow:0 14px 28px rgba(191,50,51,.22)}
+.v212-cover .case-actions .secondary{background:#fff8ef}
+/* Cleaner placeholder: neutral, immersive, no production instructions */
+.asset-slot.v212-asset{display:flex;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden}
+.asset-slot.v212-asset:before{content:"";position:absolute;width:70px;height:70px;border-radius:50%;border:1px solid rgba(179,126,91,.16);box-shadow:0 0 0 22px rgba(179,126,91,.04)}
+.asset-slot.v212-asset>div{position:relative;z-index:1;max-width:86%;font-size:8.5px;color:#aa8971;letter-spacing:.05em}
+.asset-slot.v212-asset b{display:block;font-size:10.5px;color:#8d6955;margin-bottom:3px}
+/* Tone down technical labels globally */
+.v212-natural-copy small{letter-spacing:.06em}
+@media(max-width:370px){.v212-cover .game-logo{font-size:38px}.v212-cover .cover-poster .asset-slot{height:270px}}

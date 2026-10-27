@@ -1,0 +1,26 @@
+# Build artifacts
+/preview.html
+/preview.html.gz
+/*.zip
+
+# Local backups
+/_backup/
+
+# Local-only tunnel binary / logs
+/tools/cloudflared.exe
+/tools/*.log
+/tools/cf.pid
+
+# Secrets / local platform config
+/.lamps/
+/.agents/
+*.pem
+*.key
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temp
+/_converted/

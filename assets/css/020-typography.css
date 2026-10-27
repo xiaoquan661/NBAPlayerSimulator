@@ -1,0 +1,404 @@
+/* ============================================================
+ * 020 · 全局字号与排版放大
+ * 目标：整体从“手机小字”调到“正常可读”，优先保证正文和事件弹窗。
+ * 说明：原工程大量字号写在 JS 注入样式里，这里用 .app 前缀 + !important
+ *       稳定覆盖；只调字号/行高/必要内边距，不改颜色和主要布局宽度。
+ * ============================================================ */
+
+html { -webkit-text-size-adjust: 100%; }
+
+body,
+.app {
+  font-size: 14px !important;
+  line-height: 1.55;
+}
+
+.app p {
+  font-size: 13.2px !important;
+  line-height: 1.72 !important;
+}
+
+.app small {
+  font-size: 10.5px !important;
+  line-height: 1.45 !important;
+}
+
+.app .tiny {
+  font-size: 10px !important;
+  line-height: 1.55 !important;
+}
+
+/* ---------- 捏人 / 球探报告 ---------- */
+
+.app .creator-top { gap: 4px !important; }
+.app .creator-top strong {
+  font-size: 13.5px !important;
+  letter-spacing: .5px !important;
+  white-space: nowrap !important;
+}
+.app .creator-top > span { width: 36px !important; }
+.app .creator-hero h2 { font-size: 26px !important; }
+.app .creator-hero p,
+.app .creator-wrap p { font-size: 13.5px !important; line-height: 1.75 !important; }
+.app .v183-progress > div { font-size: 10px !important; line-height: 1.3 !important; }
+.app .v183-progress .n { font-size: 10px !important; }
+.app .v181-scout-top h2 { font-size: 27px !important; }
+.app .v181-scout-top p { font-size: 13px !important; line-height: 1.65 !important; }
+.app .v181-scout-top small { font-size: 10px !important; }
+.app .v181-chips span { font-size: 11px !important; }
+.app .v181-grade small { font-size: 10.5px !important; }
+.app .v181-grade b { font-size: 20px !important; }
+.app .v181-grade em { font-size: 10px !important; }
+.app .v181-block-head h3 { font-size: 12px !important; }
+.app .v181-block-head span { font-size: 10px !important; }
+.app .v181-pick b { font-size: 15px !important; }
+.app .v181-pick span { font-size: 10px !important; line-height: 1.5 !important; }
+.app .v181-tags span { font-size: 11px !important; }
+.app .v181-attr-top { font-size: 12px !important; }
+.app .v181-attr-top b { font-size: 13px !important; }
+.app .v181-attr-top em { font-size: 10.5px !important; }
+.app .v181-note { font-size: 11.5px !important; line-height: 1.7 !important; }
+.app .v181-sign { font-size: 10px !important; line-height: 1.65 !important; }
+.app .v181-stamp small { font-size: 8.5px !important; }
+.app .v182-sec-head b { font-size: 15px !important; }
+.app .v182-sec-head p { font-size: 11.5px !important; line-height: 1.65 !important; }
+.app .v182-sec-head em { font-size: 10.5px !important; }
+.app .v183-detail { font-size: 12px !important; line-height: 1.7 !important; }
+.app .creator-card .ck { font-size: 11px !important; padding: 3px 8px !important; }
+.app .creator-card h3 { font-size: 17px !important; }
+.app .creator-card p { font-size: 12.5px !important; line-height: 1.7 !important; }
+.app .creator-card.sel {
+  border-color: #ffd23f !important;
+  background: linear-gradient(135deg, #2b2820, #1c2129 70%) !important;
+  box-shadow: 0 0 0 1px #ffd23f88 inset, 0 8px 22px rgba(255, 210, 63, .1) !important;
+}
+.app .creator-card.sel .ck {
+  background: #ffd23f !important;
+  border-color: #ffd23f !important;
+  color: #171c23 !important;
+}
+.app .creator-card.sel .cnum { color: #ffd23f26 !important; }
+.app .creator-card.sel::after {
+  content: "✓";
+  position: absolute;
+  right: 16px;
+  bottom: 8px;
+  font-size: 20px;
+  line-height: 1;
+  font-weight: 900;
+  color: #ffd23f;
+}
+.app .cvals {
+  font-size: 11.5px !important;
+  line-height: 1.6 !important;
+  white-space: normal !important;
+  overflow: visible !important;
+}
+.app .v182-locked { font-size: 12px !important; line-height: 1.7 !important; }
+.app .v183-choice { min-height: 40px !important; padding: 8px 5px !important; }
+.app .v183-choice b { font-size: 11px !important; line-height: 1.3 !important; }
+.app .v183-opt { min-height: 48px !important; padding: 10px 11px !important; }
+.app .v183-opt b { font-size: 12.5px !important; line-height: 1.4 !important; }
+.app .v183-opt span { font-size: 10.5px !important; line-height: 1.45 !important; }
+.app .v183-opt em { font-size: 10px !important; }
+.app .v184-sec-head b { font-size: 12px !important; }
+.app .v184-sec-head span { font-size: 10.5px !important; }
+.app .v184-talent { min-height: 80px !important; padding: 10px 11px !important; }
+.app .v184-talent small { font-size: 10px !important; }
+.app .v184-talent b { font-size: 13px !important; line-height: 1.3 !important; }
+.app .v184-talent span { font-size: 10.5px !important; line-height: 1.5 !important; }
+.app .v184-talent em { font-size: 10px !important; }
+.app .v184-talent-bar button { font-size: 11.5px !important; }
+.app .v184-origin-card { padding: 13px !important; }
+.app .v184-origin-card small { font-size: 9.5px !important; letter-spacing: 1.5px !important; }
+.app .v184-origin-card b { font-size: 14px !important; line-height: 1.4 !important; }
+.app .v184-origin-card p { font-size: 11.5px !important; line-height: 1.65 !important; }
+.app .v184-origin-card em {
+  display: block;
+  margin-top: 4px;
+  font-size: 10.5px !important;
+  line-height: 1.6 !important;
+  font-style: normal;
+  color: #d3a66f !important;
+}
+.app .v184-origin-card button { font-size: 11.5px !important; padding: 10px !important; }
+.app .origin-roll-card > p { font-size: 13.5px !important; }
+.app .origin-traits small { font-size: 10.5px !important; }
+.app .origin-traits span { font-size: 12px !important; line-height: 1.6 !important; }
+.app .creator-pot-note { font-size: 11.5px !important; line-height: 1.65 !important; }
+
+/* ---------- 明星选人 ---------- */
+
+.app .v76-group-head { flex-wrap: wrap !important; row-gap: 2px !important; }
+.app .v76-group-head b { font-size: 15px !important; }
+.app .v76-group-head span { font-size: 11px !important; line-height: 1.5 !important; }
+.app .v76-group-head em { font-size: 10.5px !important; }
+.app .scenario-card .meta { font-size: 10.5px !important; line-height: 1.4 !important; }
+.app .scenario-card h3 { font-size: 19px !important; line-height: 1.3 !important; }
+.app .scenario-card h3 span { font-size: 19px !important; }
+.app .scenario-card p { font-size: 12px !important; line-height: 1.6 !important; }
+.app .scenario-card p b { font-size: 13px !important; }
+.app .scenario-tags span { font-size: 10px !important; padding: 4px 7px !important; line-height: 1.3 !important; }
+.app .scenario-ovr small { font-size: 10px !important; }
+.app .v164-new-badge { font-size: 10px !important; }
+
+/* ---------- 顶部 HUD / 底部导航 ---------- */
+
+.app .career-hud small { font-size: 10px !important; }
+.app .career-hud h2 { font-size: 20px !important; }
+.app .career-hud h2 span { font-size: 11.5px !important; }
+.app .hud-meta span { font-size: 10px !important; letter-spacing: 0 !important; }
+.app .age-badge span { font-size: 10px !important; }
+.app .age-badge b { font-size: 18px !important; }
+.app .ovr-orb span { font-size: 10px !important; }
+.app .ovr-orb b { font-size: 23px !important; }
+.app .v84-hud-retire { font-size: 10px !important; }
+.app .season-brief-copy small { font-size: 10.5px !important; }
+.app .season-brief-score span { font-size: 10px !important; }
+.app .rel-pill span { font-size: 10.5px !important; }
+.app .rel-pill b { font-size: 15px !important; }
+/* 三列关系卡在窄屏放不下「标签 + 数字」同一行：改成上下两行，避免省略号截断。 */
+.app .rel-pill header {
+  display: block !important;
+  text-align: left !important;
+}
+.app .rel-pill header span {
+  display: block !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  line-height: 1.25 !important;
+}
+.app .rel-pill header b {
+  display: block !important;
+  margin-top: 2px !important;
+  line-height: 1.15 !important;
+}
+.app .v169-hidden-stats small { font-size: 10.5px !important; }
+.app .v169-hidden-stats b { font-size: 15px !important; }
+.app .dock { height: 76px !important; }
+.app .dock button {
+  font-size: 10.5px !important;
+  letter-spacing: -0.2px !important;
+  white-space: nowrap !important;
+}
+.app .dock i { font-size: 21px !important; line-height: 24px !important; }
+.app.career, .career { padding-bottom: 120px !important; }
+
+/* ---------- 赛季页 ---------- */
+
+.app .v130-strip small { font-size: 10.5px !important; }
+.app .v130-strip b { font-size: 14px !important; line-height: 1.4 !important; }
+.app .v130-strip span { font-size: 11px !important; }
+.app .v130-history-link { font-size: 13px !important; }
+.app .v130-history-link span { font-size: 11.5px !important; }
+.app .v52-usage { font-size: 11px !important; line-height: 1.55 !important; }
+
+.app .v26-bean-head {
+  flex-wrap: wrap !important;
+  align-items: flex-start !important;
+  gap: 3px !important;
+}
+.app .v26-bean-head b { font-size: 13px !important; white-space: nowrap !important; }
+.app .v26-bean-head span {
+  flex: 1 0 100% !important;
+  font-size: 10px !important;
+  line-height: 1.45 !important;
+  text-align: left !important;
+}
+.app .functional-node b { font-size: 10.5px !important; }
+.app .functional-node span { font-size: 9.5px !important; }
+.app .v168-simleft { font-size: 10px !important; }
+.app .v26-statbox header b { font-size: 13.5px !important; }
+.app .v26-statbox header span { font-size: 10.5px !important; }
+.app .v26-big3 b { font-size: 24px !important; }
+.app .v26-big3 span { font-size: 9.5px !important; }
+.app .v26-detail-grid b { font-size: 13px !important; }
+.app .v26-detail-grid span { font-size: 9.5px !important; line-height: 1.35 !important; }
+.app .v26-season-totals b { font-size: 13px !important; }
+.app .v26-season-totals span { font-size: 10px !important; }
+.app .v26-game-top span { font-size: 10px !important; }
+.app .v26-game-top b { font-size: 18px !important; }
+.app .v26-game-line strong { font-size: 13px !important; }
+.app .v26-game-line small { font-size: 10px !important; line-height: 1.45 !important; }
+.app .news-stage h3 { font-size: 14px !important; }
+.app .news-stage small { font-size: 9.5px !important; }
+.app .headline p { font-size: 12.5px !important; line-height: 1.65 !important; }
+.app .headline p b { font-size: 13.5px !important; }
+.app .v221-simctl .go { font-size: 14px !important; }
+.app .v221-simctl .speed-fixed b { font-size: 15px !important; }
+.app .v221-simctl .speed-fixed span { font-size: 9px !important; }
+.app .v26-rank-mini b { font-size: 11px !important; }
+.app .v26-rank-mini span { font-size: 10px !important; }
+.app .v73-logo-wrap i { font-size: 8px !important; }
+.app .v130-option small { font-size: 11.5px !important; line-height: 1.5 !important; }
+
+/* ---------- 生涯播报 ---------- */
+
+.app .wire-season-head small { font-size: 10px !important; }
+.app .wire-season-head b { font-size: 21px !important; }
+.app .wire-season-head > span { font-size: 11px !important; line-height: 1.5 !important; }
+.app .wire-item p { font-size: 13px !important; line-height: 1.7 !important; }
+.app .wire-item small { font-size: 10px !important; }
+.app .wire-tag { font-size: 10px !important; }
+
+/* ---------- 球员页 ---------- */
+
+.app .profile-copy p { font-size: 12.5px !important; line-height: 1.65 !important; }
+.app .v26-live-talents header span { font-size: 10.5px !important; line-height: 1.5 !important; }
+.app .v26-live-talent small { font-size: 10px !important; }
+.app .v26-live-talent b { font-size: 12.5px !important; }
+.app .v26-live-talent span { font-size: 11px !important; line-height: 1.5 !important; }
+.app .attr header { font-size: 10px !important; }
+.app .attr header b { font-size: 13px !important; }
+.app .chapter strong { font-size: 12px !important; }
+.app .chapter p { font-size: 10px !important; line-height: 1.55 !important; }
+
+/* ---------- 事件弹窗 ---------- */
+
+.app .v167-top small { font-size: 10px !important; }
+.app .v167-top h2 { font-size: 25px !important; line-height: 1.35 !important; }
+.app .v167-top > span { font-size: 11px !important; }
+.app .v167-scene { font-size: 10.5px !important; }
+.app .v167-cast span { font-size: 10.5px !important; }
+.app .v167-speaker { font-size: 12px !important; }
+.app .v167-lens { padding: 11px 13px !important; }
+.app .v167-lens-tags span { font-size: 9.5px !important; }
+.app .v167-lens p { font-size: 13px !important; line-height: 1.7 !important; }
+.app .v167-body { font-size: 14.5px !important; line-height: 1.85 !important; }
+.app .v167-stakes { padding: 12px 14px !important; }
+.app .v167-stakes b { font-size: 10px !important; }
+.app .v167-stakes span { font-size: 13px !important; line-height: 1.7 !important; }
+.app .v167-choice { padding: 14px 15px !important; }
+.app .v167-choice b { font-size: 14px !important; line-height: 1.5 !important; }
+.app .v167-choice span { font-size: 12.5px !important; line-height: 1.6 !important; }
+.app .v167-foot { font-size: 10px !important; }
+.app .v167-outcome h2 { font-size: 25px !important; }
+.app .v167-pick { font-size: 13px !important; }
+.app .v167-effect { font-size: 13px !important; line-height: 1.7 !important; }
+.app .v167-echo span { font-size: 12.5px !important; line-height: 1.65 !important; }
+.app .v167-echo em { font-size: 10px !important; }
+.app .v167-next { font-size: 11px !important; }
+.app .v167-continue { font-size: 14px !important; }
+
+/* ---------- 命运轨迹 / 三幕页 ---------- */
+
+.app .v167-story-head h2 { font-size: 28px !important; }
+.app .v167-story-head p { font-size: 13.5px !important; line-height: 1.75 !important; }
+.app .v167-destiny-card { padding: 16px !important; }
+.app .v167-destiny-card h3 { font-size: 18px !important; line-height: 1.45 !important; }
+.app .v167-destiny-card p { font-size: 13.5px !important; line-height: 1.8 !important; }
+.app .v167-destiny-card span { font-size: 10.5px !important; }
+.app .v167-main-act { padding: 15px !important; }
+.app .v167-main-act-top { flex-wrap: wrap !important; }
+.app .v167-main-act-top small { font-size: 10px !important; }
+.app .v167-main-act-top b { font-size: 17px !important; }
+.app .v167-main-act-top span { font-size: 9.5px !important; }
+.app .v167-main-act p { font-size: 13px !important; line-height: 1.7 !important; }
+.app .v167-main-act em { font-size: 11.5px !important; line-height: 1.6 !important; }
+.app .v167-origin-card b { font-size: 17px !important; }
+.app .v167-origin-card p { font-size: 12.5px !important; line-height: 1.7 !important; }
+.app .v167-origin-card span { font-size: 10.5px !important; }
+.app .v167-log h3 { font-size: 14px !important; }
+.app .v167-log-row b { font-size: 10.5px !important; }
+.app .v167-log-row span { font-size: 12.5px !important; line-height: 1.65 !important; }
+.app .v167-log-row em { font-size: 11px !important; }
+.app .v167-mainline-now h3 { font-size: 18px !important; }
+.app .v167-mainline-now p { font-size: 12.5px !important; line-height: 1.65 !important; }
+.app .v167-mainline-now .mainline-meta b { font-size: 11px !important; }
+.app .v167-epilogue > small { font-size: 10px !important; }
+.app .v167-epilogue .v167-act b { font-size: 13px !important; }
+.app .v167-epilogue .v167-act p { font-size: 13px !important; line-height: 1.75 !important; }
+.app .v167-origin-end b { font-size: 12px !important; }
+.app .v167-origin-end p { font-size: 12.5px !important; line-height: 1.7 !important; }
+.app .v167-origin-end em { font-size: 11.5px !important; }
+.app .v167-final { font-size: 13.5px !important; line-height: 1.8 !important; }
+.app .v167-destiny-final p { font-size: 13px !important; line-height: 1.75 !important; }
+
+/* ---------- 生涯档案 ---------- */
+
+.app .v29-honor-showcase header small { font-size: 10px !important; }
+.app .v29-honor-showcase header h2 { font-size: 21px !important; }
+.app .v85-honor-empty { font-size: 11.5px !important; line-height: 1.7 !important; }
+.app .v29-section { padding: 13px !important; }
+.app .v29-section > header h3 { font-size: 14.5px !important; }
+.app .v29-section > header span { font-size: 10.5px !important; line-height: 1.45 !important; }
+.app .v29-core-grid span { font-size: 10px !important; line-height: 1.35 !important; }
+.app .v29-core-grid b { font-size: 16px !important; }
+.app .v29-big3 span { font-size: 10.5px !important; line-height: 1.4 !important; }
+.app .v29-big3 b { font-size: 24px !important; }
+.app .v29-stat-grid span { font-size: 9.5px !important; line-height: 1.35 !important; }
+.app .v29-stat-grid b { font-size: 12px !important; }
+.app .v29-record span { font-size: 10px !important; line-height: 1.4 !important; }
+.app .v29-record b { font-size: 16px !important; }
+
+/* ---------- 退役结算 ---------- */
+
+.app .ending-kicker { font-size: 10px !important; }
+.app .ending-tag { font-size: 10.5px !important; }
+.app .ending-title { font-size: 25px !important; line-height: 1.4 !important; }
+.app .retired-card .ending-top p { font-size: 13.5px !important; line-height: 1.9 !important; }
+.app .ending-reflect { font-size: 12.5px !important; line-height: 1.8 !important; }
+.app .ending-reflect b { font-size: 10.5px !important; }
+.app .afterlife h3 { font-size: 16px !important; }
+.app .afterlife > p { font-size: 12.5px !important; line-height: 1.75 !important; }
+.app .afterlife-card b { font-size: 13px !important; }
+.app .afterlife-card span { font-size: 11px !important; line-height: 1.6 !important; }
+.app .afterlife-text p { font-size: 12.5px !important; line-height: 1.85 !important; }
+.app .ending-echo { font-size: 12px !important; line-height: 1.8 !important; }
+.app .vow-final blockquote { font-size: 17px !important; line-height: 1.55 !important; }
+.app .vow-final p { font-size: 12.5px !important; line-height: 1.85 !important; }
+.app .vow-final footer { font-size: 10.5px !important; }
+
+/* ---------- 休赛期 / 合同 ---------- */
+
+.app .off-hero h2 { font-size: 27px !important; }
+.app .off-hero p { font-size: 12.5px !important; line-height: 1.7 !important; }
+.app .agent-card h3 { font-size: 15px !important; }
+.app .agent-card p { font-size: 12px !important; line-height: 1.65 !important; }
+.app .contract-grid b { font-size: 13px !important; }
+.app .contract-grid span { font-size: 9.5px !important; }
+.app .offer strong { font-size: 13px !important; }
+.app .offer span { font-size: 10.5px !important; line-height: 1.5 !important; }
+.app .offer button { font-size: 11.5px !important; }
+.app .off-tabs button { font-size: 11px !important; }
+.app .add-btn span { font-size: 10px !important; }
+.app .add-btn b { font-size: 18px !important; }
+
+/* ---------- 历史地位榜单 ---------- */
+
+.app .v34-rank-card header small { font-size: 10px !important; }
+.app .v34-rank-card header h3 { font-size: 16px !important; }
+.app .v34-rank-card header span { font-size: 10px !important; }
+.app .v34-rk { font-size: 10px !important; }
+.app .v34-rn { font-size: 11.5px !important; }
+.app .v34-rt { font-size: 9px !important; }
+.app .v34-rs { font-size: 11.5px !important; }
+.app .v34-me-line b { font-size: 11.5px !important; }
+.app .v34-me-line span { font-size: 10px !important; line-height: 1.5 !important; }
+.app .v34-me-line em { font-size: 12.5px !important; }
+.app .v34-goat-note { font-size: 10.5px !important; line-height: 1.6 !important; }
+
+/* ---------- 通用按钮 / 标签 ---------- */
+
+.app .btn { font-size: 14px !important; }
+.app .choice b { font-size: 13px !important; line-height: 1.5 !important; }
+.app .choice span { font-size: 11.5px !important; line-height: 1.55 !important; }
+.app .choice em { font-size: 10px !important; }
+.app .stage-copy p { font-size: 13px !important; line-height: 1.7 !important; }
+.app .injury-card p { font-size: 12.5px !important; line-height: 1.7 !important; }
+.app .story-banner p { font-size: 12.5px !important; line-height: 1.7 !important; }
+.app .headline .stamp { font-size: 10px !important; }
+
+/* ---------- 小屏微调：只保行高，不缩字号 ---------- */
+
+@media (max-width: 370px) {
+  .app p { font-size: 13px !important; }
+  .app .v167-body { font-size: 14px !important; }
+  .app .v167-choice b { font-size: 13.5px !important; }
+  .app .v167-choice span { font-size: 12px !important; }
+  .app .v167-top h2,
+  .app .v167-outcome h2 { font-size: 23px !important; }
+  .app .v167-main-act-top b { font-size: 16px !important; }
+  .app .v167-destiny-card h3 { font-size: 17px !important; }
+}

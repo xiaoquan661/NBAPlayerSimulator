@@ -1,0 +1,358 @@
+﻿/* ============================================================
+ * 181 · 球馆夜场 Arena Night
+ * 深色底 + 球馆顶灯 + 木地板暗纹 + 球队 accent 色
+ * 只改视觉层，不改任何页面结构或数值。
+ * ============================================================ */
+
+body.v181-arena {
+  --v181-primary: #ffd23f;
+  --v181-primary-rgb: 255, 210, 63;
+  --v181-secondary: #4d8dff;
+  --v181-secondary-rgb: 77, 141, 255;
+  --v181-bg: #070b12;
+  --v181-bg2: #0b131d;
+  --v181-panel: #101a26;
+  --v181-panel2: #0b131d;
+  --v181-line: rgba(255, 255, 255, .09);
+  --v181-ink: #f2f6fb;
+  --v181-muted: #8d9bab;
+  background:
+    radial-gradient(1200px 720px at 50% -18%, rgba(var(--v181-primary-rgb), .20), transparent 62%),
+    radial-gradient(900px 640px at 88% 14%, rgba(var(--v181-secondary-rgb), .10), transparent 66%),
+    linear-gradient(180deg, #070b12 0%, #0b111b 46%, #070b12 100%) !important;
+  color: var(--v181-ink) !important;
+}
+
+html { background: #070b12 !important; }
+
+/* ---------- 球馆环境层 ---------- */
+.v181-arena-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.v181-arena-bg .v181-light {
+  position: absolute;
+  top: -18%;
+  width: 30%;
+  height: 78%;
+  background: linear-gradient(180deg, rgba(var(--v181-primary-rgb), .16), transparent 72%);
+  transform: rotate(18deg);
+  filter: blur(8px);
+  opacity: .85;
+}
+.v181-arena-bg .v181-light-b {
+  left: 52%;
+  width: 24%;
+  transform: rotate(-16deg);
+  background: linear-gradient(180deg, rgba(var(--v181-secondary-rgb), .13), transparent 70%);
+  opacity: .6;
+}
+.v181-arena-bg .v181-light-a { left: 18%; }
+.v181-arena-bg .v181-court {
+  position: absolute;
+  left: -12%;
+  right: -12%;
+  bottom: -20%;
+  height: 58%;
+  transform: perspective(680px) rotateX(63deg);
+  transform-origin: bottom center;
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, .030) 0 2px, transparent 2px 54px),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, .020) 0 1px, transparent 1px 20px),
+    linear-gradient(180deg, rgba(120, 82, 45, .10), rgba(12, 8, 5, .46));
+  border-top: 1px solid rgba(var(--v181-primary-rgb), .16);
+  opacity: .8;
+}
+.v181-arena-bg .v181-court:before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -28%;
+  width: 34%;
+  height: 120%;
+  transform: translateX(-50%);
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 50%;
+}
+.v181-arena-bg .v181-court:after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 4%;
+  width: 1px;
+  height: 78%;
+  background: rgba(255, 255, 255, .12);
+}
+.v181-arena-bg .v181-crowd {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 18%;
+  height: 26%;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, .085) 1px, transparent 1.6px);
+  background-size: 19px 15px;
+  opacity: .28;
+  mask-image: linear-gradient(180deg, transparent, #000 55%, transparent);
+}
+.v181-arena-bg .v181-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 38%, rgba(0, 0, 0, .55) 100%);
+}
+body.v181-arena #app { position: relative; z-index: 1; }
+
+/* ---------- 通用卡片：深蓝钢面 + 顶光 ---------- */
+body.v181-arena .pre,
+body.v181-arena .sheet,
+body.v181-arena .cockpit,
+body.v181-arena .season-arena,
+body.v181-arena .dash-card,
+body.v181-arena .wire-season,
+body.v181-arena .v167-story-view,
+body.v181-arena .v181-scout,
+body.v181-arena .v167-sheet,
+body.v181-arena .v167-outcome,
+body.v181-arena .agent-card,
+body.v181-arena .offer {
+  background:
+    linear-gradient(145deg, rgba(var(--v181-primary-rgb), .055) 0%, transparent 38%),
+    linear-gradient(145deg, #101a26 0%, #0b131d 58%, #091019 100%) !important;
+  border-color: rgba(255, 255, 255, .10) !important;
+  box-shadow:
+    0 18px 46px rgba(0, 0, 0, .38),
+    inset 0 1px 0 rgba(255, 255, 255, .07),
+    inset 0 2px 0 rgba(var(--v181-primary-rgb), .28) !important;
+}
+
+body.v181-arena .career-hud {
+  background:
+    linear-gradient(110deg, rgba(var(--v181-primary-rgb), .22), #0b131d 42%, #070b12 100%) !important;
+  border-bottom: 1px solid rgba(var(--v181-primary-rgb), .30) !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, .35) !important;
+}
+body.v181-arena .career-hud h2,
+body.v181-arena .career-hud h2 span { color: #ffffff !important; }
+body.v181-arena .career-hud small { color: #a8b7c8 !important; }
+body.v181-arena .career-hud .ovr-orb {
+  border-color: rgba(var(--v181-primary-rgb), .55) !important;
+  box-shadow: 0 0 0 4px rgba(var(--v181-primary-rgb), .08), 0 0 24px rgba(var(--v181-primary-rgb), .18) !important;
+}
+body.v181-arena .career-hud .ovr-orb b { color: #fff0b8 !important; }
+
+/* ---------- 赛季主视觉 ---------- */
+body.v181-arena .season-arena {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(760px 360px at 50% -18%, rgba(var(--v181-primary-rgb), .22), transparent 66%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, .025) 0 1px, transparent 1px 68px),
+    linear-gradient(155deg, #101a26 0%, #070b12 82%) !important;
+  border-color: rgba(var(--v181-primary-rgb), .22) !important;
+}
+body.v181-arena .season-arena .arena-head small,
+body.v181-arena .season-arena .mission-strip small { color: rgba(255, 235, 180, .82) !important; }
+body.v181-arena .stage-chip,
+body.v181-arena .v181-chips span,
+body.v181-arena .hud-meta span {
+  background: rgba(var(--v181-primary-rgb), .09) !important;
+  border-color: rgba(var(--v181-primary-rgb), .30) !important;
+  color: #ffe7a3 !important;
+}
+body.v181-arena .mission-strip {
+  background: linear-gradient(90deg, rgba(var(--v181-primary-rgb), .12), rgba(11, 19, 29, .86)) !important;
+  border-left: 3px solid rgba(var(--v181-primary-rgb), .75) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06) !important;
+}
+body.v181-arena .mission-strip .mission-icon {
+  background: var(--v181-primary) !important;
+  color: #101318 !important;
+  box-shadow: 0 0 18px rgba(var(--v181-primary-rgb), .28);
+}
+
+/* ---------- 数据卡 / 比分牌 ---------- */
+body.v181-arena .dash-card h3,
+body.v181-arena .wire-season-head b { color: #f5f8fc !important; }
+body.v181-arena .stat-line b,
+body.v181-arena .v181-grade b,
+body.v181-arena .fp-badge b,
+body.v181-arena .v130-history strong,
+body.v181-arena .v181-attr-top b {
+  color: #ffe08a !important;
+  text-shadow: 0 0 16px rgba(var(--v181-primary-rgb), .22);
+  font-variant-numeric: tabular-nums;
+}
+body.v181-arena .v181-grade,
+body.v181-arena .v181-pick,
+body.v181-arena .v181-template,
+body.v181-arena .wire-item,
+body.v181-arena .wire-empty,
+body.v181-arena .v181-note {
+  background: linear-gradient(145deg, #111c2a, #0a121b) !important;
+  border-color: rgba(255, 255, 255, .09) !important;
+}
+
+/* ---------- 进度条 / 技能条 ---------- */
+body.v181-arena .track i,
+body.v181-arena .mainline-progress i,
+body.v181-arena .v181-bar i,
+body.v181-arena .sk-track .fill,
+body.v181-arena .v181-chips span.on {
+  background: linear-gradient(90deg, var(--v181-primary), var(--v181-secondary)) !important;
+  box-shadow: 0 0 12px rgba(var(--v181-primary-rgb), .18) !important;
+}
+body.v181-arena .v181-bar u,
+body.v181-arena .pot {
+  background: #ffcf5a !important;
+  box-shadow: 0 0 7px rgba(255, 207, 90, .55) !important;
+}
+
+/* ---------- 按钮 ---------- */
+body.v181-arena .btn.primary,
+body.v181-arena .sim-main,
+body.v181-arena .v167-continue {
+  background: linear-gradient(135deg, #ffe066 0%, #ffbf2e 58%, #ff9d2e 100%) !important;
+  border-color: #ffcf5a !important;
+  color: #101318 !important;
+  box-shadow: 0 8px 24px rgba(255, 190, 46, .18) !important;
+}
+body.v181-arena .btn.secondary,
+body.v181-arena .v167-origin-btn,
+body.v181-arena .origin-reroll,
+body.v181-arena .v167-choice {
+  border-color: rgba(var(--v181-primary-rgb), .30) !important;
+  color: #ffe7a3 !important;
+}
+body.v181-arena .v167-choice:hover,
+body.v181-arena .v167-choice:focus-visible,
+body.v181-arena .v130-option.is-selected,
+body.v181-arena .v183-choice.on,
+body.v181-arena .v184-talent.on,
+body.v181-arena .creator-card.sel,
+body.v181-arena .scenario-card.selected {
+  border-color: rgba(var(--v181-primary-rgb), .72) !important;
+  background: linear-gradient(135deg, rgba(var(--v181-primary-rgb), .13), rgba(11, 19, 29, .92)) !important;
+  box-shadow: inset 3px 0 var(--v181-primary), inset 0 0 0 1px rgba(var(--v181-primary-rgb), .30) !important;
+}
+body.v181-arena .v130-option.is-selected .v130-radio {
+  border-color: var(--v181-primary) !important;
+  background: var(--v181-primary) !important;
+}
+body.v181-arena .v130-dialog {
+  background: linear-gradient(145deg, #101a26, #070b12) !important;
+  border-color: rgba(var(--v181-primary-rgb), .22) !important;
+}
+body.v181-arena .v130-dialog > header {
+  background:
+    radial-gradient(ellipse at top right, rgba(var(--v181-primary-rgb), .20), transparent 68%),
+    linear-gradient(135deg, #0f1b28, #070b12) !important;
+}
+body.v181-arena .v130-primary {
+  background: linear-gradient(135deg, #ffe066, #ffbf2e 58%, #ff9d2e) !important;
+  color: #101318 !important;
+}
+
+/* ---------- 事件卡：三种球馆材质 ---------- */
+body.v181-arena .v167-sheet.v181-material-prove {
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, .030) 0 1px, transparent 1px 34px),
+    radial-gradient(720px 340px at 50% -12%, rgba(var(--v181-primary-rgb), .18), transparent 66%),
+    linear-gradient(160deg, #111b24 0%, #080d13 78%) !important;
+  border-left: 3px solid rgba(var(--v181-primary-rgb), .62) !important;
+}
+body.v181-arena .v167-sheet.v181-material-become {
+  background:
+    radial-gradient(680px 340px at 82% -8%, rgba(255, 184, 92, .18), transparent 62%),
+    linear-gradient(150deg, #1b1712 0%, #0b0d12 72%) !important;
+  border-left: 3px solid rgba(255, 184, 92, .58) !important;
+}
+body.v181-arena .v167-sheet.v181-material-leave {
+  background:
+    radial-gradient(720px 360px at 50% -10%, rgba(var(--v181-secondary-rgb), .18), transparent 66%),
+    linear-gradient(180deg, #0b1420 0%, #070b12 78%) !important;
+  border-left: 3px solid rgba(var(--v181-secondary-rgb), .58) !important;
+}
+body.v181-arena .v167-top small,
+body.v181-arena .v167-scene,
+body.v181-arena .v167-echo em {
+  color: #ffe08a !important;
+}
+body.v181-arena .v167-overlay,
+body.v181-arena .v167-outcome .v167-kicker { color: #ffe08a !important; }
+body.v181-arena .v167-outcome {
+  background:
+    radial-gradient(560px 260px at 50% -10%, rgba(var(--v181-primary-rgb), .20), transparent 68%),
+    linear-gradient(145deg, #111b28, #070b12) !important;
+}
+
+/* ---------- 球探报告 / 选秀 ---------- */
+body.v181-arena .v181-scout-top {
+  background:
+    radial-gradient(680px 280px at 10% -20%, rgba(var(--v181-primary-rgb), .22), transparent 64%),
+    linear-gradient(135deg, #13202d, #091019 76%) !important;
+}
+body.v181-arena .v181-stamp {
+  border-color: var(--v181-primary) !important;
+  color: var(--v181-primary) !important;
+  background: rgba(var(--v181-primary-rgb), .07) !important;
+  box-shadow: 0 0 0 3px rgba(var(--v181-primary-rgb), .08) inset, 0 0 18px rgba(var(--v181-primary-rgb), .14) !important;
+}
+body.v181-arena .v181-stamp small { color: var(--v181-primary) !important; }
+body.v181-arena .v181-template { border-left-color: var(--v181-primary) !important; }
+body.v181-arena .v181-template b { color: #ffe08a !important; }
+
+/* ---------- 选秀夜：保持纯黑 ---------- */
+body.v181-arena .draft { background: #050608 !important; }
+body.v181-arena .draft-inner { background: transparent !important; }
+body.v181-arena .draft-text { color: #f4f8ff !important; text-shadow: none !important; }
+
+/* ---------- 首页 ---------- */
+body.v181-arena .cover-v214,
+body.v181-arena .cover {
+  background:
+    radial-gradient(900px 620px at 58% -12%, rgba(var(--v181-primary-rgb), .22), transparent 62%),
+    linear-gradient(180deg, #070b12 0%, #0b111b 58%, #070b12 100%) !important;
+}
+body.v181-arena .cover-hero-v214 { border-color: rgba(var(--v181-primary-rgb), .22) !important; }
+body.v181-arena .cover-topline i { background: linear-gradient(90deg, var(--v181-primary), transparent) !important; }
+body.v181-arena .cover-story-strip span {
+  background: rgba(var(--v181-primary-rgb), .07) !important;
+  border-color: rgba(var(--v181-primary-rgb), .22) !important;
+}
+
+/* ---------- 导航 / 页头 ---------- */
+body.v181-arena nav,
+body.v181-arena .bottom-nav,
+body.v181-arena .tabbar {
+  background: linear-gradient(180deg, rgba(7, 11, 18, .72), rgba(7, 11, 18, .96)) !important;
+  border-color: rgba(var(--v181-primary-rgb), .18) !important;
+  backdrop-filter: blur(12px);
+}
+body.v181-arena .creator-top,
+body.v181-arena .pre-top {
+  border-bottom: 1px solid rgba(var(--v181-primary-rgb), .18) !important;
+}
+
+/* ---------- 滚动条 ---------- */
+body.v181-arena ::-webkit-scrollbar { width: 7px; height: 7px; }
+body.v181-arena ::-webkit-scrollbar-track { background: #070b12; }
+body.v181-arena ::-webkit-scrollbar-thumb {
+  background: rgba(var(--v181-primary-rgb), .28);
+  border-radius: 8px;
+}
+
+/* ---------- 移动端 ---------- */
+@media (max-width: 430px) {
+  .v181-arena-bg .v181-light { opacity: .55; filter: blur(12px); }
+  .v181-arena-bg .v181-court { opacity: .55; }
+  body.v181-arena .season-arena {
+    background:
+      radial-gradient(480px 220px at 50% -18%, rgba(var(--v181-primary-rgb), .18), transparent 66%),
+      linear-gradient(155deg, #101a26 0%, #070b12 82%) !important;
+  }
+  body.v181-arena .career-hud {
+    background: linear-gradient(110deg, rgba(var(--v181-primary-rgb), .16), #0b131d 52%, #070b12) !important;
+  }
+}

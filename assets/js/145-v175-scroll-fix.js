@@ -1,0 +1,9 @@
+
+(function(){'use strict';
+function visible(selector){return Array.from(document.querySelectorAll(selector)).some(el=>el.getClientRects().length&&getComputedStyle(el).visibility!=='hidden');}
+window.v175SyncScroll=function(){if(!document.body)return;const any=visible('.overlay,.v130-overlay,.v135-overlay,#v173-notice-overlay,#v179-offseason-save,[role="dialog"][aria-modal="true"]');const cls=document.body.classList;const set=(name,on)=>cls[on?'add':'remove'](name);set('v130-dialog-open',visible('.v130-overlay'));set('v133-dialog-open',visible('.v133-overlay'));if(!any)cls.remove('v135-dialog-open');set('v173-notice-open',visible('#v173-notice-overlay'));set('v175-modal-open',any);set('v175-page-scroll',!any);if(!any&&document.body.style.overflow==='hidden')document.body.style.overflow='';};
+const old=render;render=function(){try{return old.apply(this,arguments)}finally{v175SyncScroll()}};
+let scheduled=false;const observer=new MutationObserver(()=>{if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;v175SyncScroll()})});observer.observe(document.body,{childList:true,subtree:true});
+window.addEventListener('pageshow',v175SyncScroll);document.addEventListener('visibilitychange',()=>{if(!document.hidden)v175SyncScroll()});
+const style=document.createElement('style');style.textContent='body.v175-page-scroll{overflow-y:auto!important}body.v175-modal-open{overflow:hidden}.career-main,.off-body{touch-action:pan-y}.v174-dialog{max-height:88dvh;overflow-y:auto;-webkit-overflow-scrolling:touch}.sheet,.v135-dialog,.v173-notice-body,.v133-content{touch-action:pan-y;-webkit-overflow-scrolling:touch}';document.head.appendChild(style);v175SyncScroll();
+})();
