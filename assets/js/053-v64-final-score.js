@@ -161,7 +161,7 @@ function v64HeightScore(peakOvr,seasons,games){
   var s=0;
   try{
     s+=clampNum((peakOvr-62)*0.26,0,9);            /* 峰值评分 */
-    s+=clampNum((seasons||0)*0.22,0,3.5);          /* 赛季数（生涯厚度） */
+    s+=clampNum((seasons||0)*0.25,0,3.5);          /* 赛季数（适配 12–15 赛季节奏） */
     s+=clampNum((games||0)/250,0,2.8);             /* 出场数 */
   }catch(e){}
   return s;

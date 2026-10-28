@@ -14,6 +14,10 @@ const skillAction=window.v135SkillAction;
 window.v135SkillAction=function(kind,attr){if(kind==='train'&&career?.playerId==='wiggins'){const reason=v168TrainingReason(attr);if(reason){notify(reason);return false;}}return skillAction.apply(this,arguments);};
 // A restored or interrupted result always has a durable escape route.
 const allStar=allStarView;
-allStarView=function(){return allStar.apply(this,arguments).replace('后半程即将自动开始','后半程即将开始；也可以点击下方按钮继续')+'<button class="btn primary" style="width:100%;margin-top:12px" onclick="v168ContinueAllStar()">继续后半程常规赛 →</button>';};
+allStarView=function(){
+ const h=allStar.apply(this,arguments).replace('后半程即将自动开始','后半程即将开始；也可以点击下方按钮继续');
+ /* 新版全明星页已经自带「继续后半程」按钮，只在旧版没有按钮时补一个，避免出现两个。 */
+ return /继续后半程|v221ResumeAllStar|v168ContinueAllStar/.test(h)?h:h+'<button class="btn primary" style="width:100%;margin-top:12px" onclick="v168ContinueAllStar()">继续后半程常规赛 →</button>';
+};
 window.v168ContinueAllStar=function(){if(!career||career.stage!=='allstar'||ui.modal||ui.storyEvent||ui.v130Popup)return false;resumeAllStar();return career.stage==='regular';};
 })();

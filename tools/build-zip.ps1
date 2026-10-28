@@ -28,7 +28,7 @@ finally {
   $fs.Dispose()
 }
 $size = [math]::Round((Get-Item -LiteralPath $zipPath).Length / 1MB, 2)
-$final = Join-Path $root '闯进无人相信的NBA-上传包.zip'
+$final = Join-Path $root '没人相信我打美职篮-上传包.zip'
 if (Test-Path -LiteralPath $final) { Remove-Item -LiteralPath $final -Force }
 Move-Item -LiteralPath $zipPath -Destination $final
 Write-Output ("zip=" + $final)

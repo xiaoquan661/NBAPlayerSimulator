@@ -11,10 +11,10 @@
 if(window.__v49CareerFix)return;window.__v49CareerFix=true;
 
 const V49={
-  /* 年龄退役：玩家放宽到 41~42 岁（比 AI 的 39 岁宽） */
-  AGE_ALERT:39,          /* 开始提示「退役倒计时」 */
-  AGE_FORCE:41,          /* 41 岁起：若状态不佳则退役 */
-  AGE_HARD:42,           /* 42 岁：无论状态如何都退役 */
+  /* 年龄退役：配合 12–15 赛季总节奏，32 岁开始提示，37 岁强制收束 */
+  AGE_ALERT:32,          /* 开始提示「退役倒计时」 */
+  AGE_FORCE:35,          /* 35 岁起：若状态不佳则退役 */
+  AGE_HARD:37,           /* 37 岁：无论状态如何都退役 */
   /* 成长目标：不看广告峰值 92~95；看专属可达 99 */
   CAP_BASE:95,           /* 没有专属天赋时的软上限 */
   CAP_TALENT:99,         /* 有专属天赋时的上限 */
@@ -139,7 +139,7 @@ try{
         career.feed=career.feed||[];
         career.feed.unshift(`${age} 岁：退役已经是可以被讨论的事了。你还能打，但每一年都需要重新证明自己。`);
       }
-      /* 41 岁起：状态撑不住就退；42 岁无条件。自建球员只由玩家自己决定退役。 */
+      /* 35 岁起：状态撑不住就退；37 岁无条件。自建球员由 184 的赛季节奏单独处理。 */
       if(career.playerId!=='custom'&&(age>=V49.AGE_HARD||(age>=V49.AGE_FORCE&&ovr<84))){
         career.feed.unshift(`${age} 岁：身体已经给不出往年的东西了。你决定在这里画上句号。`);
         if(typeof retire==='function')retire(`${age} 岁，身体状态不再支持继续征战`);

@@ -9,7 +9,7 @@ storyChoice=function(i){let before=career?.confidence;__v25StoryChoice2(i);if(ca
 const __v25MgmtRisk=managementTradeRisk;
 managementTradeRisk=function(){let r=__v25MgmtRisk();if(hasTalent('leader'))r-=6;return clamp(r,1,88)};
 const __v25Trigger2=triggerInjury;
-triggerInjury=function(){__v25Trigger2();if(career?.injury&&hasTalent('lucky')&&!career.luckyUsedThisSeason&&career.injury.severity==='major'&&Math.random()<.65){career.luckyUsedThisSeason=true;career.injury.severity='medium';career.injury.gamesLeft=Math.max(5,Math.ceil(career.injury.gamesLeft*.38));career.health=clamp(career.health+7);career.talentProcs.lucky=(career.talentProcs.lucky||0)+1;career.feed.unshift(`传奇天赋【幸运儿】改写了重大伤病：伤势被降级，预计仅缺席${career.injury.gamesLeft}场。`);ui.modal=null;ui.toast='幸运儿触发 · 重大伤病被改写';save();render()}};
+triggerInjury=function(){__v25Trigger2();if(career?.injury&&hasTalent('lucky')&&!career.luckyUsedThisSeason&&career.injury.severity==='major'){career.luckyUsedThisSeason=true;if(Math.random()<.65){career.injury.severity='medium';career.injury.gamesLeft=Math.max(5,Math.ceil(career.injury.gamesLeft*.38));career.health=clamp(career.health+7);career.talentProcs.lucky=(career.talentProcs.lucky||0)+1;career.feed.unshift(`传奇天赋【幸运儿】改写了重大伤病：伤势被降级，预计仅缺席${career.injury.gamesLeft}场。`);ui.modal=null;ui.toast='幸运儿触发 · 重大伤病被改写';save();render()}}};
 const __v25Next2=nextSeason;
 nextSeason=function(){__v25Next2();if(career){career.luckyUsedThisSeason=false;if(hasTalent('leader')){career.trust=clamp(career.trust+2);career.gmSatisfaction=clamp((career.gmSatisfaction||50)+3);career.feed.unshift('天赋【更衣室领袖】生效：新赛季球队关系更加稳定。')}save();render()}};
 /* 单场比赛全部整数展示：全明星也不再出现 18.7 分这种数据 */

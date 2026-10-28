@@ -168,6 +168,8 @@
 
         /* 三幕选择影响报价：合同不是只看 OVR，也看你在故事里怎么选。 */
         var branch = branchOf(career);
+        /* 与 135 的合同长度上限保持一致：生涯后段不能再被剧情加成拉回 5 年。 */
+        var maxYears = Math.max(1, 16 - season);
         if (career.v178BranchSeason !== season && career.offers.length) {
           career.offers.forEach(function (o) {
             if (!o) return;
@@ -204,7 +206,7 @@
             if (branch.leaveEnd === 'tour') { years = Math.min(2, years); salary *= 1.03; }
             else if (branch.leaveEnd === 'handover') years += 1;
 
-            o.years = Math.max(1, Math.min(5, Math.round(years)));
+            o.years = Math.max(1, Math.min(maxYears, Math.min(5, Math.round(years))));
             o.salary = round3(Math.max(0.8, salary));
           });
 

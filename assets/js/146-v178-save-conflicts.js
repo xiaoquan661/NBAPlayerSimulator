@@ -7,7 +7,7 @@ window.v178LoadingCard=function(n,sum){const status=window.__v176SlotChecks?.[n]
 function versions(n){return {local:window.__v166LocalSave?.(key(n)),cloud:api.snapshot(key(n))}}
 window.v178SlotSource=function(n){const v=versions(n);return v.cloud&&v.local&&v169SameLife(v.cloud,v.local)?' · 本机 / 云端':' · 本机缓存'};
 let warming=false;
-async function warmCloud(explicit){if(warming||!api.available())return;if(!explicit){const auth=window.ColorboxAI?.auth?.getUserInfo;if(!auth)return;warming=true;try{const res=await window.ColorboxAI.auth.getUserInfo();if(res?.code!==200||!res.data?.puid){warming=false;return;}}catch(e){warming=false;return;}}else warming=true;
+async function warmCloud(explicit){if(warming||!api.available())return;warming=true;
  for(const n of [1,2,3])api.read(key(n),false).then(()=>{if(ui.v82Picker==='pickLoad')render()}).catch(()=>{});
 }
 const priorRender=render;render=function(){const result=priorRender.apply(this,arguments);if(ui.screen==='home'||ui.v82Picker==='pickLoad')warmCloud(ui.v82Picker==='pickLoad');return result;};

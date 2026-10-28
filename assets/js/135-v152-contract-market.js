@@ -12,12 +12,13 @@ function valid(o,m){if(!career||!o||!teams.some(t=>t.abbr===o.team)||!Number.isF
  return o.salary<=D.budget(m,o.team)+.001;
 }
 function generate(m){D.off(m);const limit=count(career.ovr),max=F.maximum(service()),minimum=F.minimum(),rate=Math.max(.01,Math.min(1,Math.pow(Math.max(0,career.ovr-55)/42,2))),ask=F.money(Math.max(minimum,max*rate));
+ const maxYears=Math.max(1,16-(Number(career.seasonNo)||1));
  const candidates=teams.map(t=>{const room=D.budget(m,t.abbr),home=t.abbr===career.team;const position=D.roster(m,t.abbr).filter(p=>!p.self&&p.pos===currentP().pos);const need=position.length?Math.max(0,career.ovr-Math.max(...position.map(p=>p.ovr))):15;return {t,room,home,score:(home?1000:0)+Math.min(room/ask,1)*100+need};}).sort((a,b)=>b.score-a.score||a.t.abbr.localeCompare(b.t.abbr));
- career.offers=candidates.slice(0,limit).map(({t,room,home},i)=>{const desired=F.money(Math.min(max,ask*(1-.025*(i%4)))),affordable=home||room>=minimum;return {team:t.abbr,years:affordable?(home?4:3):1,salary:affordable?F.money(home?desired:Math.min(desired,room)):minimum,type:'FA',exception:home?'renewal':affordable?null:'minimum',v152:true};});
+ career.offers=candidates.slice(0,limit).map(({t,room,home},i)=>{const desired=F.money(Math.min(max,ask*(1-.025*(i%4)))),affordable=home||room>=minimum,years=affordable?Math.min(home?4:3,maxYears):1;return {team:t.abbr,years,salary:affordable?F.money(home?desired:Math.min(desired,room)):minimum,type:'FA',exception:home?'renewal':affordable?null:'minimum',v152:true};});
  career.v152Market={version:152,season:career.seasonNo,year:career.seasonYear,rating:career.ovr,count:limit};
  delete career.v152OffersPending;
 }
-function scaleExtensions(){for(const o of career.offers||[]){if(o.v152)continue;o.salary=F.money(Math.max(F.minimum(),Math.min(F.maximum(service()),F.maximum(service())*Math.pow(Math.max(0,career.ovr-55)/42,2))));o.years=Math.max(1,Math.min(o.team===career.team?5:4,o.years||3));o.v152=true;o.exception=o.team===career.team?'renewal':null;}}
+function scaleExtensions(){const maxYears=Math.max(1,16-(Number(career.seasonNo)||1));for(const o of career.offers||[]){if(o.v152)continue;o.salary=F.money(Math.max(F.minimum(),Math.min(F.maximum(service()),F.maximum(service())*Math.pow(Math.max(0,career.ovr-55)/42,2))));o.years=Math.max(1,Math.min(Math.min(o.team===career.team?5:4,maxYears),o.years||3));o.v152=true;o.exception=o.team===career.team?'renewal':null;}}
 function refresh(m){if(!career||!m)return;
  if(career.contract.years===0){const market=career.v152Market;if(!market||market.season!==career.seasonNo||market.year!==career.seasonYear){generate(m);return;}
   career.offers=(career.offers||[]).filter(o=>valid(o,m));const target=market.count||count(market.rating);if(career.offers.length<target){const used=new Set(career.offers.map(o=>o.team));for(const t of teams){if(used.has(t.abbr))continue;career.offers.push({team:t.abbr,years:1,salary:F.minimum(),type:'FA',exception:'minimum',v152:true});used.add(t.abbr);if(career.offers.length>=target)break;}}

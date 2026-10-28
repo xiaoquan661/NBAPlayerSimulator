@@ -545,6 +545,8 @@ window.v82Submit=submitMyCareer;
    老存档（标记已打上但没上榜）也会在下次打开退役页时补交。 */
 window.v82Resubmit=function(){ try{return submitMyCareer(true)}catch(e){return Promise.resolve(false)} };
 function v82SubmitStrip(){
+  /* Lamps 排行榜由 158-inline.js 统一展示与提交；旧的虎扑提交条不再显示。 */
+  return '';
   try{
     if(typeof career==='undefined'||!career)return '';
     var slot=Number(career.__slot)||1;
@@ -650,6 +652,7 @@ try{
     '.v82-pick header small{display:block;font-size:7px;color:#b08a58;letter-spacing:.1em}',
     '.v82-pick header b{font-size:14.5px;color:#3b2f26}',
     '.v82-pick-sub{font-size:7.5px;color:#a08a76}',
+    '@media(max-width:520px){.v82-pick{padding:12px 12px 22px}.v82-pick header{flex-wrap:wrap;align-items:flex-start}.v82-pick header div{flex:1 1 calc(100% - 38px);min-width:0}.v82-pick header b{font-size:16px;line-height:1.3}.v82-pick-sub{flex:1 1 100%;margin-left:38px;margin-top:4px;font-size:9.5px;line-height:1.55;color:#a08a76}}',
     '.v82-pick-grid{display:grid;gap:9px}',
     '.v82-slot{position:relative;padding:13px;border-radius:18px;background:#fff;border:1px solid #f0e2d1;display:flex;flex-direction:column;gap:3px;min-height:96px}',
     '.v82-slot>small{font-size:7.5px;color:#b08a58;letter-spacing:.08em}',

@@ -11,17 +11,56 @@ function sameLife(a,b){if(!a||!b||a.playerId!==b.playerId||a.draftYear&&b.draftY
 window.v169SameLife=sameLife;
 var tails={read:Promise.resolve(),write:Promise.resolve()},last={read:-Infinity,write:-Infinity},running=false;
 function lampsReady(){try{return String(navigator.userAgent||'').indexOf('LampsSDK')!==-1&&window.LampsPlatform&&typeof window.LampsPlatform.saveGameProgress==='function'&&typeof window.LampsPlatform.getGameProgress==='function'}catch(e){return false}}
+/* Lamps 的进度接口只会保存“当前用户最新一条进度”。
+   本游戏有 3 个本机存档槽，所以云端记录统一存成 { version:2, slots:{键:文本} }，
+   每次写入先合并已有槽位，避免槽 2 覆盖槽 1。旧版 { slot,text } 记录会自动迁移。 */
+var bundleCache=null,bundleLoading=null,bundleWrite=Promise.resolve();
+function loadBundle(force){
+ if(!force&&bundleCache)return Promise.resolve(bundleCache);
+ if(bundleLoading)return bundleLoading;
+ bundleLoading=window.LampsPlatform.getGameProgress().then(function(r){
+  if(!r||!r.ok)throw {code:'LAMPS_FAIL',message:(r&&r.message)||'云端读取失败'};
+  var rec=r.data&&r.data.record&&r.data.record.gamePayload;
+  var slots={};
+  if(rec&&rec.slots&&typeof rec.slots==='object'){
+   Object.keys(rec.slots).forEach(function(k){if(typeof rec.slots[k]==='string')slots[k]=rec.slots[k]});
+  }else if(rec&&typeof rec.text==='string'&&rec.slot){
+   slots[String(rec.slot)]=rec.text;
+  }
+  bundleCache={slots:slots};
+  bundleLoading=null;
+  return bundleCache;
+ },function(e){bundleLoading=null;throw e});
+ return bundleLoading;
+}
+function saveBundle(bundle){
+ var payload={version:2,slots:Object.assign({},bundle.slots)};
+ return window.LampsPlatform.saveGameProgress({game_payload:payload}).then(function(r){
+  if(!r||!r.ok||!r.data)throw {code:'LAMPS_FAIL',message:(r&&r.message)||'云端保存失败'};
+  bundleCache={slots:payload.slots};
+  return r;
+ });
+}
 function api(){
  if(!lampsReady())return null;
  var lp=window.LampsPlatform;
  return {
-  setValue:function(o){return lp.saveGameProgress({game_payload:{slot:o.key,text:o.value}}).then(function(r){return r&&r.ok?{code:200,data:{key:o.key}}:{code:'LAMPS_FAIL',message:(r&&r.message)||'云端保存失败'}})},
-  getValue:function(o){return lp.getGameProgress().then(function(r){
-   if(!r||!r.ok)return {code:'LAMPS_FAIL',message:(r&&r.message)||'云端读取失败'};
-   var rec=r.data&&r.data.record&&r.data.record.gamePayload;
-   if(rec&&typeof rec.text==='string'&&(!o||!o.key||!rec.slot||rec.slot===o.key))return {code:200,data:rec.text};
-   return {code:200,data:null};
-  })}
+  setValue:function(o){
+   bundleWrite=bundleWrite.catch(function(){}).then(function(){
+    return loadBundle().then(function(b){
+     var next={slots:Object.assign({},b.slots)};
+     next.slots[o.key]=o.value;
+     return saveBundle(next);
+    });
+   });
+   return bundleWrite.then(function(){return {code:200,data:{key:o.key}}},function(e){return {code:'LAMPS_FAIL',message:(e&&e.message)||'云端保存失败'}});
+  },
+  getValue:function(o,force){
+   return loadBundle(force).then(function(b){
+    var v=o&&o.key?b.slots[o.key]:null;
+    return {code:200,data:typeof v==='string'?v:null};
+   },function(e){return {code:'LAMPS_FAIL',message:(e&&e.message)||'云端读取失败'}});
+  }
  };
 }
 function wait(ms){return new Promise(function(resolve){setTimeout(resolve,ms)})}
@@ -47,7 +86,7 @@ function read(key,refresh){
  var job=(async function(){
   try{
    var s=api();if(!s)throw failure('当前页面尚不支持云存档，请更新后重试','SDK_UNAVAILABLE');
-   var remote=await paced('read',async function(){return checked(await s.getValue({key:key}))});
+   var remote=await paced('read',async function(){return checked(await s.getValue({key:key},refresh))});
    if((generations.get(key)||0)!==readGeneration)return null;
    if(remote!==null){var text=unpack(remote);cache.set(key,text);known.add(key);mark(key);if(text&&typeof window.__v167AdoptCloud==='function')window.__v167AdoptCloud(key,parse(text));return text}
    var legacy=null,migrated=false;try{migrated=localStorage.getItem('bust_cloud_migrated_v166_'+key)==='1'}catch(ignore){}if(!migrated&&typeof window.v134ReadHostStorage==='function')legacy=await window.v134ReadHostStorage(key,true);

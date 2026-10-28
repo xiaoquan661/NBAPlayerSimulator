@@ -29,6 +29,56 @@
     { id: 'hell',   n: '地狱', cls: 'hell', title: '从最不被看好的地方开始', d: '资源、顺位、舆论全部逆风。', note: '健康-10 · 自信-12 · 信任-14 · 顺位↓↓ · 伤病×1.35 · 成长×0.92', health: -10, confidence: -12, trust: -14, draftShift: 12, injury: 1.35, growth: 0.92 }
   ];
 
+  /* 难度逐级解锁：完成上一难度的一段生涯后才开放下一档。 */
+  const DIFF_ORDER = DIFFICULTIES.map(x => x.id);
+  const DIFF_UNLOCK_KEY = 'nba_difficulty_unlock_v1';
+  let diffUnlockCache = null;
+
+  function readDiffUnlock() {
+    if (diffUnlockCache) return diffUnlockCache;
+    const out = { easy: true };
+    try {
+      const raw = localStorage.getItem(DIFF_UNLOCK_KEY);
+      if (raw) {
+        const saved = JSON.parse(raw);
+        if (saved && typeof saved === 'object') {
+          DIFF_ORDER.forEach(id => { if (saved[id]) out[id] = true; });
+        }
+      }
+    } catch (e) {}
+    /* 老存档兼容：已经玩过更高难度的玩家不被降级锁回去。 */
+    try {
+      const c = (typeof load === 'function') ? load() : null;
+      const d = c && c.__arch && c.__arch.difficulty;
+      const idx = DIFF_ORDER.indexOf(d);
+      if (idx >= 0) for (let i = 0; i <= idx; i++) out[DIFF_ORDER[i]] = true;
+    } catch (e) {}
+    diffUnlockCache = out;
+    return out;
+  }
+
+  function isDiffUnlocked(id) {
+    if (!id) return true;
+    return !!readDiffUnlock()[id];
+  }
+
+  function unlockDifficulty(completedId) {
+    const idx = DIFF_ORDER.indexOf(completedId);
+    if (idx < 0) return false;
+    const out = readDiffUnlock();
+    let changed = false;
+    /* 完成当前难度，同时开放下一难度。 */
+    const last = Math.min(DIFF_ORDER.length - 1, idx + 1);
+    for (let i = 0; i <= last; i++) {
+      if (!out[DIFF_ORDER[i]]) { out[DIFF_ORDER[i]] = true; changed = true; }
+    }
+    if (changed) {
+      try { localStorage.setItem(DIFF_UNLOCK_KEY, JSON.stringify(out)); } catch (e) {}
+    }
+    diffUnlockCache = out;
+    return changed;
+  }
+
   // 位置球风：10 选 1（八维初始分布，总值恒定 600±10）
   // 顺序：finishing, shooting, playmaking, defense, rebounding, athleticism, durability, mentality
   const STYLES = [
@@ -44,19 +94,19 @@
     { id: 'microwave',     n: '第六人火种', d: '微波炉得分手。替补席起身，两分钟改变比赛。', gain: '终结 84 · 心态 78', weak: '耐久 66 · 篮板 54', a: [84, 72, 62, 56, 54, 76, 58, 78] }
   ];
 
-  // 自白：6 选 1（风味 + 开局文案基调；不影响数值）
+  // 自白：6 选 1（自带被动 + 对应事件线）
   const VOWS = [
-    { id: 'pure',    t: '我只为篮球而来',     d: '纯粹路线。别的声音进不来。', fx: '剧本倾向：负面媒体事件减半，遭遇低谷时心态更稳' },
-    { id: 'family',  t: '让家里过上好日子',   d: '家庭的重量，也是燃料。', fx: '剧本倾向：解锁家庭事件线（汇款/探亲/抉择），金钱类选择更多' },
-    { id: 'prove',   t: '证明被低估的人也能飞', d: '你背负的不只是自己的期待。', fx: '剧本倾向：媒体关注涨更快，外媒提问更尖锐，大场面事件多' },
-    { id: 'one-min', t: '打上 NBA，哪怕一分钟', d: '边缘人的执念，比天赋更硬。', fx: '剧本倾向：轮换边缘事件多，出场机会相关抉择更频繁' },
-    { id: 'name',    t: '总有一天他们会念我的名字', d: '选秀夜的遗憾，你要亲手讨回来。', fx: '剧本倾向：复仇/正名事件多，老东家对决有专属剧情' },
-    { id: 'easy',    t: '就试试，不行就回去读书', d: '洒脱路线。心态崩了？不存在的。', fx: '剧本倾向：心态类负面效果减半，闲适事件多，压力事件少' }
+    { id: 'pure',    t: '我只为篮球而来',     d: '纯粹路线。别的声音进不来。', fx: '被动：负面舆论与自信损失减半。事件线：低谷、专注、取舍' },
+    { id: 'family',  t: '让家里过上好日子',   d: '家庭的重量，也是燃料。', fx: '被动：合同报价 +5%，伤病风险略降。事件线：家庭、汇款、探亲' },
+    { id: 'prove',   t: '证明被低估的人也能飞', d: '你背负的不只是自己的期待。', fx: '被动：名气 +20%，得分略升；伤病风险略升。事件线：外媒、大场面' },
+    { id: 'one-min', t: '打上 NBA，哪怕一分钟', d: '边缘人的执念，比天赋更硬。', fx: '被动：伤病风险 ×0.9，替补角色得分略升。事件线：轮换、机会' },
+    { id: 'name',    t: '总有一天他们会念我的名字', d: '选秀夜的遗憾，你要亲手讨回来。', fx: '被动：名气 +10%，得分 +2%。事件线：复仇、正名' },
+    { id: 'easy',    t: '就试试，不行就回去读书', d: '洒脱路线。心态崩了？不存在的。', fx: '被动：负面心态效果减半，伤病风险 ×0.95。事件线：松弛、闲适' }
   ];
 
-  /* 成长模板：球探报告里展示的名字与曲线，不再作为完全不可见的暗箱。
-     cap 是常规成长上限，front/slope 决定早熟或晚熟，healthRisk 影响伤病。
-     数值经过重排，避免低档模板的 cap 低于球员起点。 */
+  /* 成长模板：球探报告里展示的名字与曲线。
+     cap 仅保留旧存档兼容；所有出身实际硬上限统一 110。
+     front/slope 决定早熟或晚熟，healthRisk 影响伤病。 */
   const ARCHETYPES = {
     S1: { n: '世代门面',  cap: 99, slope: 2.4, front: 1.35, healthRisk: 1.6, d: '从第一年就被当作核心培养，成长窗口来得早，能摸到这一届最高的天花板。' },
     S2: { n: '常青巨木',  cap: 97, slope: 1.9, front: 1.0,  healthRisk: 0.8, d: '成长不急，曲线很长；别人下滑的年纪，他还在往上走。' },
@@ -68,7 +118,7 @@
     B3: { n: '稳步兑现',  cap: 88, slope: 1.5, front: 1.0,  healthRisk: 0.8, d: '没有跳跃式爆发，每年补一块短板，慢慢把位置站稳。' },
     C1: { n: '优质拼图',  cap: 86, slope: 1.4, front: 1.0,  healthRisk: 0.8, d: '不是主角的曲线，靠防守和细节一点点留在场上。' },
     C2: { n: '逆袭剧本',  cap: 84, slope: 1.3, front: 0.7,  healthRisk: 0.9, d: '起步低，成长慢，但越被低估越不肯停。' },
-    C3: { n: '蓝领一生',  cap: 82, slope: 1.1, front: 1.0,  healthRisk: 1.0, d: '上限不高，胜在耐用和稳定，能把角色球员打到很久。' },
+    C3: { n: '蓝领一生',  cap: 82, slope: 1.1, front: 1.0,  healthRisk: 1.0, d: '起点不高，胜在耐用和稳定，能把角色球员打到很久。' },
     D:  { n: '搏命者',    cap: 80, slope: 2.8, front: 1.4,  healthRisk: 0.7, d: '天赋最薄，靠强度和运气抢时间；每一分都要自己挣。' }
   };
   try { window.__ARCHETYPES__ = ARCHETYPES; } catch (e) {}
@@ -279,7 +329,14 @@
     window.render && render();
   }
 
-  function pickDifficulty(id) { applyDifficulty(id); window.render && render(); }
+  function pickDifficulty(id) {
+    if (id && !isDiffUnlocked(id)) {
+      try { notify('完成上一难度的一段生涯后解锁'); } catch (e) {}
+      return;
+    }
+    applyDifficulty(id);
+    window.render && render();
+  }
 
   function toDifficulty() {
     if (!CG.style) { try { notify('先选择一个位置'); } catch (e) {} return; }
@@ -359,7 +416,7 @@
   /* 原版 createCareer 吃 currentP()（原12人结构）。我们构造一个同构对象，
      playerId 用 'custom'，让原版按通用分支走（避开球星专属逻辑）。 */
 
-  const POT_KEYS = ['finishing', 'shooting', 'playmaking', 'defense', 'rebounding', 'athleticism', 'durability', 'mentality'];
+  const POT_KEYS = ['finishing', 'shooting', 'playmaking', 'defense', 'steals', 'blocks', 'strength', 'rebounding', 'athleticism', 'durability', 'mentality'];
   const START_RANGES = { ncaa: [70, 73], cba: [72, 75], academy: [68, 71], undrafted: [66, 69], prep: [69, 72], euro: [73, 76], nbl: [70, 73], gleague: [67, 70] };
   const POT_RANGES = { ncaa: [82, 92], cba: [79, 89], academy: [78, 96], undrafted: [76, 94], prep: [84, 96], euro: [79, 88], nbl: [81, 92], gleague: [80, 94] };
 
@@ -367,16 +424,16 @@
 
   function makePotential(origin, attrs, ovr, arch) {
     const range = POT_RANGES[origin] || [80, 90];
-    /* 模板 cap 是这一局的常规成长上限；出身的潜力区间只能低于它，不能高于它。 */
-    const archCap = Math.max(ovr, Number(arch && arch.cap) || 99);
-    const target = Math.min(archCap, Math.max(ovr, rollInt(range[0], range[1])));
+    /* 不再用成长模板截断潜力：所有出身的硬上限都是 110。
+       出身只决定初始潜力区间，模板只影响成长曲线和早期/晚期速度。 */
+    const target = Math.max(ovr, rollInt(range[0], range[1]));
     const avg = POT_KEYS.reduce((sum, k) => sum + (Number(attrs[k]) || 0), 0) / POT_KEYS.length;
     const caps = {};
     POT_KEYS.forEach(k => {
       // 出身给总潜力预算，球风决定这些潜力更偏向哪些能力。
       const styleBias = (Number(attrs[k]) - avg) * 0.15;
       const room = Math.max(0, target - ovr + styleBias + rollInt(-2, 2));
-      caps[k] = Math.max(attrs[k], Math.min(archCap, Math.round(attrs[k] + room)));
+      caps[k] = Math.max(attrs[k], Math.min(110, Math.round(attrs[k] + room)));
     });
     let potentialOvr = target;
     try { potentialOvr = window.calcOvr ? Math.round(window.calcOvr(caps)) : target; } catch (e) {}
@@ -390,7 +447,13 @@
     const df = DIFFICULTIES.find(x => x.id === CG.difficulty) || DIFFICULTIES[1];
     const arch = rollArchetype(CG.origin, CG.style);
     const clampStat = (v) => Math.max(1, Math.min(99, Math.round(v)));
-    const attrs = { finishing: s.a[0], shooting: s.a[1], playmaking: s.a[2], defense: s.a[3], rebounding: s.a[4], athleticism: s.a[5], durability: s.a[6], mentality: s.a[7] };
+    const attrs = {
+      finishing: s.a[0], shooting: s.a[1], playmaking: s.a[2], defense: s.a[3],
+      steals: clampStat(s.a[3] * 0.50 + s.a[5] * 0.30 + s.a[2] * 0.20),
+      blocks: clampStat(s.a[3] * 0.45 + s.a[4] * 0.35 + s.a[5] * 0.20),
+      strength: clampStat(s.a[0] * 0.40 + s.a[4] * 0.40 + s.a[5] * 0.20),
+      rebounding: s.a[4], athleticism: s.a[5], durability: s.a[6], mentality: s.a[7]
+    };
     let ovr = 74;
     try { ovr = window.calcOvr ? window.calcOvr(attrs) : Math.round(s.a.reduce((x, y) => x + y, 0) / 8); } catch (e) { ovr = 74; }
 
@@ -464,6 +527,13 @@
 .creator-card{position:relative;text-align:left;background:#1c2129;border:1px solid #2f3742;border-radius:14px;padding:15px 56px 13px 15px;cursor:pointer;color:#e8ecf1;transition:border-color .15s,transform .15s;font-family:inherit;display:flex;flex-direction:column;gap:2px}
 .creator-card:hover{border-color:#4d8dff;transform:translateY(-2px)}
 .creator-card.sel{border-color:#ffd23f;box-shadow:0 0 0 1px #ffd23f55 inset;background:#211f19}
+.creator-card.locked{opacity:.55;cursor:not-allowed;border-style:dashed;background:#171b21}
+.creator-card.locked:hover{transform:none;border-color:#2f3742}
+.creator-card.locked .ck{color:#8d9bab;border-color:#3a4652;background:#ffffff08}
+.creator-card.locked .cnum{opacity:.55}
+.creator-card .lock-note{display:block;margin-top:6px;color:#ffd23f!important;font-size:10.5px;line-height:1.5}
+.difficulty-unlock-note{margin:0 0 12px;padding:10px 12px;border-radius:12px;background:#ffd23f0d;border:1px solid #ffd23f33;color:#b9c3cf;font-size:11px;line-height:1.65}
+.difficulty-unlock-note b{display:block;margin-bottom:2px;color:#ffd23f;font-size:9px;letter-spacing:.12em}
 .creator-card .ck{display:inline-block;font-size:10px;letter-spacing:2px;color:#ffd23f;border:1px solid #ffd23f55;border-radius:4px;padding:2px 7px;margin-bottom:10px;align-self:flex-start}
 .creator-card h3{margin:0 0 6px;font-size:16px;line-height:1.4;color:#ffffff}
 .creator-card p{margin:0;font-size:12px;line-height:1.65;color:#9aa3b2}
@@ -675,8 +745,17 @@
       `<div class="cdiff">${o.note}<br>起点 OVR ${START_RANGES[o.id][0]}–${START_RANGES[o.id][1]} · 潜力 OVR ${pr[0]}–${pr[1]}</div>`);
   }
 
-  // 难度卡：只保留标题和一行数值
+  // 难度卡：只保留标题和一行数值；未解锁时禁用并显示前置条件
   function difficultyCard(x, i) {
+    if (!isDiffUnlocked(x.id)) {
+      const prev = DIFFICULTIES[DIFF_ORDER.indexOf(x.id) - 1];
+      return `<button class="creator-card locked" disabled>
+        <span class="cnum">0${i + 1}</span>
+        <span class="ck">难度 · ${x.n}</span>
+        <h3>🔒 ${x.title}</h3>
+        <div class="cvals ${x.cls}">${x.note}<b class="lock-note">完成「${prev ? prev.n : '上一'}」难度的一段生涯后解锁</b></div>
+      </button>`;
+    }
     return ccard('0' + (i + 1), '难度 · ' + x.n, x.title, '', `__CREATOR__.pick('${x.id}')`,
       `<div class="cvals ${x.cls}">${x.note}</div>`,
       CG.difficulty === x.id ? 'sel' : '');
@@ -727,16 +806,16 @@
   function potentialTable() {
     const p = CG.player;
     if (!p || !p.potentialCaps) return '';
-    const names = { finishing: '终结', shooting: '投射', playmaking: '组织', defense: '防守', rebounding: '篮板', athleticism: '运动', durability: '耐久', mentality: '心态' };
+    const names = { finishing: '终结', shooting: '投射', playmaking: '组织', defense: '防守', steals: '抢断', blocks: '盖帽', strength: '力量', rebounding: '篮板', athleticism: '运动', durability: '耐久', mentality: '心态' };
     const rows = POT_KEYS.map(k => {
       const cur = Number(p.attrs[k]) || 0;
       const pot = Number(p.potentialCaps[k]) || cur;
       return `<div class="creator-pot-row"><span>${names[k]}</span><b>${cur}</b><em>潜力 <strong>${pot}</strong> / 110</em></div>`;
     }).join('');
-    return `<div class="creator-pot"><div class="creator-pot-head"><div><small>POTENTIAL REPORT</small><b>潜力报告</b></div><span>综合潜力 OVR ${p.potentialOvr || '—'}<br>专精点只加速成长</span></div><div class="creator-pot-grid">${rows}</div><p class="creator-pot-note">潜力由出身、球风和成长模板共同决定；难度不改变潜力。能力到达潜力线后成长明显放缓，模板上限之外不会继续常规成长。</p></div>`;
+    return `<div class="creator-pot"><div class="creator-pot-head"><div><small>POTENTIAL REPORT</small><b>潜力报告</b></div><span>初始潜力 OVR ${p.potentialOvr || '—'}<br>专精点提高潜力线</span></div><div class="creator-pot-grid">${rows}</div><p class="creator-pot-note">初始潜力由出身和球风决定；成长模板只影响成长曲线，不再限制天花板。能力到达潜力线后成长放缓，专精点可以提高潜力线、加快成长。所有出身的硬上限统一为 110。</p></div>`;
   }
 
-  const ATTR_NAMES = { finishing: '终结', shooting: '投射', playmaking: '组织', defense: '防守', rebounding: '篮板', athleticism: '运动', durability: '耐久', mentality: '心态' };
+  const ATTR_NAMES = { finishing: '终结', shooting: '投射', playmaking: '组织', defense: '防守', steals: '抢断', blocks: '盖帽', strength: '力量', rebounding: '篮板', athleticism: '运动', durability: '耐久', mentality: '心态' };
   function gradeOf(v) {
     v = Number(v) || 0;
     return v >= 90 ? 'S' : v >= 86 ? 'A' : v >= 82 ? 'B+' : v >= 78 ? 'B' : v >= 74 ? 'C+' : 'C';
@@ -813,7 +892,7 @@
       +   '<div class="v181-chips"><span>' + era.range + ' · ' + era.n + '</span><span>' + o.n + '</span><span>' + s.n + '</span><span>「' + v.t + '」</span><span>难度 · ' + df.n + '</span></div>'
       +   '<div class="v181-grades">'
       +     '<div class="v181-grade"><small>即战力</small><b>' + ovrG + '</b><em>OVR ' + p.ovr + '</em></div>'
-      +     '<div class="v181-grade"><small>上限</small><b>' + potG + '</b><em>潜力 OVR ' + (p.potentialOvr || '—') + '</em></div>'
+      +     '<div class="v181-grade"><small>初始潜力</small><b>' + potG + '</b><em>潜力 OVR ' + (p.potentialOvr || '—') + '</em></div>'
       +     '<div class="v181-grade"><small>风险</small><b>' + risk + '</b><em>' + df.n + '难度</em></div>'
       +   '</div>'
       +   '<div class="v181-block"><div class="v181-block-head"><h3>球星模板</h3><span>球探内部评估</span></div>'
@@ -822,9 +901,9 @@
       +     '<div class="v181-pick"><b>' + draftProjectionText(dr) + '</b><span>' + (dr ? '随机扰动与球队需求会影响最终顺位' : '没有球队承诺，先从 10 天合同开始') + '</span></div></div>'
       +   '<div class="v181-block"><div class="v181-block-head"><h3>优势 / 短板</h3><span>当前能力</span></div>'
       +     '<div class="v181-tags">' + strengths.map(x => '<span class="up">▲ ' + ATTR_NAMES[x.k] + ' ' + x.v + '</span>').join('') + weaknesses.map(x => '<span class="down">▽ ' + ATTR_NAMES[x.k] + ' ' + x.v + '</span>').join('') + '</div></div>'
-      +   '<div class="v181-block"><div class="v181-block-head"><h3>八维报告</h3><span>蓝条当前 · 黄线潜力 · 硬上限 110</span></div><div class="v181-attrs">' + rows + '</div></div>'
+      +   '<div class="v181-block"><div class="v181-block-head"><h3>能力报告</h3><span>蓝条当前 · 黄线初始潜力 · 硬上限 110</span></div><div class="v181-attrs">' + rows + '</div></div>'
       +   '<div class="v181-block"><div class="v181-block-head"><h3>球探结论</h3><span>' + v.t + '</span></div><p class="v181-note">' + summary + '</p></div>'
-      +   '<div class="v181-sign">' + era.range + ' · ' + era.n + ' · 难度 ' + df.n + '<br>专精点只加速成长，不会突破模板上限。</div>'
+      +   '<div class="v181-sign">' + era.range + ' · ' + era.n + ' · 难度 ' + df.n + '<br>专精点提高潜力线，模板决定成长曲线；所有出身硬上限统一 110。</div>'
       + '</div>'
       + '<div class="creator-cta"><button onclick="__CREATOR__.startCareer()">开启生涯 →</button></div>'
       + '</section>';
@@ -894,7 +973,14 @@
 
   function difficultyView(o, era) {
     const s = STYLES.find(x => x.id === CG.style) || STYLES[0];
-    const body = '<div class="creator-grid">' + DIFFICULTIES.map((x, i) => difficultyCard(x, i)).join('') + '</div>';
+    const unlocked = readDiffUnlock();
+    const next = DIFFICULTIES.find(x => !unlocked[x.id]);
+    const names = DIFFICULTIES.filter(x => unlocked[x.id]).map(x => x.n).join(' · ');
+    const note = next
+      ? `已解锁：${names}。完成「${(DIFFICULTIES[DIFF_ORDER.indexOf(next.id) - 1] || {}).n || '上一'}」难度的一段生涯，解锁「${next.n}」。`
+      : `已解锁：${names}。全部难度已开放。`;
+    const body = '<div class="difficulty-unlock-note"><b>难度进度</b><span>' + note + '</span></div>'
+      + '<div class="creator-grid">' + DIFFICULTIES.map((x, i) => difficultyCard(x, i)).join('') + '</div>';
     const cta = '<div class="creator-cta"><button ' + (CG.difficulty ? '' : 'disabled') + ' onclick="__CREATOR__.toConfirm()">下一步：确认 →</button></div>';
     return wizardShell(2, 'DIFFICULTY MODULE · 独立模块', '这一局有多难', `年代：${era.range} · ${era.n}。出身：${o.n}。球风：${s.n}。`, body, cta);
   }
@@ -1073,6 +1159,26 @@
   window.createCareer = __customCreateCareer;
   try { createCareer = __customCreateCareer; } catch (e) {}
 
+  /* 完成一段生涯（至少打过一场）后，解锁下一难度。 */
+  try {
+    const _diffRetire = retire;
+    if (typeof _diffRetire === 'function') {
+      retire = function (reason) {
+        const before = (typeof career !== 'undefined' && career) ? career : null;
+        const r = _diffRetire.apply(this, arguments);
+        try {
+          if (before && before.playerId === 'custom') {
+            const d = (before.__arch && before.__arch.difficulty) || before.difficulty;
+            const games = Number((before.careerTotals && before.careerTotals.games) || before.games || 0);
+            if (d && games > 0) unlockDifficulty(d);
+          }
+        } catch (e) {}
+        return r;
+      };
+      window.retire = retire;
+    }
+  } catch (e) {}
+
   /* 天赋抽取作为合并页的一段；独立打开时也显示正确的步骤文案。 */
   try {
     const _origTalents = window.renderTalents || renderTalents;
@@ -1127,6 +1233,15 @@
   CG.pickVow = pickVow;
   CG.toTalents = toTalents;
   CG.buildPlayer = buildPlayer;
+
+  /* 调试入口：查看/重置难度解锁进度（不参与正常玩法）。 */
+  CG.diffUnlocks = readDiffUnlock;
+  CG.unlockDifficulty = unlockDifficulty;
+  CG.resetDiffUnlock = function () {
+    try { localStorage.removeItem(DIFF_UNLOCK_KEY); } catch (e) {}
+    diffUnlockCache = { easy: true };
+    return diffUnlockCache;
+  };
 
   // 通用入口：合并页的卡片走 pickStyle / pickVow，这里保留难度兜底。
   CG.pick = function (id) {

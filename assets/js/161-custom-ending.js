@@ -105,7 +105,7 @@
       m.allnba * 3 + m.alldef * 1.2 + m.allstar * 1.6 + m.roy * 1.5 +
       m.mip * 0.8 + m.scoring * 1.5;
     var peak = Math.max(0, m.peak - 70) * 1.1;
-    var length = m.seasons * 1.3 + Math.min(m.games, 1100) / 120;
+    var length = m.seasons * 1.7 + Math.min(m.games, 1100) / 120;
     var b = m.branch || {};
     var branch = (b.legacy === 'one_team' ? 1.3 : 0) +
       (b.legacy === 'path' ? 0.9 : 0) +

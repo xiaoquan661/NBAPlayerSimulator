@@ -236,17 +236,17 @@ function v83ShareCopy(){
     honLine=arr.join('、');
   }catch(e){}
 
-  var title='【闯进无人相信的NBA】我把'+p.zh+'的生涯打到了「'+(grade||'一段传奇')+'」';
+  var title='【没人相信我打美职篮】我把'+p.zh+'的生涯打到了「'+(grade||'一段传奇')+'」';
   var lines=[
     '球员：'+p.zh,
     '本局游戏总得分：'+Math.round(total)+'（'+(grade||'')+'）',
-    rank?('NBA 历史排名：'+rank):'',
+    rank?('联盟历史排名：'+rank):'',
     hof?('名人堂：'+hof):'',
     '赛季 ' + Math.round(num83(tot.seasons,0)) + ' 个 · 出场 ' + Math.round(num83(tot.games,0)) + ' 场',
     '生涯场均 ' + (Math.round(num83(avg.pts,0)*10)/10) + ' 分 ' + (Math.round(num83(avg.reb,0)*10)/10) + ' 板 ' + (Math.round(num83(avg.ast,0)*10)/10) + ' 助',
     honLine?('主要荣誉：'+honLine):'',
     '',
-    '这是我在《闯进无人相信的NBA》里打出来的一段生涯。从选秀夜开始，这条路由我自己写。',
+    '这是我在《没人相信我打美职篮》里打出来的一段生涯。从选秀夜开始，这条路由我自己写。',
     '你也来试试？'
   ].filter(function(x){return x!==''&&x!=null});
   return {title:title,content:lines.join('\n')};
@@ -263,7 +263,7 @@ window.v83ShareCopy=v83ShareCopy;
  * 现在改成**用游戏内退役海报的那张素材合成**：
  *   · 上半部是玩家立绘（本地 assets/portrait-*.jpg，与游戏内同一张）
  *   · 下半部是游戏内同套暖色体系 + 金字
- *   · 内容与退役页一致：本局总得分 / 评级 / NBA 历史排名 / 名人堂 / 荣誉 / 生涯数据
+ *   · 内容与退役页一致：本局总得分 / 评级 / 联盟历史排名 / 名人堂 / 荣誉 / 生涯数据
  * 素材是本地同源资源，不会污染 canvas；万一图片加载失败或环境受限，自动降级为
  * 「无图版」再导出一次，保证分享功能不会因此失效。
  * ========================================================================== */
@@ -361,7 +361,7 @@ function v83DrawPoster(img){
 
   /* 头部标识 */
   g.textAlign='center';
-  g.fillStyle='#ffd88f';g.font='bold 30px sans-serif';g.fillText('闯进无人相信的NBA',W/2,86);
+  g.fillStyle='#ffd88f';g.font='bold 30px sans-serif';g.fillText('没人相信我打美职篮',W/2,86);
   g.fillStyle='rgba(224,191,140,.85)';g.font='18px sans-serif';g.fillText('CAREER COMPLETE',W/2,118);
 
   /* 姓名 + 年份/球队/位置（压在立绘下沿） */
@@ -384,9 +384,9 @@ function v83DrawPoster(img){
   if(grade){g.fillStyle='#ffeccb';g.font='bold 28px sans-serif';g.fillText(grade,W/2,y)}
   y+=42;
 
-  /* ③ 三项档案卡：NBA 历史排名 / 名人堂 / 峰值评分 */
+  /* ③ 三项档案卡：联盟历史排名 / 名人堂 / 峰值评分 */
   var cw=(W-M*2-40)/3,ch=112;
-  [['NBA 历史排名',rankL||'—'],['名人堂',hofL||'—'],['峰值评分',String(num81v((inp&&inp.rec&&inp.rec.bestOvr)||0))]].forEach(function(it,i){
+  [['联盟历史排名',rankL||'—'],['名人堂',hofL||'—'],['峰值评分',String(num81v((inp&&inp.rec&&inp.rec.bestOvr)||0))]].forEach(function(it,i){
     var cx=M+i*(cw+20);
     g.fillStyle='rgba(255,255,255,.06)';rr(cx,y,cw,ch,14);g.fill();
     g.strokeStyle='rgba(255,216,143,.28)';g.lineWidth=1.5;rr(cx,y,cw,ch,14);g.stroke();

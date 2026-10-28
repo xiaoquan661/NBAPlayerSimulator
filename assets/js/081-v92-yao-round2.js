@@ -48,7 +48,7 @@ function num92(v,d){var n=Number(v);return isFinite(n)?n:(d||0)}
 /* ==========================================================================
  * 问题 ① · 退役海报的名次改用真实排名函数
  *   接缝：renderRetired 是全局函数（可包装）；海报里的名次块有固定标记
- *   「NBA 历史排名</small><b class="...">XXX</b>」，按它替换。
+ *   「联盟历史排名</small><b class="...">XXX</b>」，按它替换。
  * ========================================================================== */
 function v92TrueRankLabel(){
   try{
@@ -81,9 +81,9 @@ try{
         var t=v92TrueRankLabel();
         if(!t||typeof h!=='string'||!h)return h;
         /* 替换海报里的名次块（只替换这一处，不动其它文案） */
-        var re=/NBA 历史排名<\/small><b class="[^"]*">[^<]*<\/b>/;
+        var re=/联盟历史排名<\/small><b class="[^"]*">[^<]*<\/b>/;
         if(re.test(h)){
-          h=h.replace(re,'NBA 历史排名</small><b class="'+t.tier+'">'+t.label+'</b>');
+          h=h.replace(re,'联盟历史排名</small><b class="'+t.tier+'">'+t.label+'</b>');
         }
       }catch(e){}
       return h;
@@ -103,7 +103,7 @@ try{
         var t=v92TrueRankLabel();
         if(t&&out&&typeof out==='object'&&typeof out.content==='string'){
           /* 把正文里可能出现的旧名次行替换成真实名次 */
-          out.content=out.content.replace(/NBA 历史排名：[^\n]*/,'NBA 历史排名：'+t.label);
+          out.content=out.content.replace(/联盟历史排名：[^\n]*/,'联盟历史排名：'+t.label);
         }
       }catch(e){}
       return out;

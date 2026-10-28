@@ -77,7 +77,7 @@ function v87DataScore(tot,avg,rec){
     s+=num87(tot.steals,0)*0.0080;
     s+=num87(tot.blocks,0)*0.0080;
     s+=num87(tot.games,0)*0.10;            /* 出场：由 0.42 降到 0.10（加分项，不主导） */
-    s+=num87(tot.seasons,0)*3.0;           /* 赛季厚度：由 6.5 降到 3.0 */
+    s+=num87(tot.seasons,0)*4.0;           /* 赛季厚度：适配 12–15 赛季节奏（原 3.0） */
     s+=num87(avg.pts,0)*2.4;               /* 生涯场均（峰值能力）仍然重视 */
     s+=num87(avg.reb,0)*1.1;
     s+=num87(avg.ast,0)*1.3;

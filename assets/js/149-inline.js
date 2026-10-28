@@ -12,12 +12,11 @@
   'use strict';
   window.__ORIGINAL_GROWTH__ = false;
 
-  const ATTR_NAMES = { finishing: '终结', shooting: '投射', playmaking: '组织', defense: '防守', rebounding: '篮板', athleticism: '运动', durability: '耐久', mentality: '心态' };
+  const ATTR_NAMES = { finishing: '终结', shooting: '投射', playmaking: '组织', defense: '防守', steals: '抢断', blocks: '盖帽', strength: '力量', rebounding: '篮板', athleticism: '运动', durability: '耐久', mentality: '心态' };
   const ATTR_KEYS = Object.keys(ATTR_NAMES);
 
   /* ---------- 存档字段初始化（对 custom 球员） ---------- */
-  const CAP_BASE_GAP = 12;   // 明星模式的初始动态上限；自建模板另用 8
-  const CAP_STEP = 4;        // 每 1 点专精提升的上限
+  const CAP_STEP = 4;        // 每 1 点专精提升的上限（仅用于兼容旧逻辑）
   const CAP_EFF_FULL = 20;   // 差距达到 20 时学习效率 100%
 
   function ensureGrowth(career) {
@@ -26,7 +25,7 @@
     ATTR_KEYS.forEach(k => { if (typeof career.focus[k] !== 'number') career.focus[k] = 0; });
     if (!career.focusLocked) career.focusLocked = {};
     ATTR_KEYS.forEach(k => { if (typeof career.focusLocked[k] !== 'number') career.focusLocked[k] = 0; });
-    /* 旧档迁移：模板数值以当前表为准，避免旧版低 cap 把存档卡死。 */
+    /* 旧档迁移：模板名称与曲线以当前表为准，避免旧版字段缺失。 */
     try {
       if (career.playerId === 'custom' && career.__arch && career.__arch.key && window.__ARCHETYPES__) {
         const meta = window.__ARCHETYPES__[career.__arch.key];
@@ -66,7 +65,7 @@
       }
     }
     if (career.playerId !== 'custom') initStarCaps(career);
-    /* 模板 cap 之外的潜力线不再对外展示；专精点只能把潜力推到模板线。 */
+    /* 模板不再限制潜力上限；所有出身最终都能成长到 110。 */
     if (career.playerId === 'custom' && career.__arch && career.potentialCaps) {
       const hard = hardCapFor(career);
       ATTR_KEYS.forEach(k => {
@@ -97,7 +96,8 @@
   }
 
   function hardCapFor(c) {
-    return Math.min(99, (c && c.__arch && c.__arch.cap) || 92);
+    /* 所有出身统一 110 硬上限；出身只影响初始能力与初始潜力，不再限制天花板。 */
+    return 110;
   }
 
   /* ---------- 赛季分配锁定 ----------
@@ -130,32 +130,21 @@
     return hasSpendablePoint() || pendingFocus() > 0;
   }
 
-  const CAP_VERSION = 3;
+  const CAP_VERSION = 5;
 
   function initDynCaps(c) {
     if (!c) return;
     if (!c.dynCap) c.dynCap = {};
     const hard = hardCapFor(c);
-    /* 自建球员的模板空间更紧，让专精点有明确的“推高成长上限”作用。 */
-    const gap = (c.playerId === 'custom' && c.__arch) ? 8 : CAP_BASE_GAP;
+    /* 不再按出身 / 模板设置成长上限：所有属性都可以自然成长到 110。
+       出身只影响初始能力和初始潜力，专精点只影响潜力线与成长效率。 */
     if (c.dynCapVersion !== CAP_VERSION) {
-      // 公式版本升级 / 旧档迁移：按当前能力 + 基础空间 + 已投入专精重算一次
       c.dynCap = {};
-      ATTR_KEYS.forEach(k => {
-        const val = c.attrs[k] || 0;
-        const f = (c.focus && c.focus[k]) || 0;
-        c.dynCap[k] = Math.max(val, Math.min(hard, Math.round(val + gap + f * CAP_STEP)));
-      });
+      ATTR_KEYS.forEach(k => { c.dynCap[k] = hard; });
       c.dynCapVersion = CAP_VERSION;
       return;
     }
-    ATTR_KEYS.forEach(k => {
-      const val = c.attrs[k] || 0;
-      let cap = c.dynCap[k];
-      // 之后只有投入/撤回专精点才会改变；这里只保证不低于当前能力、不超过模板。
-      if (typeof cap !== 'number') cap = val + gap;
-      c.dynCap[k] = Math.max(val, Math.min(hard, Math.round(cap)));
-    });
+    ATTR_KEYS.forEach(k => { c.dynCap[k] = hard; });
   }
 
   function dynCapFor(c, k) {
@@ -221,12 +210,16 @@
     // 专精点不再直接乘学习效率；它改为把潜力线向右推 1 点。
     // 潜力线提高后，val/pot 下降，学习效率会自然回升。
     let r = base;
+    /* 传奇天赋【超级学习力】：24 岁前成长效率 +35%。 */
+    try {
+      if (career.age <= 24 && typeof hasTalent === 'function' && hasTalent('learn')) r *= 1.35;
+    } catch (e) {}
     try {
       const mods = career.__arch && career.__arch.mods;
       if (mods && mods[k]) r *= mods[k];
       const dg = career.__arch && career.__arch.difficultyGrowth;
       if (dg) r *= dg;
-      /* 成长模板 cap：到达动态上限后不再常规成长。 */
+      /* 到达 110 硬上限后不再常规成长。 */
       if (career.playerId === 'custom' && career.__arch) {
         const dc = dynCapFor(career, k);
         if (val >= dc) r *= 0.55;
@@ -321,6 +314,9 @@
       rebounding: (l.reb || 0) * 2.2,
       playmaking: (l.ast || 0) * 2.6,
       defense: ((l.stl || 0) * 4 + (l.blk || 0) * 3),
+      steals: (l.stl || 0) * 4.5,
+      blocks: (l.blk || 0) * 3.5,
+      strength: (l.reb || 0) * 0.9 + (l.pts || 0) * 0.15,
       athleticism: (l.pts || 0) * 0.35,
       durability: 8, mentality: 7 + (g.win ? 2 : 0)
     };
@@ -473,7 +469,7 @@
         const front = Number(career.__arch.front) || Number(meta.front) || 1;
         const slope = Number(career.__arch.slope) || Number(meta.slope) || 1.8;
         const cap = Number(career.__arch.cap) || Number(meta.cap) || 92;
-        /* 模板越高，成长窗口越宽；低档模板仍然会被 dynCap 挡住。 */
+        /* 模板只影响成长曲线和早晚熟；所有模板的硬上限统一为 110。 */
         const capBoost = cap >= 97 ? 2.3 : cap >= 93 ? 2.0 : cap >= 88 ? 1.7 : cap >= 84 ? 1.4 : 1.2;
         p *= capBoost;
         if (age <= 23) p *= Math.max(0.90, Math.min(1.12, 0.82 + front * 0.18));
@@ -514,7 +510,7 @@
     ATTR_KEYS.forEach(k => {
       const val = Number(career.attrs[k]) || 0;
       if (val >= hardFor(k)) return;
-      /* 模板 dynCap 是常规成长上限：没有专精投入时，能力到这里就停。 */
+      /* dynCap 现在统一为 110；只有硬上限会停止常规成长。 */
       if (career.playerId === 'custom' && career.__arch && val >= dynCapFor(career, k)) return;
       const s = growthWeight(k);
       if (s > bestScore) { bestScore = s; best = k; }
@@ -564,11 +560,13 @@
   /* ---------- 专精操作 ---------- */
   function ensurePotentialCaps() {
     if (!career) return;
-    if (!career.potentialCaps) {
-      career.potentialCaps = {};
-      const hard = (career.playerId === 'custom' && career.__arch) ? hardCapFor(career) : POT_MAX;
-      ATTR_KEYS.forEach(k => { career.potentialCaps[k] = Math.min(hard, potentialFor(k)); });
-    }
+    if (!career.potentialCaps) career.potentialCaps = {};
+    const hard = (career.playerId === 'custom' && career.__arch) ? hardCapFor(career) : POT_MAX;
+    ATTR_KEYS.forEach(k => {
+      if (typeof career.potentialCaps[k] !== 'number') {
+        career.potentialCaps[k] = Math.max(Number(career.attrs && career.attrs[k]) || 0, Math.min(hard, potentialFor(k)));
+      }
+    });
   }
 
   function addFocus(k) {
@@ -579,7 +577,7 @@
     const hard = customArch ? hardCapFor(career) : POT_MAX;
     const pot = potentialFor(k);
     const dyn = customArch ? dynCapFor(career, k) : hard;
-    if (pot >= hard && dyn >= hard) return notify(ATTR_NAMES[k] + ' 已经到模板上限');
+    if (pot >= hard && dyn >= hard) return notify(ATTR_NAMES[k] + ' 已经到硬上限 110');
     career.focus[k] = (career.focus[k] || 0) + 1;
     career.potentialCaps[k] = Math.min(hard, POT_MAX, pot + 1);
     if (customArch) {
@@ -674,6 +672,13 @@
 #focus-panel .sk-bot button:not(:disabled):hover{border-color:#ffd23f}
 #focus-panel .sk-bot button:disabled{opacity:.3;cursor:default}
 #focus-panel .sk-bot button.on{border-color:#ffd23f88;color:#ffd23f}
+.fp-ad{margin:12px 0;padding:12px 13px;border-radius:15px;background:linear-gradient(135deg,rgba(255,210,63,.10),rgba(28,33,41,.94));border:1px solid rgba(255,210,63,.24)}
+.fp-ad header{display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.fp-ad header b{color:#ffffff;font-size:12.5px}
+.fp-ad header span{color:#ffd23f;font-size:9.5px;font-weight:900}
+.fp-ad p{margin:5px 0 8px;color:#9aa3b2;font-size:10.5px;line-height:1.6}
+.fp-ad button{width:100%;height:38px;border:0;border-radius:12px;background:linear-gradient(135deg,#ffd23f,#f0a92e);color:#101318;font-size:11.5px;font-weight:900;cursor:pointer}
+.fp-ad button:disabled{opacity:.45;cursor:default}
 </style>`;
 
   // 面板 CSS 在模块初始化时就注入，保证右下角「专精面板」按钮在首次打开面板前也是深色样式
@@ -712,6 +717,71 @@
     }).join('');
   }
 
+  function adPointsHTML() {
+    try {
+      if (!career || typeof window.v63AdLeft !== 'function' || typeof window.v63WatchAdForPoints !== 'function') return '';
+      var left = Number(window.v63AdLeft()) || 0;
+      var used = (typeof window.v63AdSeen === 'function') ? Number(window.v63AdSeen()) || 0 : 0;
+      var limit = 3;
+      var points = 5;
+      return '<section class="fp-ad">'
+        + '<header><b>需要更多专精点？</b><span>看奖励视频 · +' + points + ' 专精点</span></header>'
+        + '<p>本赛季还可看 ' + left + ' 次（已看 ' + used + '/' + limit + '）。奖励直接加入当前专精点。</p>'
+        + '<button onclick="v63WatchAdForPoints()"' + (left <= 0 ? ' disabled' : '') + '>'
+        + (left > 0 ? '🎬 看奖励视频 · 获得 ' + points + ' 个专精点' : '本赛季次数已用完')
+        + '</button></section>';
+    } catch (e) { return ''; }
+  }
+
+  /* 广告现在直接发专精点：不再经过训练点，也不再做 2:1 换算。 */
+  let focusAdBusy = false;
+  const __gFocusAdWatch = async function () {
+    try {
+      if (!career || focusAdBusy) return false;
+      if (typeof window.v63AdLeft !== 'function') return false;
+      if (Number(window.v63AdLeft()) <= 0) {
+        notify('本赛季看广告得专精点的次数已用完');
+        return false;
+      }
+      if (typeof rewardAd === 'undefined' || !rewardAd || typeof rewardAd.request !== 'function') {
+        notify('广告组件未就绪');
+        return false;
+      }
+      focusAdBusy = true;
+      const owner = career, season = career.seasonNo, year = career.seasonYear;
+      try {
+        const rewarded = await rewardAd.request('dev_points');
+        if (!(rewarded === true || (rewarded && rewarded.success === true))) {
+          notify('广告未完成，未发放专精点');
+          return false;
+        }
+        if (career !== owner || owner.seasonNo !== season || owner.seasonYear !== year) {
+          notify('生涯或赛季已变化，本次奖励未计入其他存档');
+          return false;
+        }
+        career.v63AdCount = (typeof window.v63AdSeen === 'function' ? Number(window.v63AdSeen()) || 0 : Number(career.v63AdCount) || 0) + 1;
+        career.focusPts = (Number(career.focusPts) || 0) + 5;
+        career.feed = career.feed || [];
+        career.feed.unshift('奖励视频：获得 5 个专精点（本赛季第 ' + career.v63AdCount + '/3 次）。');
+        save();
+        render();
+        notify('已获得 5 个专精点 · 本赛季还剩 ' + Math.max(0, 3 - career.v63AdCount) + ' 次');
+        return true;
+      } catch (e) {
+        const msg = String((e && e.message) || e || '');
+        notify(msg === 'AD_NOT_REWARDED' ? '广告未完成，未发放专精点' : (msg || '广告暂时未完成，请稍后重试'));
+        return false;
+      } finally {
+        focusAdBusy = false;
+      }
+    } catch (e) {
+      focusAdBusy = false;
+      return false;
+    }
+  };
+  window.v63WatchAdForPoints = __gFocusAdWatch;
+  try { v63WatchAdForPoints = __gFocusAdWatch; } catch (e) {}
+
   function renderFocusPage() {
     ensureGrowth(career);
     ensureSeasonGrowth(career);
@@ -721,7 +791,7 @@
     const canDone = (career.focusPts <= 0 || !hasSpendablePoint()) && pending > 0;
     let hint;
     if (career.focusPts > 0 && hasSpendablePoint()) hint = '还有 ' + career.focusPts + ' 点未分配，分配完才能完成本季专精。';
-    else if (career.focusPts > 0 && !hasSpendablePoint()) hint = '所有潜力已到 ' + ((career.playerId === 'custom' && career.__arch) ? '模板上限' : POT_MAX) + '，剩余 ' + career.focusPts + ' 点专精已无法使用；确认已投入的点即可进入下一赛季。';
+    else if (career.focusPts > 0 && !hasSpendablePoint()) hint = '所有潜力已到硬上限 ' + POT_MAX + '，剩余 ' + career.focusPts + ' 点专精已无法使用；确认已投入的点即可进入下一赛季。';
     else if (pending > 0) hint = '本次已投入 ' + pending + ' 点，点击「完成分配」后本季锁定。';
     else if (locked > 0) hint = '本季专精已确认，不能撤回。下赛季结束后会发放新的专精点。';
     else hint = '本赛季还没有分配专精点。';
@@ -731,6 +801,7 @@
     return `<section class="focus-page">
 <div class="fp-page-head"><div><h2>技能 · 专精</h2></div><span class="fp-badge">剩余专精点<b>${career.focusPts}</b>${pending ? '<em>本次投入 ' + pending + ' 点</em>' : ''}</span></div>
 ${lastLine}
+${adPointsHTML()}
 <div class="fp-legend"><span><i class="lg-fill"></i>当前能力</span><span><i class="lg-pot"></i>潜力黄条</span><span>已投入 ${focused} 点</span><span>已锁定 ${locked} 点</span><span>本次投入 ${pending} 点</span></div>
 <div class="fp-list">${focusRows()}</div>
 ${confirmPanel}
@@ -851,7 +922,7 @@ ${confirmPanel}
     return r;
   };
 
-  /* ---------- 年龄曲线：31 岁后才开始衰退 ----------
+  /* ---------- 年龄曲线：29 岁后开始衰退，配合 12–15 赛季节奏 ----------
      自建球员不再走 v50 的“赛季目标自动补属性”。
      成长全部来自比赛；休赛期只处理年龄带来的身体下滑。 */
   function customAgeCurve() {
@@ -859,24 +930,32 @@ ${confirmPanel}
     career.age = (Number(career.age) || 22) + 1;
     const age = career.age;
     const long = (() => { try { return hasTalent('long'); } catch (e) { return false; } })();
-    if (age >= 31) {
+    career.flags = career.flags || {};
+    if (age >= 30 && !career.flags.secondSpring && typeof hasTalent === 'function' && hasTalent('late')) {
+      career.flags.secondSpring = true;
+      career.attrs.mentality = clamp((Number(career.attrs.mentality) || 50) + 2, 30, 110);
+      career.attrs.shooting = clamp((Number(career.attrs.shooting) || 50) + 1, 30, 110);
+      career.ovrMod = (Number(career.ovrMod) || 0) + 1;
+      career.feed.unshift('天赋【第二春】触发：30 岁后第一次明显衰退被改写，心态 +2、投射 +1、OVR 修正 +1。');
+    }
+    if (age >= 29) {
       const phys = ['athleticism', 'durability', 'finishing', 'defense'];
-      let chance = age >= 39 ? 0.96 : age >= 36 ? 0.82 : age >= 33 ? 0.62 : 0.38;
+      let chance = age >= 38 ? 0.96 : age >= 35 ? 0.84 : age >= 32 ? 0.66 : age >= 30 ? 0.52 : 0.40;
       if (long) chance *= 0.78;
       phys.forEach(k => {
         if (Math.random() >= chance) return;
         let drop = 1;
-        if (age >= 37 && !long && Math.random() < 0.32) drop = 2;
+        if (age >= 35 && !long && Math.random() < 0.32) drop = 2;
         career.attrs[k] = clamp((Number(career.attrs[k]) || 50) - drop, 30, 110);
       });
-      if (age >= 34) {
-        const skillChance = (long ? 0.22 : 0.34) + (age >= 38 ? 0.16 : 0);
+      if (age >= 31) {
+        const skillChance = (long ? 0.22 : 0.34) + (age >= 36 ? 0.16 : 0);
         ['shooting', 'playmaking', 'rebounding'].forEach(k => {
           if (Math.random() < skillChance) career.attrs[k] = clamp((Number(career.attrs[k]) || 50) - 1, 30, 110);
         });
       }
-      if (age >= 36 && Math.random() < 0.26) career.attrs.mentality = clamp((Number(career.attrs.mentality) || 50) - 1, 30, 110);
-      if (age === 31) career.feed.unshift('31 岁：身体恢复开始变慢，之后每个休赛期都会出现自然下滑。');
+      if (age >= 34 && Math.random() < 0.26) career.attrs.mentality = clamp((Number(career.attrs.mentality) || 50) - 1, 30, 110);
+      if (age === 29) career.feed.unshift('29 岁：身体恢复开始变慢，之后每个休赛期都会出现自然下滑。');
     }
     syncOvr();
     if (typeof save === 'function') save();
@@ -1016,7 +1095,7 @@ ${confirmPanel}
     const rate = learnRate(k);
     const pct = Math.round(rate * 100);
     let label;
-    if (val >= hard) label = customArch ? '已达模板上限' : '已达硬上限';
+    if (val >= hard) label = '已达硬上限';
     else if (customArch && val >= dynCapFor(career, k)) label = '已达成长上限 · 专精可提高';
     else if (val > pot) label = '超出潜力 · 成长放缓';
     else if (val === pot) label = '潜力线 · 开始放缓';
@@ -1062,7 +1141,7 @@ ${confirmPanel}
 .tr-moved h3{color:#ffffff;font-size:17px;margin:9px 0 7px;line-height:1.5}
 .tr-moved p{color:#9aa3b2;font-size:11.5px;line-height:1.8;margin:0 auto;max-width:320px}
 .tr-moved button{margin-top:15px;height:40px;padding:0 22px;border:0;border-radius:20px;background:#ffd23f;color:#101318;font-size:12.5px;font-weight:800;cursor:pointer}
-</style><section class="tr-moved"><h3>技能成长与专精加点，都在「球员」页</h3><button onclick="ui.tab='player';render()">打开球员页 →</button></section>`;
+</style><section class="tr-moved"><h3>技能成长与专精加点，都在「球员」页</h3><button onclick="ui.tab='player';render()">打开球员页 →</button></section>${adPointsHTML()}`;
   };
 
   // 7. offseasonView 文案适配（成长点 → 专精点）
