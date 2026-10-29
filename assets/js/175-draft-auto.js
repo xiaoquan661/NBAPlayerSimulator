@@ -1,6 +1,7 @@
 /* ============================================================
  * 175 · 选秀之夜自动播放
  * 选秀台词自动逐段出现；最后一段停在“开始职业生涯”，需要玩家点击。
+ * 「跳过」只跳到最后一幕，不会直接进入生涯。
  * 只改选秀夜的播放方式，不改顺位、球队和选秀结果。
  * ============================================================ */
 (function () {
@@ -94,15 +95,18 @@
       + '<div class="draft-dots">' + dots + '</div>'
       + (last
         ? '<button class="btn v175-draft-start" onclick="nextDraft()">开始职业生涯</button>'
-        : '<button class="v175-draft-skip" onclick="v175DraftSkip()">跳过动画，直接进入生涯 ›</button>')
+        : '<button class="v175-draft-skip" onclick="v175DraftSkip()">跳过到最后一幕 ›</button>')
       + '</div></section>';
   }
 
   window.v175DraftSkip = function () {
     stopAuto();
     try {
-      ui.draftStep = Math.max(0, draftLinesNow().length - 1);
-      createCareer();
+      var lines = draftLinesNow();
+      if (!lines.length) { render(); return; }
+      /* 只跳到最后一幕，仍然由玩家点「开始职业生涯」进入生涯。 */
+      ui.draftStep = Math.max(0, lines.length - 1);
+      render();
     } catch (e) {
       console.error('[175] draft skip failed', e);
       render();

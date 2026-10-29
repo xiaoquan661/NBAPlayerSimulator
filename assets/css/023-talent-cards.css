@@ -1,0 +1,201 @@
+/* ============================================================
+ * 023 · 天赋卡视觉强化 + 固定底部按钮禁用态
+ *   - 四张天赋卡：稀有度光晕、斜向高光、发光标签、选中呼吸光
+ *   - 禁用按钮统一实色置灰，不再用透明叠在复杂背景上
+ * ============================================================ */
+
+/* ---------- 卡片底板 ---------- */
+.app .v184-talent {
+  --tglow: rgba(95, 206, 138, .20);
+  --tline: rgba(95, 206, 138, .40);
+  --tline-bright: rgba(95, 206, 138, .70);
+  --tcolor: #7fe0a1;
+  --tbg1: #16261f;
+  --tbg2: #101720;
+  display: flex !important;
+  flex-direction: column;
+  gap: 4px !important;
+  position: relative !important;
+  isolation: isolate;
+  overflow: hidden !important;
+  border: 1px solid var(--tline) !important;
+  border-radius: 13px !important;
+  background:
+    radial-gradient(95% 85% at 100% 0%, var(--tglow), transparent 62%),
+    linear-gradient(150deg, var(--tbg1), var(--tbg2) 68%, #0d131a) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .10),
+    0 10px 24px rgba(0, 0, 0, .30) !important;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease !important;
+}
+
+/* 稀有度配色 */
+.app .v184-talent.common {
+  --tglow: rgba(95, 206, 138, .20);
+  --tline: rgba(95, 206, 138, .38);
+  --tline-bright: rgba(95, 206, 138, .68);
+  --tcolor: #7fe0a1;
+  --tbg1: #16261f;
+  --tbg2: #101720;
+}
+.app .v184-talent.good {
+  --tglow: rgba(77, 141, 255, .24);
+  --tline: rgba(77, 141, 255, .42);
+  --tline-bright: rgba(111, 163, 255, .72);
+  --tcolor: #8db6ff;
+  --tbg1: #16233a;
+  --tbg2: #101720;
+}
+.app .v184-talent.rare {
+  --tglow: rgba(160, 108, 255, .26);
+  --tline: rgba(160, 108, 255, .46);
+  --tline-bright: rgba(195, 155, 255, .76);
+  --tcolor: #c9a6ff;
+  --tbg1: #241a36;
+  --tbg2: #11161f;
+}
+.app .v184-talent.legend {
+  --tglow: rgba(255, 210, 63, .28);
+  --tline: rgba(255, 210, 63, .52);
+  --tline-bright: rgba(255, 224, 110, .86);
+  --tcolor: #ffdf7a;
+  --tbg1: #33270f;
+  --tbg2: #14181f;
+}
+
+/* 斜向高光 */
+.app .v184-talent::before,
+.app .v184-talent::after {
+  content: "" !important;
+  display: block !important;
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+.app .v184-talent::before {
+  left: -42%;
+  top: -85%;
+  width: 175%;
+  height: 130%;
+  transform: rotate(-14deg);
+  background: linear-gradient(180deg, rgba(255, 255, 255, .16), rgba(255, 255, 255, .03) 45%, rgba(255, 255, 255, 0) 68%);
+  opacity: .85;
+  transition: transform .35s ease, opacity .35s ease;
+}
+.app .v184-talent::after {
+  right: -30px;
+  top: -34px;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--tglow), rgba(255, 255, 255, 0) 70%);
+  filter: blur(2px);
+  opacity: .95;
+}
+.app .v184-talent.legend::before {
+  animation: v184LegendSheen 4.8s ease-in-out infinite;
+}
+.app .v184-talent > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* 稀有度标签：发光小胶囊 */
+.app .v184-talent small {
+  display: inline-flex !important;
+  align-items: center;
+  align-self: flex-start;
+  gap: 5px;
+  margin: 0 0 1px !important;
+  padding: 2px 8px !important;
+  border: 1px solid var(--tline) !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, .05) !important;
+  color: var(--tcolor) !important;
+  font-size: 9px !important;
+  font-weight: 900 !important;
+  line-height: 1.55 !important;
+  letter-spacing: .14em !important;
+  text-shadow: 0 0 10px var(--tglow);
+}
+.app .v184-talent small::before {
+  content: "" !important;
+  display: inline-block !important;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 7px currentColor;
+}
+.app .v184-talent b {
+  letter-spacing: .01em;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, .40);
+}
+.app .v184-talent span {
+  color: #c8d3e0 !important;
+}
+.app .v184-talent em {
+  color: #9ee7b8 !important;
+}
+
+/* 选中：只改外围描边为冷青色，卡面内部保持原有稀有度样式。
+   同时用 #app 提高优先级，覆盖 022 的 v181-arena 金色选中态。 */
+#app .v184-talent.on,
+.app .v184-talent.on {
+  border-color: #8fe9ff !important;
+  background:
+    radial-gradient(95% 85% at 100% 0%, var(--tglow), transparent 62%),
+    linear-gradient(150deg, var(--tbg1), var(--tbg2) 68%, #0d131a) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .10),
+    0 10px 24px rgba(0, 0, 0, .30) !important;
+}
+
+@keyframes v184TalentPulse {
+  0%, 100% { opacity: .55; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.18); }
+}
+
+@keyframes v184LegendSheen {
+  0%, 100% { transform: translateX(-6%) rotate(-14deg); opacity: .62; }
+  50% { transform: translateX(6%) rotate(-14deg); opacity: 1; }
+}
+
+@media (hover: hover) {
+  .app .v184-talent:hover {
+    transform: translateY(-2px);
+    border-color: var(--tline-bright) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, .14),
+      0 0 22px var(--tglow),
+      0 14px 28px rgba(0, 0, 0, .36) !important;
+  }
+  .app .v184-talent:hover::before {
+    transform: translateX(7%) rotate(-14deg);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app .v184-talent,
+  .app .v184-talent::before,
+  .app .v184-talent::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ---------- 禁用按钮：实色置灰，禁止透明 ---------- */
+.app .btn.primary:disabled,
+.app .btn.primary[disabled],
+.app .sticky-cta .btn:disabled,
+.app .sticky-cta .btn[disabled] {
+  background: #333a44 !important;
+  background-image: none !important;
+  border: 1px solid #4a525e !important;
+  color: #8b95a3 !important;
+  opacity: 1 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .05) !important;
+  text-shadow: none !important;
+  cursor: not-allowed;
+}
