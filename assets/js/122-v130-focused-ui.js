@@ -79,6 +79,25 @@ const style=document.createElement('style');style.textContent=`body.v130-dialog-
 `;document.head.appendChild(style);
 const trainStyle=document.createElement('style');trainStyle.textContent='.v133-train{margin-top:14px;padding:14px;border:1px solid #e6dfd2;border-radius:16px;background:#fffdf8}.v133-train-head{display:flex;justify-content:space-between;gap:10px;align-items:baseline;margin-bottom:10px}.v133-train-head b{font-size:13px;color:#263746}.v133-train-head span{font-size:9px;color:#8b806b;line-height:1.5;text-align:right}.v133-train-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.v133-train-grid button{border:1px solid #e3dccf;border-radius:12px;background:#faf7f0;color:#283e4b;padding:9px 4px;cursor:pointer;font-family:inherit}.v133-train-grid button b{display:block;font-size:11px}.v133-train-grid button span{display:block;font-size:9px;color:#9b8b74;margin-top:3px}.v133-train-grid button.is-on{border-color:#b49357;background:#f3ead9;box-shadow:inset 0 0 0 1px #b49357}.v133-train-grid button.is-on span{color:#a58144}@media(max-width:420px){.v133-train-grid{grid-template-columns:repeat(2,1fr)}}';document.head.appendChild(trainStyle);
 })();
+/* 专项集训模块改为夜场风格，并保证弹窗内容区可滚动。 */
+(function(){
+const st=document.createElement('style');st.id='v133-train-dark';
+st.textContent=[
+ '.v133-train{margin-top:14px;padding:14px;border:1px solid #2f3742;border-radius:16px;background:linear-gradient(145deg,#1b2028,#151a21);box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}',
+ '.v133-train-head b{color:#ffffff}',
+ '.v133-train-head span{color:#8a93a3}',
+ '.v133-train-grid button{border:1px solid #2f3742;border-radius:12px;background:#1c2129;color:#c9d1dc;transition:border-color .15s,background .15s,transform .15s}',
+ '.v133-train-grid button b{color:#ffffff}',
+ '.v133-train-grid button span{color:#8a93a3}',
+ '.v133-train-grid button.is-on{border-color:#ffd23f;background:#2a261b;box-shadow:inset 0 0 0 1px #ffd23f55}',
+ '.v133-train-grid button.is-on b{color:#ffe6a0}',
+ '.v133-train-grid button.is-on span{color:#ffd23f}',
+ '.v133-train-grid button:active{transform:scale(.98)}',
+ '@media(hover:hover){.v133-train-grid button:hover{border-color:#4a5664;background:#232b35}}',
+ '.v133-dialog .v133-content{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}'
+].join('');
+document.head.appendChild(st);
+})();
 /* v133: focused offseason operations and staged draft presentation. */
 (function(){
 const D=window.__v129Debug,esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
