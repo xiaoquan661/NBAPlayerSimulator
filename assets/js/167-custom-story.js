@@ -1395,7 +1395,57 @@
     return html;
   }
 
+  /* 广告会让页面短暂离开游戏；部分宿主回包时会顺带重置页面状态，
+     导致捏人页跳回明星选人页。这里在广告前后各存/还原一次页面身份。 */
+  function adPageSnapshot() {
+    try {
+      var C = window.__CREATOR__ || {};
+      return {
+        mode: window.__GAME_MODE__,
+        screen: ui && ui.screen,
+        tab: ui && ui.tab,
+        selected: ui && ui.selected,
+        awaiting: !!(ui && ui.starAwaitingPick),
+        step: C.step,
+        year: C.year,
+        origin: C.origin,
+        originRoll: C.originRoll,
+        style: C.style,
+        vow: C.vow,
+        difficulty: C.difficulty,
+        player: C.player,
+        talentReady: C.talentReady,
+        talents: ui && Array.isArray(ui.talents) ? ui.talents.slice() : null,
+        talentPick: ui ? ui.talentPick : null,
+        allTalents: !!(ui && ui.allTalents),
+        talentFreeUsed: ui ? ui.talentFreeUsed : 0
+      };
+    } catch (e) { return null; }
+  }
+
+  function adRestorePage(snap) {
+    if (!snap || snap.mode !== 'custom') return;
+    try {
+      window.__GAME_MODE__ = 'custom';
+      if (typeof ui !== 'undefined' && ui) {
+        ui.screen = snap.screen || 'select';
+        ui.selected = 'custom';
+        ui.starAwaitingPick = false;
+        if (snap.tab) ui.tab = snap.tab;
+        if (snap.talents) ui.talents = snap.talents;
+        if (snap.talentPick !== undefined) ui.talentPick = snap.talentPick;
+        ui.allTalents = !!snap.allTalents;
+        if (snap.talentFreeUsed !== undefined) ui.talentFreeUsed = snap.talentFreeUsed;
+      }
+      var C = window.__CREATOR__ || {};
+      ['step', 'year', 'origin', 'originRoll', 'style', 'vow', 'difficulty', 'player', 'talentReady'].forEach(function (k) {
+        if (snap[k] !== undefined) C[k] = snap[k];
+      });
+    } catch (e) {}
+  }
+
   window.v167UnlockOriginStory = async function () {
+    var snap = adPageSnapshot();
     try {
       var currentOrigin = originId();
       if (ui && ui.originStoryUnlockedFor === currentOrigin) {
@@ -1408,7 +1458,10 @@
       }
       var r = await rewardAd.request('exclusive_talent');
       var ok = (r === true) || (r && r.success === true);
+      /* 无论成功失败，先把页面还原回自建捏人流程，避免被宿主带回明星选人页。 */
+      adRestorePage(snap);
       if (!ok) {
+        render();
         notify('广告未完成，未解锁出身事件链');
         return;
       }
@@ -1424,6 +1477,8 @@
       render();
       notify('出身事件链已解锁 · 四个天赋一并打包');
     } catch (e) {
+      adRestorePage(snap);
+      try { render(); } catch (e2) {}
       var msg = String((e && e.message) || e || '');
       if (msg.indexOf('AD_NOT_REWARDED') >= 0) {
         notify('广告未完成，未解锁出身事件链');
