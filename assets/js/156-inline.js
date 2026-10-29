@@ -142,12 +142,32 @@
     return importantText(e.text);
   }
 
+  function wireIcon(kind) {
+    var d = {
+      attr: '<path d="M2.4 9.4 5 6.8l1.8 1.8L10.8 4"/><path d="M8.6 4h2.2v2.2"/>',
+      game: '<circle cx="6" cy="6" r="4.2"/><path d="M1.9 6h8.2M6 1.8v8.4M3 3.1c1.5 1.2 4.5 1.2 6 0M3 8.9c1.5-1.2 4.5-1.2 6 0"/>',
+      team: '<path d="M6 1.6 9.7 2.9v3.2c0 2-1.5 3.6-3.7 4.3-2.2-.7-3.7-2.3-3.7-4.3V2.9L6 1.6Z"/><path d="M4.5 5.7 5.7 7l2.1-2.5"/>',
+      season: '<path d="M3.2 1.9h5.6v2.3a2.8 2.8 0 0 1-5.6 0V1.9Z"/><path d="M3.2 3.1H1.7v.6c0 1.2 1 2.1 2.2 2.1M8.8 3.1h1.5v.6c0 1.2-1 2.1-2.2 2.1M6 7v1.9M4.1 10.2h3.8"/>',
+      info: '<path d="M6 1.8a4.2 4.2 0 0 0-2.6 7.5L3 11h6l-.4-1.7A4.2 4.2 0 0 0 6 1.8Z"/><path d="M4.9 11h2.2"/>',
+      important: '<path d="m6 1.5 1.35 2.75 3.05.45-2.2 2.15.52 3.05L6 8.45 4.28 9.9 4.8 6.85 2.6 4.7l3.05-.45L6 1.5Z"/>'
+    };
+    return '<svg viewBox="0 0 12 12" aria-hidden="true"' + (kind === 'important' ? ' class="is-star" fill="currentColor" stroke="none"' : ' fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round"') + '>' + (d[kind] || d.info) + '</svg>';
+  }
+
+  function tagHTML(e) {
+    var imp = isImportant(e);
+    var kind = e.kind || 'info';
+    return '<span class="wire-tag ' + kindCls(kind) + (imp ? ' is-important' : '') + '">'
+      + wireIcon(imp ? 'important' : kind)
+      + '<em>' + (KIND[kind] || '动态') + '</em></span>';
+  }
+
   function itemHTML(e, hidden) {
     var cls = e.kind === 'attr' ? 'grow' : e.kind;
     return '<article class="v156-wire-row wire-item ' + cls + (isImportant(e) ? ' is-important' : '') + '"'
       + (hidden ? ' style="display:none"' : '')
       + ' data-kind="' + (e.kind || 'info') + '">'
-      + '<span class="wire-tag">' + (isImportant(e) ? '重要' : (KIND[e.kind] || '动态')) + '</span>'
+      + tagHTML(e)
       + '<p>' + esc2(e.text) + '</p>'
       + (e.meta ? '<small>' + e.meta + '</small>' : '')
       + '</article>';
@@ -179,7 +199,9 @@
     }).join('');
     return '<section class="v156-wirebox' + (wireExpanded ? ' open' : '') + '">'
       + '<button type="button" class="v156-wirebar' + (imp ? ' is-important' : '') + '" aria-expanded="' + (wireExpanded ? 'true' : 'false') + '" onclick="v156WireToggle()">'
-      + '<span class="v156-wirebar-tag ' + (latest ? kindCls(latest.kind) : 'info') + '">' + (imp ? '重要' : (latest ? (KIND[latest.kind] || '动态') : '播报')) + '</span>'
+      + '<span class="v156-wirebar-tag ' + (latest ? kindCls(latest.kind) : 'info') + (imp ? ' is-important' : '') + '">'
+      + wireIcon(imp ? 'important' : (latest ? latest.kind : 'info'))
+      + '<em>' + (latest ? (KIND[latest.kind] || '动态') : '播报') + '</em></span>'
       + '<b>' + (latest ? esc2(latest.text) : '还没有播报，打完一场比赛会更新') + '</b>'
       + (unread > 0 ? '<em>' + (unread > 9 ? '9+' : unread) + ' 条新</em>' : '')
       + '<i class="v156-wirebar-chev">' + (wireExpanded ? '▴' : '▾') + '</i>'
@@ -240,7 +262,7 @@
     }
   });
 
-  /* 重要消息从顶部滑入，多条纵向堆叠；普通消息只更新播报条。 */
+  /* 成长消息和重要消息从顶部滑入，多条纵向堆叠；其他普通消息只更新播报条。 */
   function toastLayer() {
     var layer = document.getElementById('v156-wire-toasts');
     if (!layer) {
@@ -252,10 +274,18 @@
     return layer;
   }
 
+  var toastQueue = [];
+  var toastLive = 0;
+
   function closeBanner(el) {
-    if (!el || !el.parentNode) return;
+    if (!el || el.__v156Closed) return;
+    el.__v156Closed = true;
     el.classList.add('is-out');
-    setTimeout(function () { if (el.parentNode) el.remove(); }, 220);
+    setTimeout(function () {
+      if (el.parentNode) el.remove();
+      toastLive = Math.max(0, toastLive - 1);
+      pumpBanners();
+    }, 220);
   }
 
   function openWireFromToast() {
@@ -270,31 +300,44 @@
     }, 50);
   }
 
-  function showBanner(text) {
+  function createBanner(item) {
     var layer = toastLayer();
+    var kind = item && item.kind || 'info';
+    var grow = kind === 'attr';
+    var cls = grow ? 'is-attr' : 'is-important';
     var el = document.createElement('button');
     el.type = 'button';
-    el.className = 'v156-wire-toast';
-    el.innerHTML = '<small>重要播报</small><span></span><i>展开 ›</i>';
-    el.querySelector('span').textContent = text;
+    el.className = 'v156-wire-toast ' + cls;
+    el.innerHTML = '<small class="' + cls + '">' + wireIcon(grow ? 'attr' : 'important') + '<em>' + (grow ? '成长' : '重要') + '</em></small><span></span><i>展开 ›</i>';
+    el.querySelector('span').textContent = item && item.text || '';
     el.onclick = function () { closeBanner(el); openWireFromToast(); };
     /* 新消息插在最上面，旧消息整体往下挤。 */
     layer.insertBefore(el, layer.firstChild);
-    while (layer.children.length > 3) {
-      var last = layer.lastElementChild;
-      if (last) last.remove(); else break;
-    }
     setTimeout(function () { closeBanner(el); }, 5200);
   }
 
-  function toastImportant() {
+  function pumpBanners() {
+    while (toastLive < 3 && toastQueue.length) {
+      toastLive++;
+      createBanner(toastQueue.shift());
+    }
+  }
+
+  function enqueueBanner(item) {
+    toastQueue.push(item);
+    pumpBanners();
+  }
+
+  /* 成长消息不再按“是否重要”筛选，出现就排队弹；重要消息照旧弹。 */
+  function toastWire() {
     try {
       if (!career || career.retired || !ui || ui.screen !== 'career' || ui.modal || ui.storyEvent) return;
       var d = gather();
       if (career.wireToastSeq == null) { career.wireToastSeq = d.maxSeq; return; }
       var known = Number(career.wireToastSeq) || 0;
       var fresh = d.items.filter(function (x) {
-        if (!(x.seq > known) || !isImportant(x)) return false;
+        if (!(x.seq > known)) return false;
+        if (x.kind !== 'attr' && !isImportant(x)) return false;
         /* 玩家自己确认赛季目标的提示不用再弹一次。 */
         if (/^本季目标：/.test(String(x.text || ''))) return false;
         return true;
@@ -305,8 +348,8 @@
       /* 播报面板已经展开时，消息就在玩家眼前，不再弹顶部条。 */
       var openPanel = document.getElementById('v156-wire-panel');
       if (wireExpanded && openPanel && openPanel.classList.contains('open')) return;
-      /* fresh 是“最新在前”，倒序逐条插入，最终最新的一条在最上面。 */
-      fresh.slice(0, 3).reverse().forEach(function (x) { showBanner(x.text); });
+      /* fresh 最新在前；倒序入队后逐条弹出，任意时刻最新的一条仍在最上面。 */
+      fresh.slice().reverse().forEach(enqueueBanner);
     } catch (e) {}
   }
 
@@ -356,7 +399,7 @@
         var fab = document.getElementById('focus-fab');
         if (fab) fab.remove();
       } catch (e) {}
-      try { toastImportant(); } catch (e) {}
+      try { toastWire(); } catch (e) {}
       try { if (wireExpanded) markWireRead(); } catch (e) {}
       return r;
     };
@@ -380,10 +423,16 @@
     '.wire-item{background:#1c2129;border:1px solid #2f3742;border-radius:14px;padding:12px 14px}',
     '.wire-item p{color:#e8ecf1;font-size:12.5px;line-height:1.65;margin:0;word-break:break-word}',
     '.wire-item small{display:block;color:#8a93a3;font-size:9px;margin-top:6px}',
-    '.wire-tag{display:inline-block;font-size:9px;font-weight:800;color:#101318;background:#ffd23f;border-radius:7px;padding:2px 6px;margin-right:6px;vertical-align:1px}',
-    '.wire-item.game .wire-tag{background:#4d8dff;color:#0b1220}',
-    '.wire-item.season .wire-tag{background:#4ade80;color:#0b1a10}',
-    '.wire-item.team .wire-tag{background:#9aa3b2;color:#101318}',
+    '.wire-tag{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:900;color:#ffd23f;background:#ffd23f14;border:1px solid #ffd23f44;border-radius:7px;padding:2px 7px;margin-right:6px;vertical-align:middle}',
+    '.wire-tag em{font-style:normal}',
+    '.wire-tag svg{width:11px;height:11px;flex:none;filter:drop-shadow(0 0 2px currentColor)}',
+    /* 016 有 .wire-item.team/game/season .wire-tag!important，必须用更高优先级把分类色拿回来。 */
+    '.v156-wire-row.wire-item .wire-tag.attr{color:#c4a6ff!important;background:#8b5cf618!important;border-color:#8b5cf655!important}',
+    '.v156-wire-row.wire-item .wire-tag.game{color:#8bbcff!important;background:#4d8dff18!important;border-color:#4d8dff55!important}',
+    '.v156-wire-row.wire-item .wire-tag.season{color:#7fe0a1!important;background:#4ade8016!important;border-color:#4ade8055!important}',
+    '.v156-wire-row.wire-item .wire-tag.team{color:#ffb27a!important;background:#ff9f4318!important;border-color:#ff9f4355!important}',
+    '.v156-wire-row.wire-item .wire-tag.info{color:#aab4c2!important;background:#5f6b7a18!important;border-color:#5f6b7a55!important}',
+    '.v156-wire-row.wire-item .wire-tag.is-important{color:#ffd23f!important;background:#ffd23f1c!important;border-color:#ffd23f99!important;box-shadow:0 0 10px #ffd23f33}',
     '.wire-empty{background:#1c2129;border:1px dashed #2f3742;border-radius:14px;padding:22px 14px;color:#9aa3b2;font-size:12px;text-align:center;line-height:1.7}',
     '.wire-item.team p{color:#c9d1dc}',
     '.wire-item.grow{background:#211f16;border-color:#463c1d;border-left:3px solid #ffd23f}',
@@ -408,12 +457,18 @@
     '.v156-wirebar b{flex:1;min-width:0;font-size:11.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#e8ecf1;line-height:1.4}',
     '.v156-wirebar em{flex:none;font-style:normal;font-size:9px;font-weight:900;color:#101318;background:#ffd23f;border-radius:999px;padding:3px 7px;white-space:nowrap}',
     '.v156-wirebar i{flex:none;font-style:normal;color:#8a93a3;font-size:13px;line-height:1;transition:transform .2s ease}',
-    '.v156-wirebar-tag{flex:none;font-size:9px;font-weight:900;color:#101318;background:#ffd23f;border-radius:6px;padding:2px 6px;white-space:nowrap}',
-    '.v156-wirebar-tag.attr{background:#ffd23f;color:#101318}',
-    '.v156-wirebar-tag.game{background:#4d8dff;color:#0b1220}',
-    '.v156-wirebar-tag.season{background:#4ade80;color:#0b1a10}',
-    '.v156-wirebar-tag.team{background:#9aa3b2;color:#101318}',
-    '.v156-wirebar-tag.info{background:#5f6b7a;color:#e8ecf1}',
+    /* 覆盖 [class*="bar"] i 的蓝金渐变，否则箭头会变成一块色块。 */
+    '.v156-wirebar .v156-wirebar-chev{display:inline-flex!important;align-items:center;justify-content:center;width:auto!important;height:auto!important;min-width:0!important;padding:0!important;border:0!important;border-radius:0!important;background:none!important;background-image:none!important;box-shadow:none!important;color:#8a93a3!important;font-size:13px!important;line-height:1!important}',
+    '.v156-wirebar-tag{flex:none;display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:900;color:#ffd23f;background:#ffd23f14;border:1px solid #ffd23f44;border-radius:6px;padding:2px 7px;white-space:nowrap}',
+    '.v156-wirebar-tag em{font-style:normal}',
+    '.v156-wirebar-tag svg{width:11px;height:11px;flex:none;filter:drop-shadow(0 0 2px currentColor)}',
+    /* 016 的 span{color:#d6dbe3!important} 会吃掉标签颜色，这里必须同样 !important。 */
+    '.v156-wirebar-tag.attr{color:#c4a6ff!important;background:#8b5cf618!important;border-color:#8b5cf655!important}',
+    '.v156-wirebar-tag.game{color:#8bbcff!important;background:#4d8dff18!important;border-color:#4d8dff55!important}',
+    '.v156-wirebar-tag.season{color:#7fe0a1!important;background:#4ade8016!important;border-color:#4ade8055!important}',
+    '.v156-wirebar-tag.team{color:#ffb27a!important;background:#ff9f4318!important;border-color:#ff9f4355!important}',
+    '.v156-wirebar-tag.info{color:#aab4c2!important;background:#5f6b7a18!important;border-color:#5f6b7a55!important}',
+    '.v156-wirebar-tag.is-important{color:#ffd23f!important;background:#ffd23f1c!important;border-color:#ffd23f99!important;box-shadow:0 0 10px #ffd23f33}',
     '.v156-wire-panel{max-height:0;opacity:0;overflow:hidden;border:1px solid transparent;border-top:0;border-radius:0 0 13px 13px;background:#10161d;transition:max-height .3s ease,opacity .18s ease,border-color .2s ease;margin-top:-1px}',
     '.v156-wire-panel.open{max-height:min(52dvh,460px);opacity:1;border-color:#2f3742;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}',
     '.v156-wire-panel-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:10px 12px 0}',
@@ -429,7 +484,11 @@
     '.v156-wire-toasts{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:200005;display:flex;flex-direction:column;gap:8px;width:min(440px,calc(100% - 28px));pointer-events:none}',
     '.v156-wire-toast{pointer-events:auto;display:flex;align-items:center;gap:9px;width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid #ffd23f66;border-left:3px solid #ffd23f;border-radius:13px;background:#141a22;color:#e8ecf1;text-align:left;font-family:inherit;box-shadow:0 14px 40px #0008;cursor:pointer;animation:v156WireDrop .32s cubic-bezier(.2,1.15,.35,1)}',
     '.v156-wire-toast.is-out{animation:v156WireToastOut .22s ease-in forwards}',
-    '.v156-wire-toast small{flex:none;font-size:9px;font-weight:900;color:#101318;background:#ffd23f;border-radius:6px;padding:2px 6px}',
+    '.v156-wire-toast.is-attr{border-color:#8b5cf666;border-left-color:#c4a6ff}',
+    '.v156-wire-toast.is-attr small{background:#c4a6ff!important;color:#101318!important}',
+    '.v156-wire-toast small{flex:none;display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:900;color:#101318!important;background:#ffd23f;border-radius:6px;padding:2px 6px}',
+    '.v156-wire-toast small em{font-style:normal}',
+    '.v156-wire-toast small svg{width:10px;height:10px;flex:none}',
     '.v156-wire-toast span{flex:1;min-width:0;font-size:11px;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
     '.v156-wire-toast i{flex:none;font-style:normal;font-size:9px;color:#ffd23f}',
     '@keyframes v156WireDrop{0%{opacity:0;transform:translateY(-140%)}70%{opacity:1;transform:translateY(4px)}100%{opacity:1;transform:translateY(0)}}',

@@ -46,9 +46,14 @@
         }
       }
     } catch (e) {}
-    /* 老存档兼容：已经玩过更高难度的玩家不被降级锁回去。 */
+    /* 老存档兼容：已经玩过更高难度的玩家不被降级锁回去。
+       163 包装过 load()，会按旧存档的 playerId 改写 __GAME_MODE__；
+       这里只是读难度，不能让正在捏人的自建模式被一份球星旧档切回 star。 */
     try {
-      const c = (typeof load === 'function') ? load() : null;
+      const modeBefore = window.__GAME_MODE__;
+      let c = null;
+      try { c = (typeof load === 'function') ? load() : null; }
+      finally { if (window.__GAME_MODE__ !== modeBefore) window.__GAME_MODE__ = modeBefore; }
       const d = c && c.__arch && c.__arch.difficulty;
       const idx = DIFF_ORDER.indexOf(d);
       if (idx >= 0) for (let i = 0; i <= idx; i++) out[DIFF_ORDER[i]] = true;

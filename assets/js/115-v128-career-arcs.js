@@ -90,9 +90,9 @@ function settle(m,s){
   if(s.settled||!s.goal)return;
   s.settled=true;s.success=achieved(s);
   var delta=s.success?5:(s.goal.id==='title'?-5:-2);
-  career.trust=cap(career.trust+delta);career.confidence=cap(career.confidence+(s.success?3:-2));
+  career.trust=cap(career.trust+delta);career.confidence=cap(career.confidence+(s.success?3:-1));
   if(s.success){career.devPoints=(Number(career.devPoints)||0)+1;m.reputation++}
-  var text='赛季目标「'+s.goal.title+'」'+(s.success?'完成：球队信任 +5，自信 +3，专精点 +1。':'未完成：球队信任 '+delta+'，自信 -2。');
+  var text='赛季目标「'+s.goal.title+'」'+(s.success?'完成：球队信任 +5，自信 +3，专精点 +1。':'未完成：球队信任 '+delta+'，自信 -1。');
   log(m,text);
   m.history.unshift({year:s.year,phase:s.phase,goal:s.goal.title,plan:s.plan,success:s.success,decisions:s.decisions.slice()});m.history=m.history.slice(0,25);
 }
