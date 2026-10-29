@@ -322,9 +322,35 @@ body.v181-arena .cover {
 }
 body.v181-arena .cover-hero-v214 { border-color: rgba(var(--v181-primary-rgb), .22) !important; }
 body.v181-arena .cover-topline i { background: linear-gradient(90deg, var(--v181-primary), transparent) !important; }
+body.v181-arena .cover-story-strip {
+  display: grid !important;
+  grid-template-columns: repeat(4, auto) !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 4px 24px !important;
+}
 body.v181-arena .cover-story-strip span {
-  background: rgba(var(--v181-primary-rgb), .07) !important;
-  border-color: rgba(var(--v181-primary-rgb), .22) !important;
+  background: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  color: #c3cbd6 !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  line-height: 2 !important;
+  letter-spacing: .04em !important;
+  white-space: nowrap !important;
+  text-align: center !important;
+  text-shadow: 0 1px 8px #000 !important;
+}
+body.v181-arena .cover-story-strip span::before {
+  content: "•";
+  color: #ffd23f !important;
+  margin-right: 6px !important;
+  font-size: 8px !important;
+  vertical-align: 1px !important;
 }
 
 /* ---------- 导航 / 页头 ---------- */

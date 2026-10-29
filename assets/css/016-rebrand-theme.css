@@ -382,8 +382,9 @@ th{background:#212730!important}
 .cover-title-v214 p{color:#9aa3b2!important}
 .cover-title-v214 h1 em{color:#ffd23f!important}
 .cover-title-v214 h1 em:after{background:#ffd23f!important}
-.cover-story-strip{grid-template-columns:repeat(4,1fr)!important}
-.cover-story-strip span{background:#1c2129!important;border-color:#2f3742!important;color:#d6dbe3!important}
+.cover-story-strip{display:grid!important;grid-template-columns:repeat(4,auto)!important;justify-content:center!important;align-items:center!important;gap:4px 24px!important;margin-top:10px!important;padding:2px 4px!important}
+.cover-story-strip span{background:none!important;border:0!important;border-radius:0!important;box-shadow:none!important;padding:0!important;margin:0!important;color:#c3cbd6!important;font-size:10px!important;font-weight:800!important;line-height:2!important;letter-spacing:.04em!important;white-space:nowrap!important;text-align:center!important;text-shadow:0 1px 8px #000!important}
+.cover-story-strip span::before{content:"•";color:#ffd23f!important;margin-right:6px!important;font-size:8px!important;vertical-align:1px!important}
 .cover.cover-v214 .cover-actions{background:linear-gradient(180deg,rgba(18,21,26,0),rgba(18,21,26,.94) 22%,#12151a 62%)!important;border-top-color:#2a3038!important;box-shadow:0 -12px 26px #00000066!important}
 .cover-v214 .asset-slot{background:#0f1319!important;color:#6b7484!important}
 .ng-notice{position:relative;z-index:3;margin:18px 0 16px;padding:16px 18px;border:1px solid #2f3742;border-radius:18px;background:linear-gradient(135deg,#1c2129,#151a21);color:#e8ecf1;box-shadow:0 12px 32px #00000055}
