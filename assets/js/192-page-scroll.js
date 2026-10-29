@@ -35,13 +35,29 @@
     return s;
   }
 
+  /* 自定义捏人页自带内部滚动容器：部分宿主会锁住页面本身滚动。
+     这类页面统一以 .creator-wrap 的 scrollTop 为准。 */
+  function creatorScroller() {
+    try { return document.querySelector('.creator-wrap'); } catch (e) { return null; }
+  }
+
   function currentY() {
-    try { return Number(window.scrollY) || Number(document.documentElement.scrollTop) || Number(document.body.scrollTop) || 0; }
-    catch (e) { return 0; }
+    try {
+      var c = creatorScroller();
+      if (c) return Number(c.scrollTop) || 0;
+      return Number(window.scrollY) || Number(document.documentElement.scrollTop) || Number(document.body.scrollTop) || 0;
+    } catch (e) { return 0; }
   }
 
   function scrollToY(y) {
-    try { window.scrollTo(0, Math.max(0, Number(y) || 0)); } catch (e) {}
+    try {
+      var c = creatorScroller();
+      if (c) {
+        c.scrollTop = Math.max(0, Number(y) || 0);
+        return;
+      }
+      window.scrollTo(0, Math.max(0, Number(y) || 0));
+    } catch (e) {}
   }
 
   function reset() {
@@ -68,14 +84,18 @@
 
       var afterKey = pageKey();
       displayedKey = afterKey;
+      var target = positions[afterKey] || 0;
       if (afterKey !== beforeKey) {
-        var target = positions[afterKey] || 0;
         var token = ++navToken;
         scrollToY(target);
         /* 页面高度刚变化时，浏览器可能先夹住滚动值；稍后再补一次。 */
         setTimeout(function () {
           if (token === navToken && pageKey() === afterKey) scrollToY(target);
         }, 35);
+      } else {
+        /* 同一页面内的重渲染（选位置/自白/天赋）会重建 DOM，
+           内部滚动容器会回到 0，这里恢复玩家刚才的位置。 */
+        scrollToY(target);
       }
       return out;
     };

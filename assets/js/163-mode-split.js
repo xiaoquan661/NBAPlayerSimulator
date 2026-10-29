@@ -30,7 +30,8 @@
     CG.vow = null;
     CG.step = 0;
     CG.originRoll = null;
-    CG.originRerolls = 2;
+    /* 不在这里重置 originRerolls：剩余次数由 148 按本段新生涯持久化，
+       退出捏人页再进来不会刷新免费重抽机会。 */
     CG.englishName = null;
     CG.playerNameZh = null;
     CG.nameKind = '';

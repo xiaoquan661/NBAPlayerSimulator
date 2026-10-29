@@ -171,10 +171,47 @@
   const CG = { step: 0, year: null, origin: null, difficulty: null, style: null, vow: null, originRoll: null, originRerolls: 2, englishName: null, playerNameZh: null, nameKind: '', talentReady: false };
   window.__CREATOR__ = CG;
 
+  /* 出身重抽机会只在“这一段新生涯”内有效。
+     退出捏人页再进来、或刷新页面，都沿用同一个出身和剩余次数，
+     避免靠反复退出白嫖重抽；真正进入生涯（createCareer）后才清空。 */
+  const ORIGIN_REROLL_KEY = 'bust_creator_origin_v1';
+  function readOriginRerollState() {
+    try {
+      const raw = window.localStorage.getItem(ORIGIN_REROLL_KEY);
+      if (!raw) return null;
+      const saved = JSON.parse(raw);
+      if (!saved || typeof saved.roll !== 'string' || !ORIGINS.some(x => x.id === saved.roll)) return null;
+      const left = Math.max(0, Math.min(2, Math.floor(Number(saved.left) || 0)));
+      return { roll: saved.roll, left: left };
+    } catch (e) { return null; }
+  }
+  function writeOriginRerollState() {
+    try {
+      if (!CG.originRoll) return;
+      window.localStorage.setItem(ORIGIN_REROLL_KEY, JSON.stringify({
+        roll: CG.originRoll,
+        left: Math.max(0, Math.floor(Number(CG.originRerolls) || 0))
+      }));
+    } catch (e) {}
+  }
+  function clearOriginRerollState() {
+    try { window.localStorage.removeItem(ORIGIN_REROLL_KEY); } catch (e) {}
+  }
+
   function ensureOriginRollState() {
     if (!CG.originRoll && CG.origin) CG.originRoll = CG.origin;
-    if (!CG.originRoll) CG.originRoll = ORIGINS[Math.floor(Math.random() * ORIGINS.length)].id;
+    if (!CG.originRoll) {
+      const saved = readOriginRerollState();
+      if (saved) {
+        CG.originRoll = saved.roll;
+        CG.originRerolls = saved.left;
+      } else {
+        CG.originRoll = ORIGINS[Math.floor(Math.random() * ORIGINS.length)].id;
+        CG.originRerolls = 2;
+      }
+    }
     if (typeof CG.originRerolls !== 'number') CG.originRerolls = 2;
+    writeOriginRerollState();
   }
 
   function pickYear(year) {
@@ -189,6 +226,7 @@
     let cur = CG.originRoll, next = cur, n = 0;
     while (next === cur && n++ < 20) next = ORIGINS[Math.floor(Math.random() * ORIGINS.length)].id;
     CG.originRoll = next;
+    writeOriginRerollState();
     window.render && render();
   }
 
@@ -206,6 +244,7 @@
       const ok = (r === true) || (r && r.success === true);
       if (!ok) { try { notify('广告未完成，未刷新'); } catch (e) {} return; }
       CG.originRerolls = 2;
+      writeOriginRerollState();
       window.render && render();
       try { notify('出身重抽次数已刷新 · 剩 2 次'); } catch (e) {}
     } catch (e) {
@@ -989,10 +1028,9 @@
     return wizardShell(2, 'DIFFICULTY MODULE · 独立模块', '这一局有多难', `年代：${era.range} · ${era.n}。出身：${o.n}。球风：${s.n}。`, body, cta);
   }
 
+  /* 兼容旧入口：统一走带持久化的版本。 */
   function ensureOriginRoll() {
-    if (!CG.originRoll && CG.origin) CG.originRoll = CG.origin;
-    if (!CG.originRoll) CG.originRoll = ORIGINS[Math.floor(Math.random() * ORIGINS.length)].id;
-    if (typeof CG.originRerolls !== 'number') CG.originRerolls = 2;
+    ensureOriginRollState();
   }
 
   function ensureEnglishName() {
@@ -1142,7 +1180,10 @@
   const __customCreateCareer = function () {
     /* 模拟明星模式走原版 createCareer，不经过自建球员的潜力/专精初始化。 */
     if (window.__GAME_MODE__ === 'star') {
-      return _origCreateCareer.call(window);
+      const starResult = _origCreateCareer.call(window);
+      /* 任何模式正式开局，都视为上一段捏人尝试结束。 */
+      clearOriginRerollState();
+      return starResult;
     }
     // 复用确认页已经生成并展示过的球员，避免进入生涯时重新随机一次潜力。
     const p = CG.player || buildPlayer();
@@ -1157,6 +1198,8 @@
     window.currentP = _origCurrentP;
     // 生涯对象附加成长模板（球探报告展示名称与描述）
     if (typeof career !== 'undefined' && career) {
+      /* 正式进入生涯后，下一次新建球员重新拥有 2 次免费重抽。 */
+      clearOriginRerollState();
       if (dr && dr.teamAbbr) career.team = dr.teamAbbr;
       if (dr && dr.team) career.draftTeamName = dr.team;
       const df = DIFFICULTIES.find(x => x.id === CG.difficulty) || DIFFICULTIES[1];
