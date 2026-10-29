@@ -118,7 +118,7 @@ window.v128Choose=function(goal,plan){
   s.goal=g;s.plan=plan;log(m,'本季目标：'+g.title+'。你选择以「'+plans[plan].title+'」的方式迎接这一年。');commit();return true;
 };
 /* 赛季目标锁定后，打法策略可以在赛季中随时调整，下一场生效。 */
-window.v128ChangePlan=function(plan){
+window.v128ChangePlan=function(plan,skipRender){
   var m=ensure();if(!m)return false;var s=m.season;
   if(!s.goal||s.settled||career.retired||!canChoose())return false;
   if(!plans[plan]||(plan==='mentor'&&s.phase!=='veteran'))return false;
@@ -126,7 +126,9 @@ window.v128ChangePlan=function(plan){
   var old=s.plan;
   s.plan=plan;
   log(m,'打法调整：从「'+(plans[old]?plans[old].title:'未定')+'」切换为「'+plans[plan].title+'」，下一场生效。');
-  commit();return true;
+  /* 弹窗内切换只落盘，不整页重绘，避免闪屏。 */
+  if(skipRender){if(typeof save==='function')save();}else commit();
+  return true;
 };
 function decision(s){}
 window.v128Decide=function(){return false};

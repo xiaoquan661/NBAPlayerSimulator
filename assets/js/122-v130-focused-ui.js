@@ -31,9 +31,21 @@ window.v130Open=function(v){if(!['promise','history'].includes(v))return;ui.v130
 window.v130Close=function(){const m=arc();ui.v130Dismiss=m?key(m.season):null;ui.v130Popup=null;render()};
 function key(s){return career.playerId+':'+s.no+':'+(s.pending?'decision'+s.pending.mark:'promise')}
 function chooseCard(id,title,desc,selected,action){return '<button class="v130-option '+(selected?'is-selected':'')+'" aria-pressed="'+selected+'" onclick="'+action+'"><span class="v130-radio"></span><span><b>'+e(title)+'</b><small>'+e(desc)+'</small></span></button>'}
-window.v130Goal=function(id){const m=arc();if(!m||!m.season.options.some(x=>x.id===id))return;ui.v130Goal=id;render()};
-window.v130Plan=function(id){if(!window.__v128Debug.plans[id])return;ui.v130Plan=id;render()};
-window.v130ChangePlan=function(id){if(!window.v128ChangePlan)return;ui.v130Plan=id;window.v128ChangePlan(id)};
+/* 只在弹窗内切换选中态，不整页 render，避免切换目标时闪屏。 */
+function applyChoice(action, id) {
+  const box = document.querySelector('.v130-dialog .v130-content');
+  if (!box) return;
+  Array.from(box.querySelectorAll('.v130-option')).forEach(function (b) {
+    const oc = b.getAttribute('onclick') || '';
+    if (oc.indexOf(action + '(') !== 0) return;
+    const on = oc.indexOf("'" + id + "'") >= 0;
+    b.classList.toggle('is-selected', on);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+}
+window.v130Goal=function(id){const m=arc();if(!m||!m.season.options.some(x=>x.id===id))return;ui.v130Goal=id;applyChoice('v130Goal', id)};
+window.v130Plan=function(id){if(!window.__v128Debug.plans[id])return;ui.v130Plan=id;applyChoice('v130Plan', id)};
+window.v130ChangePlan=function(id){if(!window.v128ChangePlan)return;ui.v130Plan=id;if(window.v128ChangePlan(id, true))applyChoice('v130ChangePlan', id)};
 window.v130Confirm=function(){const m=arc();if(!m)return;const g=ui.v130Goal||m.season.options[0]?.id,p=ui.v130Plan||'attack';if(window.v128Choose(g,p)){ui.v130Popup=null;render()}};
 window.v130Decision=function(id){if(window.v128Decide(id)){ui.v130Popup=null;render()}};
 function promise(m){const s=m.season,plans=window.__v128Debug.plans;
