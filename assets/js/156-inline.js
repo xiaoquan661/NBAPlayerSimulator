@@ -7,6 +7,8 @@
   'use strict';
 
   var KIND = { attr: '成长', game: '比赛', team: '球队', season: '赛季', info: '动态' };
+  var wireExpanded = false;
+  var wireFilter = 'all';
 
   function esc2(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
@@ -140,16 +142,30 @@
     return importantText(e.text);
   }
 
-  function itemHTML(e) {
+  function itemHTML(e, hidden) {
     var cls = e.kind === 'attr' ? 'grow' : e.kind;
-    return '<article class="v156-wire-row wire-item ' + cls + (isImportant(e) ? ' is-important' : '') + '" data-kind="' + (e.kind || 'info') + '">'
+    return '<article class="v156-wire-row wire-item ' + cls + (isImportant(e) ? ' is-important' : '') + '"'
+      + (hidden ? ' style="display:none"' : '')
+      + ' data-kind="' + (e.kind || 'info') + '">'
       + '<span class="wire-tag">' + (isImportant(e) ? '重要' : (KIND[e.kind] || '动态')) + '</span>'
       + '<p>' + esc2(e.text) + '</p>'
       + (e.meta ? '<small>' + e.meta + '</small>' : '')
       + '</article>';
   }
 
-  /* 顶部常驻消息条 */
+  function markWireRead() {
+    try {
+      var d = gather();
+      if (career.wireReadSeq !== d.maxSeq) {
+        career.wireReadSeq = d.maxSeq;
+        if (typeof save === 'function') save();
+      }
+      var em = document.querySelector('.v156-wirebar em');
+      if (em) em.parentNode.removeChild(em);
+    } catch (e) {}
+  }
+
+  /* 顶部常驻消息条 + 原地下拉展开面板 */
   function bar() {
     var d = gather();
     var latest = d.items[0];
@@ -157,103 +173,117 @@
     var read = readSeq(d.maxSeq);
     d.items.forEach(function (x) { if (x.seq > read) unread++; });
     var imp = isImportant(latest);
-    return '<button type="button" class="v156-wirebar' + (imp ? ' is-important' : '') + '" onclick="v156WireOpen()">'
+    var filters = [['all', '全部'], ['team', '球队'], ['game', '比赛'], ['attr', '成长'], ['season', '赛季']];
+    var rows = d.items.slice(0, 30).map(function (e) {
+      return itemHTML(e, wireFilter !== 'all' && e.kind !== wireFilter);
+    }).join('');
+    return '<section class="v156-wirebox' + (wireExpanded ? ' open' : '') + '">'
+      + '<button type="button" class="v156-wirebar' + (imp ? ' is-important' : '') + '" aria-expanded="' + (wireExpanded ? 'true' : 'false') + '" onclick="v156WireToggle()">'
       + '<span class="v156-wirebar-tag ' + (latest ? kindCls(latest.kind) : 'info') + '">' + (imp ? '重要' : (latest ? (KIND[latest.kind] || '动态') : '播报')) + '</span>'
       + '<b>' + (latest ? esc2(latest.text) : '还没有播报，打完一场比赛会更新') + '</b>'
       + (unread > 0 ? '<em>' + (unread > 9 ? '9+' : unread) + ' 条新</em>' : '')
-      + '<i>›</i>'
-      + '</button>';
-  }
-
-  function drawerHTML(d) {
-    var filters = [['all', '全部'], ['team', '球队'], ['game', '比赛'], ['attr', '成长'], ['season', '赛季']];
-    var rows = d.items.slice(0, 30).map(itemHTML).join('');
-    return '<div class="v156-wire-overlay" id="v156-wire-overlay" onclick="if(event.target===this)v156WireClose()">'
-      + '<section class="v156-wire-sheet" role="dialog" aria-modal="true" aria-label="生涯播报">'
-      + '<header><div><small>生涯播报</small><h2>球队与联盟动态</h2>'
-      + '<p>' + d.season + ' · ' + d.wins + '胜' + d.losses + '负 · ' + (d.gp ? d.gp + ' 场' : '尚未出场') + '</p></div>'
-      + '<button class="v156-wire-close" aria-label="关闭播报" onclick="v156WireClose()">×</button></header>'
+      + '<i class="v156-wirebar-chev">' + (wireExpanded ? '▴' : '▾') + '</i>'
+      + '</button>'
+      + '<div class="v156-wire-panel' + (wireExpanded ? ' open' : '') + '" id="v156-wire-panel">'
+      + '<div class="v156-wire-panel-head"><small>生涯播报</small><span>' + d.season + ' · ' + d.wins + '胜' + d.losses + '负 · ' + (d.gp ? d.gp + ' 场' : '尚未出场') + '</span></div>'
       + '<div class="v156-wire-filters">'
-      + filters.map(function (f, i) {
-          return '<button class="v156-wire-filter' + (i === 0 ? ' on' : '') + '" onclick="v156WireFilter(\'' + f[0] + '\',this)">' + f[1] + '</button>';
+      + filters.map(function (f) {
+          return '<button class="v156-wire-filter' + (wireFilter === f[0] ? ' on' : '') + '" onclick="v156WireFilter(\'' + f[0] + '\',this)">' + f[1] + '</button>';
         }).join('')
       + '</div>'
       + '<div class="v156-wire-body">'
       + (rows || '<div class="wire-empty">还没有播报。打一场比赛，能力成长和球队动态会在这里更新。</div>')
-      + '</div></section></div>';
+      + '</div></div></section>';
   }
 
-  window.v156WireOpen = function () {
-    try {
-      if (!career || document.getElementById('v156-wire-overlay')) return;
-      var d = gather();
-      if (career.wireReadSeq !== d.maxSeq) {
-        career.wireReadSeq = d.maxSeq;
-        try { save(); } catch (e) {}
-      }
-      document.body.insertAdjacentHTML('beforeend', drawerHTML(d));
-      document.body.classList.add('v156-wire-open');
-      var em = document.querySelector('.v156-wirebar em');
-      if (em) em.remove();
-      var close = document.querySelector('.v156-wire-close');
-      if (close) try { close.focus(); } catch (e) {}
-    } catch (e) {}
+  window.v156WireToggle = function () {
+    var panel = document.getElementById('v156-wire-panel');
+    if (!panel) return;
+    wireExpanded = !wireExpanded;
+    panel.classList.toggle('open', wireExpanded);
+    var box = document.querySelector('.v156-wirebox');
+    if (box) box.classList.toggle('open', wireExpanded);
+    var bar = document.querySelector('.v156-wirebar');
+    if (bar) {
+      bar.setAttribute('aria-expanded', wireExpanded ? 'true' : 'false');
+      var chev = bar.querySelector('.v156-wirebar-chev');
+      if (chev) chev.textContent = wireExpanded ? '▴' : '▾';
+    }
+    if (wireExpanded) markWireRead();
   };
-
+  window.v156WireOpen = function () {
+    if (!wireExpanded) window.v156WireToggle();
+    else markWireRead();
+  };
   window.v156WireClose = function () {
-    var el = document.getElementById('v156-wire-overlay');
-    if (el) el.remove();
-    document.body.classList.remove('v156-wire-open');
+    if (wireExpanded) window.v156WireToggle();
   };
 
   window.v156WireFilter = function (kind, btn) {
-    var sheet = document.getElementById('v156-wire-overlay');
-    if (!sheet) return;
-    Array.prototype.forEach.call(sheet.querySelectorAll('.v156-wire-filter'), function (b) {
+    wireFilter = kind;
+    var panel = document.getElementById('v156-wire-panel');
+    if (!panel) return;
+    Array.prototype.forEach.call(panel.querySelectorAll('.v156-wire-filter'), function (b) {
       b.classList.toggle('on', b === btn);
     });
-    Array.prototype.forEach.call(sheet.querySelectorAll('.v156-wire-row'), function (row) {
+    Array.prototype.forEach.call(panel.querySelectorAll('.v156-wire-row'), function (row) {
       row.style.display = (kind === 'all' || row.getAttribute('data-kind') === kind) ? '' : 'none';
     });
-    var box = sheet.querySelector('.v156-wire-body');
+    var box = panel.querySelector('.v156-wire-body');
     if (box) box.scrollTop = 0;
   };
 
   document.addEventListener('keydown', function (event) {
-    if (event.key === 'Escape' && document.getElementById('v156-wire-overlay')) {
+    if (event.key === 'Escape' && wireExpanded) {
       event.preventDefault();
       window.v156WireClose();
     }
   });
 
-  /* 重要消息只提示一次；旧消息不补提示。 */
+  /* 重要消息从顶部滑入提示；普通消息只更新播报条。 */
   function toastImportant() {
     try {
       if (!career || career.retired || !ui || ui.screen !== 'career' || ui.modal || ui.storyEvent) return;
       var d = gather();
       if (career.wireToastSeq == null) { career.wireToastSeq = d.maxSeq; return; }
       var known = Number(career.wireToastSeq) || 0;
-      var fresh = d.items.filter(function (x) { return x.seq > known && isImportant(x); });
+      var fresh = d.items.filter(function (x) {
+        if (!(x.seq > known) || !isImportant(x)) return false;
+        /* 玩家自己确认赛季目标的提示不用再弹一次。 */
+        if (/^本季目标：/.test(String(x.text || ''))) return false;
+        return true;
+      });
       if (!fresh.length) return;
       career.wireToastSeq = Math.max.apply(null, fresh.map(function (x) { return x.seq; }));
       try { save(); } catch (e) {}
-      /* 赛季页顶部已经有播报条，不再重复弹提示。 */
-      if (ui.tab === 'season') return;
+      /* 播报面板已经展开时，消息就在玩家眼前，不再弹顶部条。 */
+      var openPanel = document.getElementById('v156-wire-panel');
+      if (wireExpanded && openPanel && openPanel.classList.contains('open')) return;
+      var now = Date.now();
+      if (career.__v156ToastAt && now - career.__v156ToastAt < 1500) return;
+      career.__v156ToastAt = now;
       var old = document.getElementById('v156-wire-toast');
       if (old) old.remove();
       var el = document.createElement('button');
       el.type = 'button';
       el.id = 'v156-wire-toast';
       el.className = 'v156-wire-toast';
-      el.innerHTML = '<small>重要播报</small><span></span><i>查看 ›</i>';
+      el.innerHTML = '<small>重要播报</small><span></span><i>展开 ›</i>';
       el.querySelector('span').textContent = fresh[0].text;
-      el.onclick = function () { el.remove(); window.v156WireOpen(); };
+      el.onclick = function () {
+        el.remove();
+        if (ui && ui.screen === 'career' && ui.tab !== 'season') {
+          ui.tab = 'season';
+          try { render(); } catch (e) {}
+        }
+        setTimeout(function () { if (window.v156WireOpen) window.v156WireOpen(); }, 40);
+      };
       document.body.appendChild(el);
-      setTimeout(function () { if (el.parentNode) el.remove(); }, 6000);
+      setTimeout(function () { if (el.parentNode) el.remove(); }, 5200);
     } catch (e) {}
   }
 
-  /* 顶部一行消息条；完整播报进底部抽屉，不再占据赛季页正文。 */
+  /* 顶部一行消息条；完整播报在条下原地展开。 */
   var prevSeasonView = seasonView;
   seasonView = function () {
     var h = prevSeasonView.apply(this, arguments);
@@ -296,6 +326,7 @@
         if (fab) fab.remove();
       } catch (e) {}
       try { toastImportant(); } catch (e) {}
+      try { if (wireExpanded) markWireRead(); } catch (e) {}
       return r;
     };
   } catch (e) {}
@@ -338,40 +369,38 @@
     '.wire-season .wire-item p{font-size:12px}',
     '.wire-season .wire-empty{padding:16px 12px;font-size:11px}',
 
-    /* ---------- 顶部播报条 + 抽屉 ---------- */
-    'body.v156-wire-open{overflow:hidden}',
-    '.v156-wirebar{position:sticky;top:0;z-index:35;display:flex;align-items:center;gap:8px;width:100%;box-sizing:border-box;margin:0 0 10px;padding:9px 12px;border:1px solid #2f3742;border-radius:13px;background:#141a22;color:#e8ecf1;text-align:left;font-family:inherit;cursor:pointer;box-shadow:0 6px 18px #0004}',
+    /* ---------- 顶部播报条 + 下拉面板 ---------- */
+    '.v156-wirebox{position:sticky;top:0;z-index:35;margin:0 0 10px}',
+    '.v156-wirebox.open .v156-wirebar{border-radius:13px 13px 0 0;border-bottom-color:#232b35}',
+    '.v156-wirebar{display:flex;align-items:center;gap:8px;width:100%;box-sizing:border-box;margin:0;padding:9px 12px;border:1px solid #2f3742;border-radius:13px;background:#141a22;color:#e8ecf1;text-align:left;font-family:inherit;cursor:pointer;box-shadow:0 6px 18px #0004;transition:border-color .18s ease}',
     '.v156-wirebar.is-important{border-color:#ffd23f88;box-shadow:inset 0 0 0 1px #ffd23f22,0 6px 20px #0005}',
     '.v156-wirebar b{flex:1;min-width:0;font-size:11.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#e8ecf1;line-height:1.4}',
     '.v156-wirebar em{flex:none;font-style:normal;font-size:9px;font-weight:900;color:#101318;background:#ffd23f;border-radius:999px;padding:3px 7px;white-space:nowrap}',
-    '.v156-wirebar i{flex:none;font-style:normal;color:#8a93a3;font-size:15px;line-height:1}',
+    '.v156-wirebar i{flex:none;font-style:normal;color:#8a93a3;font-size:13px;line-height:1;transition:transform .2s ease}',
     '.v156-wirebar-tag{flex:none;font-size:9px;font-weight:900;color:#101318;background:#ffd23f;border-radius:6px;padding:2px 6px;white-space:nowrap}',
     '.v156-wirebar-tag.attr{background:#ffd23f;color:#101318}',
     '.v156-wirebar-tag.game{background:#4d8dff;color:#0b1220}',
     '.v156-wirebar-tag.season{background:#4ade80;color:#0b1a10}',
     '.v156-wirebar-tag.team{background:#9aa3b2;color:#101318}',
     '.v156-wirebar-tag.info{background:#5f6b7a;color:#e8ecf1}',
-    '.v156-wire-overlay{position:fixed;inset:0;z-index:200010;background:rgba(3,6,10,.66);backdrop-filter:blur(4px);display:flex;align-items:flex-end;justify-content:center}',
-    '.v156-wire-sheet{width:100%;max-width:520px;max-height:82dvh;display:flex;flex-direction:column;background:#121820;color:#e8ecf1;border:1px solid #2f3742;border-bottom:0;border-radius:20px 20px 0 0;overflow:hidden;box-shadow:0 -20px 60px #0009;animation:v156WireUp .22s ease-out}',
-    '@keyframes v156WireUp{from{transform:translateY(40px);opacity:.5}to{transform:translateY(0);opacity:1}}',
-    '@keyframes v156WireToastIn{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}',
-    '.v156-wire-sheet>header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:18px 16px 12px;border-bottom:1px solid #232b35;flex:none}',
-    '.v156-wire-sheet>header small{display:block;font-size:9px;letter-spacing:2px;color:#ffd23f;font-weight:800}',
-    '.v156-wire-sheet>header h2{margin:5px 0 0;font-size:19px;line-height:1.3;color:#fff}',
-    '.v156-wire-sheet>header p{margin:4px 0 0;font-size:10px;color:#8a93a3}',
-    '.v156-wire-close{width:32px;height:32px;flex:none;border:1px solid #3a4655;border-radius:50%;background:#1c2129;color:#e8ecf1;font-size:17px;line-height:1;cursor:pointer}',
-    '.v156-wire-filters{display:flex;gap:6px;padding:10px 16px;overflow-x:auto;flex:none;scrollbar-width:none}',
+    '.v156-wire-panel{max-height:0;opacity:0;overflow:hidden;border:1px solid transparent;border-top:0;border-radius:0 0 13px 13px;background:#10161d;transition:max-height .3s ease,opacity .18s ease,border-color .2s ease;margin-top:-1px}',
+    '.v156-wire-panel.open{max-height:min(52dvh,460px);opacity:1;border-color:#2f3742;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}',
+    '.v156-wire-panel-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:10px 12px 0}',
+    '.v156-wire-panel-head small{font-size:9px;letter-spacing:1.5px;color:#ffd23f;font-weight:800}',
+    '.v156-wire-panel-head span{font-size:9px;color:#8a93a3;text-align:right;line-height:1.5}',
+    '.v156-wire-filters{position:sticky;top:0;z-index:1;display:flex;gap:6px;padding:8px 12px;overflow-x:auto;background:#10161d;scrollbar-width:none}',
     '.v156-wire-filters::-webkit-scrollbar{display:none}',
-    '.v156-wire-filter{flex:none;border:1px solid #2f3742;border-radius:999px;background:#1a2028;color:#9aa3b2;font-size:10px;font-weight:800;padding:6px 11px;font-family:inherit;cursor:pointer}',
+    '.v156-wire-filter{flex:none;border:1px solid #2f3742;border-radius:999px;background:#1a2028;color:#9aa3b2;font-size:10px;font-weight:800;padding:5px 10px;font-family:inherit;cursor:pointer}',
     '.v156-wire-filter.on{border-color:#ffd23f;background:#2a261b;color:#ffd23f}',
-    '.v156-wire-body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:4px 16px calc(16px + env(safe-area-inset-bottom));display:grid;gap:8px;align-content:start}',
+    '.v156-wire-body{display:grid;gap:8px;align-content:start;padding:2px 12px 12px}',
     '.v156-wire-row{margin:0}',
     '.v156-wire-row.is-important{border-left:3px solid #ffd23f;background:#211f16}',
-    '.v156-wire-toast{position:fixed;left:50%;bottom:calc(86px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:200005;display:flex;align-items:center;gap:9px;width:min(440px,calc(100% - 28px));box-sizing:border-box;padding:10px 12px;border:1px solid #ffd23f66;border-radius:13px;background:#141a22;color:#e8ecf1;text-align:left;font-family:inherit;box-shadow:0 14px 40px #0008;cursor:pointer;animation:v156WireToastIn .2s ease-out}',
+    '.v156-wire-toast{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:200005;display:flex;align-items:center;gap:9px;width:min(440px,calc(100% - 28px));box-sizing:border-box;padding:10px 12px;border:1px solid #ffd23f66;border-left:3px solid #ffd23f;border-radius:13px;background:#141a22;color:#e8ecf1;text-align:left;font-family:inherit;box-shadow:0 14px 40px #0008;cursor:pointer;animation:v156WireDrop .32s cubic-bezier(.2,1.15,.35,1)}',
     '.v156-wire-toast small{flex:none;font-size:9px;font-weight:900;color:#101318;background:#ffd23f;border-radius:6px;padding:2px 6px}',
     '.v156-wire-toast span{flex:1;min-width:0;font-size:11px;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
     '.v156-wire-toast i{flex:none;font-style:normal;font-size:9px;color:#ffd23f}',
-    '@media(max-width:380px){.v156-wirebar b{font-size:11px}.v156-wire-sheet>header h2{font-size:17px}}'
+    '@keyframes v156WireDrop{0%{opacity:0;transform:translate(-50%,-140%)}68%{opacity:1;transform:translate(-50%,4px)}100%{opacity:1;transform:translate(-50%,0)}}',
+    '@media(max-width:380px){.v156-wirebar b{font-size:11px}}'
   ].join('');
   document.head.appendChild(css);
 
