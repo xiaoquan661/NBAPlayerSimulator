@@ -18,9 +18,33 @@ function setSaveStatus(text,kind){
     if(el){el.textContent=text||'';el.className='v170-save-status '+(kind||'')}
   }catch(e){}
 }
+let saveToastTimer=0;
+function showSaveToast(text,kind){
+  try{
+    var el=document.getElementById('v167-save-toast');
+    if(!el){
+      el=document.createElement('div');
+      el.id='v167-save-toast';
+      el.setAttribute('role','status');
+      el.innerHTML='<i></i><span></span>';
+      document.body.appendChild(el);
+    }
+    el.className='v167-save-toast '+(kind||'');
+    var span=el.querySelector('span');
+    if(span)span.textContent=text||'';
+    el.style.display='flex';
+    if(saveToastTimer){clearTimeout(saveToastTimer);saveToastTimer=0}
+    if(kind!=='pending'){
+      saveToastTimer=setTimeout(function(){
+        var n=document.getElementById('v167-save-toast');
+        if(n)n.style.display='none';
+      },kind==='ok'?2200:4200);
+    }
+  }catch(e){}
+}
 window.v167SaveNow=async function(){
-  if(saving){setSaveStatus('正在保存，请稍候…','pending');return false}
-  if(!career){setSaveStatus('当前没有可保存的生涯','warn');notify('当前没有可保存的生涯');return false}
+  if(saving){setSaveStatus('正在保存，请稍候…','pending');showSaveToast('正在保存，请稍候…','pending');return false}
+  if(!career){setSaveStatus('当前没有可保存的生涯','warn');showSaveToast('当前没有可保存的生涯','warn');return false}
   saving=true;
   var n=slot(),k=key(n),onRetired=!!(ui&&ui.screen==='retired'),msg='',kind='';
   try{
@@ -28,6 +52,7 @@ window.v167SaveNow=async function(){
     save();
     try{render()}catch(e){}
     setSaveStatus('本机已保存，正在同步云端…','pending');
+    showSaveToast('本机已保存，正在同步云端…','pending');
     if(!api||typeof api.sync!=='function'||typeof api.available==='function'&&!api.available()){
       msg='本机已保存（当前未连接云端）';kind='ok';
       setSaveStatus(msg,kind);return true;
@@ -46,7 +71,7 @@ window.v167SaveNow=async function(){
   }catch(e){
     msg='本机已保存；云端同步失败';kind='warn';return false;
   }finally{
-    if(msg){setSaveStatus(msg,kind);if(!onRetired)notify(msg)}
+    if(msg){setSaveStatus(msg,kind);showSaveToast(msg,kind)}
     saving=false;
     try{render()}catch(e){}
     if(msg)setSaveStatus(msg,kind);
@@ -59,6 +84,6 @@ const home=renderHome;renderHome=function(){let h=home.apply(this,arguments);if(
 const hud=renderHud;renderHud=function(){return hud.apply(this,arguments).replace('<header class="career-hud">','<header class="career-hud v172-hud">').replace('<div class="hud-right">','<div class="hud-right">'+saveButton())};
 const retired=renderRetired;renderRetired=function(){return '<div class="v170-retired-tools">'+saveButton()+'<span id="v167-save-status" class="v170-save-status"></span></div>'+retired.apply(this,arguments)};
 const beforeRender=render;render=function(){const result=beforeRender.apply(this,arguments);if(ui.v167LoadingSlot){const root=document.querySelector('#app');root?.insertAdjacentHTML('beforeend','<div role="status" style="position:fixed;bottom:94px;left:20px;right:20px;max-width:420px;margin:auto;padding:14px;border-radius:14px;background:#1c2129;color:#e8ecf1;border:1px solid #2f3742;box-shadow:0 8px 24px #00000066;z-index:99998;text-align:center;font-size:13px;pointer-events:none">正在比较本机与云端存档，请稍候…</div>')}return result};
-const style=document.createElement('style');style.textContent='.v172-hud>div:first-child{min-width:0}.v172-hud h2{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.4;overflow-wrap:anywhere}.v172-hud h2 span{display:block}.v172-hud small{white-space:normal;line-height:1.5}.v172-hud .hud-right{display:flex;flex-wrap:wrap;justify-content:flex-end;width:110px;gap:6px}.v172-hud .age-badge,.v172-hud .ovr-orb{order:0;flex-shrink:0}.v172-hud .v84-hud-retire{order:1;align-self:center;flex:0 0 30px;padding:5px 2px}.v172-hud .v170-save-button{order:2;min-width:70px;padding:8px 6px}.v170-save-button{align-self:flex-start;flex-shrink:0;min-height:34px;padding:8px 10px;border:1px solid #e8beb4;border-radius:11px;background:#fff4e6;color:#b63f45;font-size:11px;font-weight:800;white-space:nowrap;cursor:pointer}.v170-save-button:disabled{opacity:.55;cursor:wait}.v170-retired-tools{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:10px;padding:10px 12px;background:#fffaf2}.v170-save-status{font-size:11px;line-height:1.4;color:#9aa3b2}.v170-save-status.ok{color:#3f9b68}.v170-save-status.warn{color:#b63f45}.v170-save-status.pending{color:#a9782a}';document.head.appendChild(style);
+const style=document.createElement('style');style.textContent='.v172-hud>div:first-child{min-width:0}.v172-hud h2{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.4;overflow-wrap:anywhere}.v172-hud h2 span{display:block}.v172-hud small{white-space:normal;line-height:1.5}.v172-hud .hud-right{display:flex;flex-wrap:wrap;justify-content:flex-end;width:110px;gap:6px}.v172-hud .age-badge,.v172-hud .ovr-orb{order:0;flex-shrink:0}.v172-hud .v84-hud-retire{order:1;align-self:center;flex:0 0 30px;padding:5px 2px}.v172-hud .v170-save-button{order:2;min-width:70px;padding:8px 6px}.v170-save-button{align-self:flex-start;flex-shrink:0;min-height:34px;padding:8px 10px;border:1px solid #e8beb4;border-radius:11px;background:#fff4e6;color:#b63f45;font-size:11px;font-weight:800;white-space:nowrap;cursor:pointer}.v170-save-button:disabled{opacity:.55;cursor:wait}.v170-retired-tools{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:10px;padding:10px 12px;background:#fffaf2}.v170-save-status{font-size:11px;line-height:1.4;color:#9aa3b2}.v170-save-status.ok{color:#3f9b68}.v170-save-status.warn{color:#b63f45}.v170-save-status.pending{color:#a9782a}.v167-save-toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:100000;display:none;align-items:center;gap:9px;max-width:min(440px,calc(100% - 32px));padding:11px 14px;border-radius:14px;background:#1c2129;border:1px solid #3a4655;color:#e8ecf1;font-size:12px;line-height:1.5;box-shadow:0 12px 34px #0009;pointer-events:none}.v167-save-toast i{width:8px;height:8px;border-radius:50%;background:#ffd23f;flex:none;animation:v167SavePulse 1s ease-in-out infinite}.v167-save-toast.ok{border-color:#2f6b4b}.v167-save-toast.ok i{background:#5fce8a;animation:none}.v167-save-toast.warn{border-color:#6b3434}.v167-save-toast.warn i{background:#ff8a8a;animation:none}.v167-save-toast.pending{border-color:#5b4728}@keyframes v167SavePulse{0%,100%{opacity:.35;transform:scale(.85)}50%{opacity:1;transform:scale(1.15)}}';document.head.appendChild(style);
 })();
 
