@@ -89,13 +89,12 @@
       return '<i class="' + (i <= step ? 'on' : '') + '"></i>';
     }).join('');
     return '<section class="draft"><div class="draft-inner">'
-      + '<button class="v175-draft-skip" onclick="v175DraftSkip()">跳过动画 ›</button>'
       + asset('【素材位：选秀之夜舞台背景】', '用途：选秀舞台/灯光/观众虚化背景；不要具体球员和文字')
       + '<div class="draft-text v175-draft-text">' + draftTextHTML(lines[step]) + '</div>'
       + '<div class="draft-dots">' + dots + '</div>'
       + (last
         ? '<button class="btn v175-draft-start" onclick="nextDraft()">开始职业生涯</button>'
-        : '')
+        : '<button class="v175-draft-skip" onclick="v175DraftSkip()">跳过动画，直接进入生涯 ›</button>')
       + '</div></section>';
   }
 
@@ -172,7 +171,7 @@
   st.textContent = [
     '.draft-inner{position:relative!important}',
     '.v175-draft-text{width:100%!important;max-width:340px!important;margin:0 auto!important;padding:0 4px!important;min-height:170px!important;display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;font-size:clamp(16px,4.8vw,18px)!important;line-height:1.85!important;font-weight:700!important;letter-spacing:.02em!important;overflow-wrap:break-word!important;word-break:normal!important;line-break:strict!important;text-wrap:balance}',
-    '.v175-draft-skip{position:absolute!important;top:8px!important;right:8px!important;z-index:6!important;padding:8px 12px!important;border-radius:999px!important;border:1px solid #3a4452!important;background:#171d26!important;color:#c3cbd6!important;font-size:11px!important;font-weight:800!important;cursor:pointer!important;box-shadow:none!important}',
+    '.v175-draft-skip{display:block!important;width:100%!important;height:44px!important;margin-top:14px!important;padding:0 12px!important;border-radius:14px!important;border:1px solid #3a4452!important;background:#171d26!important;color:#c3cbd6!important;font-size:11.5px!important;font-weight:800!important;cursor:pointer!important;box-shadow:none!important}',
     '.v175-draft-skip:active{background:#0f141b!important}',
     '.v175-draft-start{width:100%!important;margin-top:24px!important;background:#fff!important;color:#111!important}'
   ].join('');

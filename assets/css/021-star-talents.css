@@ -44,9 +44,9 @@
 .v170-talents .v184-talent {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  min-height: 64px;
-  padding: 9px 10px;
+  gap: 3px;
+  min-height: 96px;
+  padding: 12px;
   text-align: left;
   border: 1px solid #2f3742;
   border-radius: 11px;
@@ -54,8 +54,16 @@
   color: #c9d1dc;
   font-family: inherit;
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
   transition: border-color .15s, transform .15s;
 }
+.v170-talents .v184-talent::before,
+.v170-talents .v184-talent::after,
+.v170-talents .v184-talent *::before,
+.v170-talents .v184-talent *::after { content: none !important; display: none !important; }
+.v170-talents .v184-talents::before,
+.v170-talents .v184-talents::after { content: none !important; display: none !important; }
 
 .v170-talents .v184-talent:active {
   transform: scale(.985);
