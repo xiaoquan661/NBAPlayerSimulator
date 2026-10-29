@@ -406,7 +406,7 @@ storyChoice=function(i){
 
 mainlineNowCard=function(){let p=currentP();if(!career.exclusive)return `<section class="story-lock"><div class="lock-icon">★</div><small>EXCLUSIVE STORY LOCKED</small><h2>没有解锁，就没有剧情护航</h2><p>本局只会进行纯职业生涯模拟。解锁【${p.exclusive.n}】后，才会出现贯穿多年的真实人物主线、连续选择和分支回收。</p><button onclick="unlockStoryMidCareer()">🎬 解锁专属天命 + 连续剧情</button></section>`;let x=storyGoal(),arr=campaigns[career.playerId]||[];return `<section class="v27-story-card"><div class="v27-story-index">${Math.min(career.storyIndex+1,arr.length)}<small>/${arr.length}</small></div><div><small>正在推进的专属故事</small><h3>${x.title}</h3><p>${x.goal}</p><div class="v27-story-progress"><i style="width:${x.pct}%"></i></div><b>${x.impact}</b></div><button onclick="stopSim();ui.tab='story';render()">进入剧情档案 →</button></section>`};
 
-storyView=function(){v27Init();let p=currentP(),arr=campaigns[p.id]||[],w=career.worldline,div=w.divergence,end=mainlineEnding();return `<section class="v27-story-header"><small>CHARACTER CAMPAIGN</small><h2>${p.zh} · 一条会记住你选择的生涯故事</h2><p>剧情配角与私下对话为游戏化虚构，历史节点以真实生涯环境为锚点。每一章会读取前面的路线，不是独立事件。</p></section>${!career.exclusive?mainlineNowCard():`<div class="v27-chapter-list">${arr.map((e,i)=>{let r=v27Resolve(e),done=i<career.storyIndex,on=i===career.storyIndex;return `<div class="v27-chapter ${done?'done':''} ${on?'on':''}"><span>${done?'✓':String(i+1).padStart(2,'0')}</span><div><small>${r.scene}</small><b>${r.t}</b><p>${done?(career.storyLog.find(x=>x.title===r.t)?.choice||'这一章已经写入你的世界线'):on?'这是你现在正在走向的剧情节点':'后续章节会读取前面的选择继续发展'}</p></div></div>`}).join('')}</div>`}<section class="v27-choice-history"><h3>你的故事不是“加点记录”</h3>${career.storyLog.slice().reverse().map(x=>`<div><small>${x.label}${x.scene?` · ${x.scene}`:''}</small><b>${x.title}</b><p>你选择：${x.choice}</p><strong>${x.impact}</strong></div>`).join('')||'<p class="tiny">第一章做出选择后，这里会记录每一次决定和它真正造成的结果。</p>'}</section>${div?`<div class="divergence-card"><div class="fork">Y</div><div><small>首个历史分歧 · ${div.label}</small><b>${div.title}</b><p>${div.reason}</p></div></div>`:''}<div class="story-outcome"><div class="seal">◆</div><div><small>当前世界线倾向</small><b>${end[0]}</b><p>${end[1]}</p></div></div>`};
+storyView=function(){v27Init();let p=currentP(),arr=campaigns[p.id]||[],w=career.worldline,div=w.divergence,end=mainlineEnding();return `<section class="v27-story-header"><small>CHARACTER CAMPAIGN</small><h2>${p.zh} · 一条会记住你选择的生涯故事</h2><p>剧情配角与私下对话为游戏化虚构，历史节点以真实生涯环境为锚点。每一章会读取前面的路线，不是独立事件。</p></section>${!career.exclusive?mainlineNowCard():`<div class="v27-chapter-list">${arr.map((e,i)=>{let r=v27Resolve(e),done=i<career.storyIndex,on=i===career.storyIndex;return `<div class="v27-chapter ${done?'done':''} ${on?'on':''}"><span>${done?'✓':String(i+1).padStart(2,'0')}</span><div><small>${r.scene}</small><b>${r.t}</b><p>${done?(career.storyLog.find(x=>x.title===r.t)?.choice||'这一章已经写入你的世界线'):on?'这是你现在正在走向的剧情节点':'后续章节会读取前面的选择继续发展'}</p></div></div>`}).join('')}</div>`}<section class="v27-choice-history"><h3>你的故事不是“数值记录”</h3>${career.storyLog.slice().reverse().map(x=>`<div><small>${x.label}${x.scene?` · ${x.scene}`:''}</small><b>${x.title}</b><p>你选择：${x.choice}</p><strong>${x.impact}</strong></div>`).join('')||'<p class="tiny">第一章做出选择后，这里会记录每一次决定和它真正造成的结果。</p>'}</section>${div?`<div class="divergence-card"><div class="fork">Y</div><div><small>首个历史分歧 · ${div.label}</small><b>${div.title}</b><p>${div.reason}</p></div></div>`:''}<div class="story-outcome"><div class="seal">◆</div><div><small>当前世界线倾向</small><b>${end[0]}</b><p>${end[1]}</p></div></div>`};
 
 const __v27OverlayBase=renderOverlay;
 renderOverlay=function(){
@@ -466,19 +466,19 @@ Object.assign(P('oden').exclusive,{
 });
 Object.assign(P('kwame').exclusive,{
  n:'十九岁重开·把状元重新养一遍',
- d:'【立刻生效】心态+6、成长耐心+15、教练信任+5。23岁前每个休赛期加点额外+1；每年自动补强2项最低能力；自信最低锁在55。并解锁长篇乔丹—科比双时代人物主线。',
- perks:['23岁前加点翻倍','每年补强2项最低能力','解锁Michael Jordan / Doug Collins / Kobe / Phil Jackson主线'],
+ d:'【立刻生效】心态+6、成长耐心+15、教练信任+5。23岁前每个休赛期专精额外+1；每年自动补强2项最低能力；自信最低锁在55。并解锁长篇乔丹—科比双时代人物主线。',
+ perks:['23岁前专精翻倍','每年补强2项最低能力','解锁Michael Jordan / Doug Collins / Kobe / Phil Jackson主线'],
  cast:'Michael Jordan · Doug Collins · Brendan Haywood · Jared Jeffries · Kobe Bryant · Phil Jackson'
 });
 Object.assign(P('fultz').exclusive,{
  n:'原装回归·大学时期完整投篮包',
- d:'【立刻生效】投射+6、投篮稳定直接65、自信+8。投射加点额外+1；稳定≥80时赛季末再强化投射并获得额外OVR成长。并解锁长篇从费城迷失到奥兰多重生的悬念主线。',
- perks:['开局投射+6 / 稳定65','投射加点额外+1','解锁Brett Brown / Embiid / Simmons / Steve Clifford / Judy Seto主线'],
+ d:'【立刻生效】投射+6、投篮稳定直接65、自信+8。投射专精额外+1；稳定≥80时赛季末再强化投射并获得额外OVR成长。并解锁长篇从费城迷失到奥兰多重生的悬念主线。',
+ perks:['开局投射+6 / 稳定65','投射专精额外+1','解锁Brett Brown / Embiid / Simmons / Steve Clifford / Judy Seto主线'],
  cast:'Brett Brown · Joel Embiid · Ben Simmons · JJ Redick · Jimmy Butler · Steve Clifford · Jeff Weltman · Judy Seto'
 });
 Object.assign(P('simmons').exclusive,{
  n:'完全体西帝·投篮封印解除',
- d:'【立刻生效】投射+8、出手欲望至少68、自信+5。投射加点额外+1；季后赛每场都会获得“主动进攻”加成，额外制造2~4分，出手欲望不会跌破68。并解锁长篇费城崩塌与重建分支主线。',
+ d:'【立刻生效】投射+8、出手欲望至少68、自信+5。投射专精额外+1；季后赛每场都会获得“主动进攻”加成，额外制造2~4分，出手欲望不会跌破68。并解锁长篇费城崩塌与重建分支主线。',
  perks:['开局投射+8 / 出手欲望≥68','季后赛每场主动进攻+2~4分','解锁Embiid / Butler / Doc Rivers / Trae Young / Morey / Harden主线'],
  cast:'Brett Brown · Joel Embiid · Jimmy Butler · Doc Rivers · Daryl Morey · Trae Young · Matisse Thybulle · James Harden'
 });
@@ -814,7 +814,7 @@ addPoint=function(k){
  if(!career||career.devPoints===used)return;
  v28Init();
  let msg='';
- if(hasTalent('kwame_x')&&career.playerId==='kwame'&&career.age<=23){career.attrs[k]=clamp(career.attrs[k]+1,30,99);msg='【十九岁重开】23岁前加点额外+1'}
+ if(hasTalent('kwame_x')&&career.playerId==='kwame'&&career.age<=23){career.attrs[k]=clamp(career.attrs[k]+1,30,99);msg='【十九岁重开】23岁前专精额外+1'}
  if(hasTalent('fultz_x')&&career.playerId==='fultz'&&k==='shooting'){career.attrs.shooting=clamp(career.attrs.shooting+1,30,99);career.special=clamp(career.special+2);msg='【原装回归】投射额外+1，投篮稳定+2'}
  if(hasTalent('simmons_x')&&career.playerId==='simmons'&&k==='shooting'){career.attrs.shooting=clamp(career.attrs.shooting+1,30,99);career.special=clamp(career.special+2);msg='【完全体西帝】投射额外+1，出手欲望+2'}
  if(msg){career.exclusiveRuntime.procs++;career.exclusiveRuntime.seasonProcs++;career.exclusiveRuntime.lastProc=msg;career.feed.unshift(msg);v222Pop&&v222Pop(currentP().exclusive.n+' · 训练加成',msg);syncOvr();save();render()}

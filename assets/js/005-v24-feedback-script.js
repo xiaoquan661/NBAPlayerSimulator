@@ -21,9 +21,18 @@ updateAverages=function(line){
 };
 function tradeCooldownActive(){v24Init();return career.seasonNo-career.lastTradeSeason<=1}
 managementTradeRisk=function(){
- v24Init();if(tradeCooldownActive()&&!career.tradeRequest)return 1;let r=2;
- if(career.tradeRequest)r+=40;if(career.trust<35)r+=14;else if(career.trust<45)r+=6;if(career.contract.years<=1)r+=4;if(career.ovr<76)r+=4;if(career.ovr>=86)r-=4;r+=(career.teamTradePressure||0)*8;
- if(career.stage==='regular'&&!career.tradeRequest)r*=.55;return clamp(Math.round(r),1,65)
+ v24Init();if(tradeCooldownActive()&&!career.tradeRequest)return 1;
+ let r=2,trust=Number(career.trust)||0,ovr=Number(career.ovr)||70,role=String(career.role||'');
+ if(career.tradeRequest)r+=40;
+ /* 信任、能力、角色、合同和球队压力都连续影响概率，不再是几个固定档位。 */
+ if(trust<80)r+=(80-trust)*.30;
+ if(ovr<78)r+=(78-ovr)*.55;else if(ovr>=86)r-=Math.min(9,(ovr-86)*.75);
+ if(career.contract.years<=1)r+=4;
+ if(/边缘/.test(role))r+=2;else if(/轮换/.test(role))r+=1;else if(/核心|门面|全明星/.test(role))r-=2;
+ if(career.games>=10){let wr=(Number(career.wins)||0)/career.games;if(wr<.35)r+=5;else if(wr>.62)r-=3;let ppg=Number(career.seasonStats&&career.seasonStats.pts)||0;if(ppg>=22&&ovr>=82)r-=2;else if(ppg<8&&/核心|首发/.test(role))r+=3}
+ r+=(career.teamTradePressure||0)*8;
+ if(career.stage==='regular'&&!career.tradeRequest)r*=.55;
+ return clamp(Math.round(r),1,65)
 };
 managementStance=function(){let r=managementTradeRisk();if(tradeCooldownActive()&&!career.tradeRequest)return['球队明确倾向稳定阵容','你刚经历过球队变化，管理层不会轻易连续交易你。'];if(career.tradeRequest)return['你主动推动交易',`经纪团队正在寻找方案；这不是必然成交，当前推进概率约 ${r}%。`];if(r>=30)return['存在真实交易流言',`只有关系、合同或球队规划出现明显冲突时，管理层才会认真听报价。风险约 ${r}%。`];if(r>=10)return['偶尔有球队询价',`球队仍以留队为主，除非出现明显升级机会。风险约 ${r}%。`];return['管理层倾向长期合作',`当前没有实质交易计划。只要你不主动申请，生涯不会无缘无故频繁换队。`]};
 maybeDeadline=function(){
@@ -94,7 +103,7 @@ function seasonPhaseV24(){if(career.stage==='awards')return'常规赛 · 奖项�
 const __v24SeasonViewBase=seasonView;
 seasonView=function(){v24Init();if(career.stage==='awards')return awardsView();if(career.stage==='seasonrecap')return v24SeasonRecapView();return __v24SeasonViewBase()};
 renderHud=function(){let p=currentP();return `<header class="career-hud"><div><small>${seasonLabel()} · ${career.age}岁 · ${seasonPhaseV24()}</small><h2>${p.zh}<span> / ${teamBy(career.team).name}</span></h2><div class="hud-meta"><span>${careerPhaseLabel()}</span><span>YEAR ${career.seasonNo}</span><span>${career.role}</span></div></div><div class="hud-right"><div class="age-badge"><b>${career.age}</b><span>AGE / 岁</span></div><div class="ovr-orb"><span>OVR</span><b>${career.ovr}</b></div></div></header>`};
-function offTrade(){v24Init();let m=managementStance(),risk=managementTradeRisk();return `<section class="agent-card"><h3>申请交易 / 管理层动向</h3><p>交易现在是重大生涯事件，不是随机换队。你不主动申请、球队关系也稳定时，管理层基本不会无缘无故送走你。</p><div class="contract-grid"><div><span>教练信任</span><b>${career.trust}</b></div><div><span>当前意愿</span><b>${career.tradeRequest||'愿意留队'}</b></div><div><span>上次交易</span><b>${career.tradeHistory.length?career.tradeHistory[career.tradeHistory.length-1].season:'从未'}</b></div></div><div class="gm-state"><header><b>${m[0]}</b><span>${risk}%</span></header><p>${m[1]}</p></div><div class="choice-list"><button class="choice" onclick="requestTrade('争冠球队')"><b>申请交易 · 去争冠球队</b><span>主动提高交易概率，优先寻找强队。</span></button><button class="choice" onclick="requestTrade('更多机会')"><b>申请交易 · 要更多机会</b><span>主动提高交易概率，优先寻找能给更多球权的球队。</span></button><button class="choice" onclick="requestTrade('新环境')"><b>申请交易 · 只想换个环境</b><span>不限制目的地，但也不会保证一定成交。</span></button><button class="choice" onclick="career.tradeRequest=null;career.feed.unshift('你告诉经纪人：本赛季不主动推动交易。');save();render()"><b>明确留队</b><span>没有明显矛盾时，管理层将以稳定阵容为优先。</span></button></div></section>`}
+function offTrade(){v24Init();let m=managementStance(),risk=managementTradeRisk();return `<section class="agent-card"><h3>申请交易 / 管理层动向</h3><p>交易现在是重大生涯事件，不是随机换队。你不主动申请、球队关系也稳定时，管理层基本不会无缘无故送走你。</p><div class="contract-grid"><div><span>教练信任</span><b>${career.trust}</b></div><div><span>当前意愿</span><b>${career.tradeRequest||'愿意留队'}</b></div><div><span>上次交易</span><b>${career.tradeHistory.length?career.tradeHistory[career.tradeHistory.length-1].season:'从未'}</b></div></div><div class="gm-state gm-info"><header><b>${m[0]}</b><span>${risk}%</span></header><p>${m[1]}</p><small>影响：教练信任 · 合同年限 · 能力与角色 · 赛季表现 · 球队交易压力</small></div><div class="choice-list"><button class="choice" onclick="requestTrade('争冠球队')"><b>申请交易 · 去争冠球队</b><span>主动提高交易概率，优先寻找强队。</span></button><button class="choice" onclick="requestTrade('更多机会')"><b>申请交易 · 要更多机会</b><span>主动提高交易概率，优先寻找能给更多球权的球队。</span></button><button class="choice" onclick="requestTrade('新环境')"><b>申请交易 · 只想换个环境</b><span>不限制目的地，但也不会保证一定成交。</span></button><button class="choice" onclick="career.tradeRequest=null;career.feed.unshift('你告诉经纪人：本赛季不主动推动交易。');save();render()"><b>明确留队</b><span>没有明显矛盾时，管理层将以稳定阵容为优先。</span></button></div></section>`}
 const __v24RegularBase=regularView;
 regularView=function(){v24Init();let base=__v24RegularBase();let insert=mainlineNowCard();let marker='</section><div class="focus-stats">';return base.includes(marker)?base.replace(marker,`</section>${insert}<div class="focus-stats">`):insert+base};
 const __v24OverlayBase=renderOverlay;

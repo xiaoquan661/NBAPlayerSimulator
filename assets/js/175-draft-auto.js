@@ -66,11 +66,12 @@
       ui.draftStep = i;
       render();
       if (i < lines.length - 1) {
-        var delay = 1000 + Math.min(600, String(lines[i] || '').length * 18);
+        /* 每段至少停 2 秒，长句再多给一点阅读时间。 */
+        var delay = 2000 + Math.min(900, String(lines[i] || '').length * 22);
         timer = setTimeout(tick, delay);
       }
     }
-    timer = setTimeout(tick, 900);
+    timer = setTimeout(tick, 1400);
   }
 
   try {

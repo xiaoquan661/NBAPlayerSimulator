@@ -32,6 +32,8 @@
     CG.originRoll = null;
     CG.originRerolls = 2;
     CG.englishName = null;
+    CG.playerNameZh = null;
+    CG.nameKind = '';
     CG.talentReady = false;
     CG.player = null;
     CG.playerJson = null;
@@ -53,6 +55,7 @@
     resetCreator();
     try {
       ui.selected = 'bennett';
+      ui.starAwaitingPick = false;
       ui.exclusive = false;
       ui.allTalents = false;
       ui.talentPick = null;
@@ -69,6 +72,8 @@
     if (mode === 'star') {
       window.__GAME_MODE__ = 'star';
       try {
+        ui.starAwaitingPick = true;
+        ui.selected = 'bennett';
         ui.exclusive = false;
         ui.allTalents = false;
         ui.talentPick = null;
@@ -83,6 +88,7 @@
     resetCreator();
     try {
       ui.selected = 'custom';
+      ui.starAwaitingPick = false;
       ui.exclusive = false;
       ui.allTalents = false;
       ui.originStoryUnlocked = false;
@@ -189,11 +195,52 @@
   var prevRenderSelect = renderSelect;
   renderSelect = function () {
     if (currentMode() === 'star' && typeof window.__ORIG_RENDER_SELECT__ === 'function') {
-      return window.__ORIG_RENDER_SELECT__.apply(this, arguments);
+      var h = window.__ORIG_RENDER_SELECT__.apply(this, arguments);
+      try {
+        if (ui && ui.starAwaitingPick) {
+          /* 原版默认选中本内特；这里只做视觉取消，不破坏页面构建。 */
+          h = h.replace(/class="([^"]*)"/g, function (_, cls) {
+            var tokens = cls.split(/\s+/).filter(function (x) { return x && x !== 'selected'; });
+            return 'class="' + tokens.join(' ') + '"';
+          });
+          h = h.replace(/onclick="ui\.selected='/g, "onclick=\"ui.starAwaitingPick=false;ui.selected='");
+          h = h.replace(/<div class="sticky-cta">[\s\S]*?<\/div>/,
+            '<div class="sticky-cta"><button class="btn primary" disabled style="opacity:.45;cursor:not-allowed">先选择一位球星</button>'
+            + '<p style="margin:8px 0 0;text-align:center;font-size:10px;color:#9aa3b2">点击上方球星卡片后继续</p></div>');
+        }
+      } catch (e) {}
+      return h;
     }
     return prevRenderSelect.apply(this, arguments);
   };
   window.renderSelect = renderSelect;
+
+  /* 未选球星时禁止进入天赋页。 */
+  try {
+    var prevOpenTalents = openTalents;
+    openTalents = function () {
+      try {
+        if (currentMode() === 'star' && ui && ui.starAwaitingPick) {
+          notify('先选择一位球星');
+          return;
+        }
+      } catch (e) {}
+      return prevOpenTalents.apply(this, arguments);
+    };
+    window.openTalents = openTalents;
+  } catch (e) {}
+
+  /* 其它入口直接调用 startSelect 时，也让明星模式先处于未选状态。 */
+  try {
+    var prevStartSelect = startSelect;
+    startSelect = function () {
+      try {
+        if (currentMode() === 'star' && typeof ui !== 'undefined' && ui) ui.starAwaitingPick = true;
+      } catch (e) {}
+      return prevStartSelect.apply(this, arguments);
+    };
+    window.startSelect = startSelect;
+  } catch (e) {}
 
   /* 创建生涯：明星模式走原版；自建模式走自建初始化。 */
   var prevCreateCareer = createCareer;

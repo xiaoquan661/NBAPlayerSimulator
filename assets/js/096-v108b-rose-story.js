@@ -352,7 +352,7 @@ try{
         }catch(e){}
         if(!total)total=(typeof P!=='undefined'&&Array.isArray(P))?P.length:0;
         var word=CN[total]||String(total);
-        html=String(html).replace(/<h2>[^<]*个人，[^<]*种活法<\/h2>/,'<h2>'+word+'个人，'+word+'种活法</h2>');
+        html=String(html).replace(/<h2>[^<]*(?:个人，[^<]*种活法|位球员，[^<]*种生涯)<\/h2>/,'<h2>'+word+'位球员，'+word+'种生涯</h2>');
       }catch(e){}
       return html;
     };

@@ -1141,7 +1141,7 @@ ${confirmPanel}
 .tr-moved h3{color:#ffffff;font-size:17px;margin:9px 0 7px;line-height:1.5}
 .tr-moved p{color:#9aa3b2;font-size:11.5px;line-height:1.8;margin:0 auto;max-width:320px}
 .tr-moved button{margin-top:15px;height:40px;padding:0 22px;border:0;border-radius:20px;background:#ffd23f;color:#101318;font-size:12.5px;font-weight:800;cursor:pointer}
-</style><section class="tr-moved"><h3>技能成长与专精加点，都在「球员」页</h3><button onclick="ui.tab='player';render()">打开球员页 →</button></section>${adPointsHTML()}`;
+</style><section class="tr-moved"><h3>技能成长与专精分配，都在「球员」页</h3><button onclick="ui.tab='player';render()">打开球员页 →</button></section>${adPointsHTML()}`;
   };
 
   // 7. offseasonView 文案适配（成长点 → 专精点）

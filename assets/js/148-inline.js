@@ -168,7 +168,7 @@
 
   /* ---------- 捏人状态 ---------- */
 
-  const CG = { step: 0, year: null, origin: null, difficulty: null, style: null, vow: null, originRoll: null, originRerolls: 2, englishName: null, talentReady: false };
+  const CG = { step: 0, year: null, origin: null, difficulty: null, style: null, vow: null, originRoll: null, originRerolls: 2, englishName: null, playerNameZh: null, nameKind: '', talentReady: false };
   window.__CREATOR__ = CG;
 
   function ensureOriginRollState() {
@@ -469,7 +469,7 @@
 
     const player = {
       id: 'custom',
-      zh: '无名新秀',
+      zh: CG.playerNameZh || CG.englishName || '无名新秀',
       en: CG.englishName || (v.id === 'name' ? 'The Unnamed' : 'Rookie'),
       year: CG.year || 2026, age: o.age || (o.id === 'cba' ? 22 : 19),
       team: 'NOP', pos: s.id.includes('guard') ? 'PG' : s.id.includes('four') || s.id.includes('anchor') ? 'PF' : 'SF',
@@ -887,7 +887,7 @@
       + '<div class="creator-top"><button class="creator-back" onclick="__CREATOR__.stepBack()">←</button><strong>新的生涯 · 第 4/4 步</strong><span style="width:36px"></span></div>'
       + progressBar(3)
       + '<div class="v181-scout">'
-      +   '<div class="v181-scout-top"><small>SCOUTING REPORT · 球探报告</small><h2>' + (CG.englishName || 'Rookie') + '</h2><p>' + p.age + ' 岁 · ' + o.n + ' · ' + s.n + '</p>'
+      +   '<div class="v181-scout-top"><small>SCOUTING REPORT · 球探报告</small><h2>' + (CG.playerNameZh || CG.englishName || 'Rookie') + '</h2><p>' + (CG.englishName && CG.englishName !== CG.playerNameZh ? CG.englishName + ' · ' : '') + p.age + ' 岁 · ' + o.n + ' · ' + s.n + '</p>'
       +     '<div class="v181-stamp"><b>' + potG + '</b><small>UPSIDE</small></div></div>'
       +   '<div class="v181-chips"><span>' + era.range + ' · ' + era.n + '</span><span>' + o.n + '</span><span>' + s.n + '</span><span>「' + v.t + '」</span><span>难度 · ' + df.n + '</span></div>'
       +   '<div class="v181-grades">'
@@ -992,16 +992,30 @@
   }
 
   function ensureEnglishName() {
-    if (!CG.englishName) rerollName(true);
+    if (!CG.englishName || !CG.playerNameZh) rerollName(true);
   }
 
   function rerollName(silent) {
     const year = CG.year || 2026;
     const i = Math.floor(Math.random() * 1000000);
+    var picked = null;
     try {
-      CG.englishName = window.v180EnglishName ? window.v180EnglishName(year, i, null) : ('Rookie ' + (100 + (i % 900)));
-    } catch (e) {
-      CG.englishName = 'Rookie ' + (100 + (i % 900));
+      if (typeof window.v189RandomName === 'function') {
+        picked = window.v189RandomName(CG.origin || CG.originRoll || '', null);
+      }
+    } catch (e) {}
+    if (picked && picked.zh) {
+      CG.playerNameZh = picked.zh;
+      CG.englishName = picked.en || picked.zh;
+      CG.nameKind = picked.kind || '';
+    } else {
+      try {
+        CG.englishName = window.v180EnglishName ? window.v180EnglishName(year, i, null) : ('Rookie ' + (100 + (i % 900)));
+      } catch (e) {
+        CG.englishName = 'Rookie ' + (100 + (i % 900));
+      }
+      CG.playerNameZh = CG.englishName;
+      CG.nameKind = 'western';
     }
     if (!silent && window.render) render();
   }
@@ -1035,9 +1049,14 @@
 
   function nameBlock() {
     ensureEnglishName();
+    var zh = CG.playerNameZh || CG.englishName || '无名新秀';
+    var sub = CG.englishName && CG.englishName !== zh
+      ? '英译中 · ' + CG.englishName
+      : '中文名随机生成';
     return '<div class="creator-id">'
       + '<div class="creator-id-head"><b>球员姓名</b><span>系统生成，可重抽</span></div>'
-      + '<div class="creator-id-row"><b>' + CG.englishName + '</b><button onclick="__CREATOR__.rerollName()">🎲 换个名字</button></div>'
+      + '<div class="creator-id-row"><b>' + zh + '</b><button onclick="__CREATOR__.rerollName()">🎲 换个名字</button></div>'
+      + '<div style="margin-top:4px;font-size:10px;color:#8d9bab;letter-spacing:.02em">' + sub + '</div>'
       + '</div>';
   }
 
@@ -1142,6 +1161,9 @@
       career.potentialOvr = CG.potentialOvr;
       career.potentialHard = 110;
       career.englishName = CG.englishName || '';
+      career.playerNameZh = CG.playerNameZh || CG.englishName || '';
+      career.playerName = career.playerNameZh || '我';
+      career.nameKind = CG.nameKind || '';
       /* 自建球员使用专精点，不再沿用原版 5 点训练营成长点；
          否则初始会变成 4 + ceil(5/2) = 7 点，与策划口径不符。 */
       career.devPoints = 0;
@@ -1151,7 +1173,7 @@
       career.feed = ['机票、护照、一双球鞋。你的名字还没有人认识。'];
     }
     CG.step = 0; CG.year = null; CG.origin = null; CG.difficulty = null; CG.style = null; CG.vow = null;
-    CG.originRoll = null; CG.originRerolls = 2; CG.englishName = null;
+    CG.originRoll = null; CG.originRerolls = 2; CG.englishName = null; CG.playerNameZh = null; CG.nameKind = '';
     CG.player = null; CG.playerJson = null; CG.archetype = null; CG.talentReady = false;
     // 保留 CG.pendingArch：1 秒轮询还要把它写入存档 __arch
   };

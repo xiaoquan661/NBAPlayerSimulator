@@ -219,11 +219,16 @@ body.v181-arena .v167-continue {
   box-shadow: 0 8px 24px rgba(255, 190, 46, .18) !important;
 }
 body.v181-arena .btn.secondary,
-body.v181-arena .v167-origin-btn,
 body.v181-arena .origin-reroll,
 body.v181-arena .v167-choice {
   border-color: rgba(var(--v181-primary-rgb), .30) !important;
   color: #ffe7a3 !important;
+}
+/* 广告按钮是黄底，文字必须用深色，否则会和背景糊在一起。 */
+body.v181-arena .v167-origin-btn {
+  border-color: #ffcf5a !important;
+  color: #101318 !important;
+  text-shadow: none !important;
 }
 body.v181-arena .v167-choice:hover,
 body.v181-arena .v167-choice:focus-visible,

@@ -65,6 +65,19 @@ function v110CustomEn(c){
   try{c.englishName=nm}catch(e){}
   return nm;
 }
+/* 旧自建存档的中文名兜底：优先读存档，否则按固定信息生成可复现的中文名。 */
+function v110CustomZh(c){
+  if(!c)return '无名新秀';
+  if(c.playerNameZh&&c.playerNameZh!=='我')return c.playerNameZh;
+  if(c.playerName&&c.playerName!=='我')return c.playerName;
+  var a=c.__arch||{};
+  var seed=[c.draftYear,c.origin,a.origin,a.style,a.vow,c.team,c.seasonYear||c.seasonNo].join('|');
+  var picked=null;
+  try{if(window.v189RandomName)picked=window.v189RandomName(a.origin||c.origin||'',seed)}catch(e){}
+  var zh=(picked&&picked.zh)||c.englishName||'无名新秀';
+  try{c.playerNameZh=zh}catch(e){}
+  return zh;
+}
 function ensureAlias(id,careerObj){
   try{
     if(id==null)return null;
@@ -79,7 +92,7 @@ function ensureAlias(id,careerObj){
     var isCustom=String(cid)==='custom';
     var stub={
       id:cid,
-      zh:isCustom?'我':((c&&c.playerName)||(c&&c.zh)||'存档球员'),
+      zh:isCustom?v110CustomZh(c):((c&&c.playerName)||(c&&c.zh)||'存档球员'),
       en:isCustom?v110CustomEn(c):cid,
       year:(c&&c.draftYear)||2008,
       age:(c&&c.age)||20,

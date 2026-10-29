@@ -22,7 +22,7 @@ renderHome=function(){
 const previousSelect=renderSelect;
 renderSelect=function(){
  let html=previousSelect.apply(this,arguments).replace('选择你的第一位状元','选择你的生涯主角');
- html=html.replace('不是六张换皮卡。每个人拥有独立数值机制、专属主线、关键矛盾和不同的生涯风险。','从新加入的五位球员开始，或重写一段熟悉的生涯。每个人都有自己的天赋、故事与选择。');
+ html=html.replace('不是六张换皮卡。每个人拥有独立数值机制、专属主线、关键矛盾和不同的生涯风险。','12 位球员，分为「新生涯」「意难平」「水货状元」三组。每个人都有自己的天赋、专属故事和路线选择。');
  return html;
 };
 if(ui.screen==='home'||ui.screen==='select')render();

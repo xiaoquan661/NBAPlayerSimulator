@@ -40,15 +40,40 @@
     return fallbackEn();
   }
 
+  function fallbackZh() {
+    var c = null;
+    try { if (typeof career !== 'undefined' && career) c = career; } catch (e) {}
+    if (!c) return '无名新秀';
+    if (c.playerNameZh && c.playerNameZh !== '我') return c.playerNameZh;
+    var arch = c.__arch || {};
+    var seed = [c.draftYear, c.origin, arch.origin, arch.style, arch.vow, c.team, c.seasonYear || c.seasonNo].join('|');
+    var picked = null;
+    try {
+      if (typeof window.v189RandomName === 'function') {
+        picked = window.v189RandomName(arch.origin || c.origin || '', seed);
+      }
+    } catch (e) {}
+    var zh = (picked && picked.zh) || c.englishName || '无名新秀';
+    try { c.playerNameZh = zh; } catch (e) {}
+    return zh;
+  }
+
+  function displayZh() {
+    try {
+      if (typeof career !== 'undefined' && career && career.playerNameZh && career.playerNameZh !== '我') return career.playerNameZh;
+    } catch (e) {}
+    return fallbackZh();
+  }
+
   function fixProfile() {
     try {
       if (typeof career === 'undefined' || !career || career.playerId !== 'custom') return;
-      career.playerName = '我';
+      career.playerName = displayZh();
       var arr = (typeof P !== 'undefined' && Array.isArray(P)) ? P : [];
       for (var i = 0; i < arr.length; i++) {
         var p = arr[i];
         if (!p || String(p.id) !== 'custom') continue;
-        p.zh = '我';
+        p.zh = displayZh();
         p.en = displayEn();
         p.pos = '自建球员';
         p.title = '我的生涯';
@@ -67,7 +92,7 @@
       var p = prevPlayerBy.apply(this, arguments);
       try {
         if (String(id) === 'custom' && p) {
-          p.zh = '我';
+          p.zh = displayZh();
           p.en = displayEn();
           p.pos = '自建球员';
           p.title = '我的生涯';
