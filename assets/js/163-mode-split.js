@@ -174,7 +174,8 @@
     homeStyle.textContent = [
       '.v163-mode-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}',
       '.v163-mode-row .btn{width:100%!important;height:48px!important;font-size:13.5px!important}',
-      '.v163-custom-cta{background:#1c2129!important;color:#ffffff!important;border:1px solid #3a4655!important;box-shadow:none!important}'
+      '.v163-custom-cta{background:#1c2129!important;color:#ffffff!important;border:1px solid #3a4655!important;box-shadow:none!important}',
+      '.v163-pick-gate{background:#171d26!important;background-image:none!important;border:1px solid #2e3742!important;color:#aeb8c5!important;box-shadow:none!important;opacity:1!important;filter:none!important;text-shadow:none!important;cursor:not-allowed!important}'
     ].join('');
     document.head.appendChild(homeStyle);
   } catch (e) {}
@@ -212,8 +213,7 @@
           });
           h = h.replace(/onclick="ui\.selected='/g, "onclick=\"ui.starAwaitingPick=false;ui.selected='");
           h = h.replace(/<div class="sticky-cta">[\s\S]*?<\/div>/,
-            '<div class="sticky-cta"><button class="btn primary" disabled style="opacity:.45;cursor:not-allowed">先选择一位球星</button>'
-            + '<p style="margin:8px 0 0;text-align:center;font-size:10px;color:#9aa3b2">点击上方球星卡片后继续</p></div>');
+            '<div class="sticky-cta"><button class="btn primary v163-pick-gate" disabled style="background:#171d26!important;background-image:none!important;border:1px solid #2e3742!important;color:#aeb8c5!important;box-shadow:none!important;opacity:1!important;filter:none!important;text-shadow:none!important;cursor:not-allowed!important">先选择一位球星</button></div>');
         }
       } catch (e) {}
       return h;
