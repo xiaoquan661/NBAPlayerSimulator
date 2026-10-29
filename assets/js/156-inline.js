@@ -240,7 +240,53 @@
     }
   });
 
-  /* 重要消息从顶部滑入提示；普通消息只更新播报条。 */
+  /* 重要消息从顶部滑入，多条纵向堆叠；普通消息只更新播报条。 */
+  function toastLayer() {
+    var layer = document.getElementById('v156-wire-toasts');
+    if (!layer) {
+      layer = document.createElement('div');
+      layer.id = 'v156-wire-toasts';
+      layer.className = 'v156-wire-toasts';
+      document.body.appendChild(layer);
+    }
+    return layer;
+  }
+
+  function closeBanner(el) {
+    if (!el || !el.parentNode) return;
+    el.classList.add('is-out');
+    setTimeout(function () { if (el.parentNode) el.remove(); }, 220);
+  }
+
+  function openWireFromToast() {
+    if (ui && ui.screen === 'career' && ui.tab !== 'season') {
+      ui.tab = 'season';
+      try { render(); } catch (e) {}
+    }
+    setTimeout(function () {
+      var box = document.querySelector('.v156-wirebox');
+      try { if (box && box.scrollIntoView) box.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
+      if (window.v156WireOpen) window.v156WireOpen();
+    }, 50);
+  }
+
+  function showBanner(text) {
+    var layer = toastLayer();
+    var el = document.createElement('button');
+    el.type = 'button';
+    el.className = 'v156-wire-toast';
+    el.innerHTML = '<small>重要播报</small><span></span><i>展开 ›</i>';
+    el.querySelector('span').textContent = text;
+    el.onclick = function () { closeBanner(el); openWireFromToast(); };
+    /* 新消息插在最上面，旧消息整体往下挤。 */
+    layer.insertBefore(el, layer.firstChild);
+    while (layer.children.length > 3) {
+      var last = layer.lastElementChild;
+      if (last) last.remove(); else break;
+    }
+    setTimeout(function () { closeBanner(el); }, 5200);
+  }
+
   function toastImportant() {
     try {
       if (!career || career.retired || !ui || ui.screen !== 'career' || ui.modal || ui.storyEvent) return;
@@ -259,27 +305,8 @@
       /* 播报面板已经展开时，消息就在玩家眼前，不再弹顶部条。 */
       var openPanel = document.getElementById('v156-wire-panel');
       if (wireExpanded && openPanel && openPanel.classList.contains('open')) return;
-      var now = Date.now();
-      if (career.__v156ToastAt && now - career.__v156ToastAt < 1500) return;
-      career.__v156ToastAt = now;
-      var old = document.getElementById('v156-wire-toast');
-      if (old) old.remove();
-      var el = document.createElement('button');
-      el.type = 'button';
-      el.id = 'v156-wire-toast';
-      el.className = 'v156-wire-toast';
-      el.innerHTML = '<small>重要播报</small><span></span><i>展开 ›</i>';
-      el.querySelector('span').textContent = fresh[0].text;
-      el.onclick = function () {
-        el.remove();
-        if (ui && ui.screen === 'career' && ui.tab !== 'season') {
-          ui.tab = 'season';
-          try { render(); } catch (e) {}
-        }
-        setTimeout(function () { if (window.v156WireOpen) window.v156WireOpen(); }, 40);
-      };
-      document.body.appendChild(el);
-      setTimeout(function () { if (el.parentNode) el.remove(); }, 5200);
+      /* fresh 是“最新在前”，倒序逐条插入，最终最新的一条在最上面。 */
+      fresh.slice(0, 3).reverse().forEach(function (x) { showBanner(x.text); });
     } catch (e) {}
   }
 
@@ -295,7 +322,11 @@
           h = h.replace(/<section class="off-hero"[\s\S]*?<\/section>/, '');
           h = h.replace(/<div class="off-body"[\s\S]*?(?=<button[^>]*off-next)/, '');
         }
-        h = bar() + h;
+        /* 播报条回到原位置：模拟区和「本赛季个人数据」之间。 */
+        var wire = bar();
+        var statAnchor = '<section class="v26-statbox"><header><b>本赛季个人数据</b>';
+        if (h.indexOf(statAnchor) >= 0) h = h.replace(statAnchor, wire + statAnchor);
+        else h += wire;
       }
     } catch (e) {}
     return h;
@@ -370,7 +401,7 @@
     '.wire-season .wire-empty{padding:16px 12px;font-size:11px}',
 
     /* ---------- 顶部播报条 + 下拉面板 ---------- */
-    '.v156-wirebox{position:sticky;top:0;z-index:35;margin:0 0 10px}',
+    '.v156-wirebox{margin:10px 0 12px}',
     '.v156-wirebox.open .v156-wirebar{border-radius:13px 13px 0 0;border-bottom-color:#232b35}',
     '.v156-wirebar{display:flex;align-items:center;gap:8px;width:100%;box-sizing:border-box;margin:0;padding:9px 12px;border:1px solid #2f3742;border-radius:13px;background:#141a22;color:#e8ecf1;text-align:left;font-family:inherit;cursor:pointer;box-shadow:0 6px 18px #0004;transition:border-color .18s ease}',
     '.v156-wirebar.is-important{border-color:#ffd23f88;box-shadow:inset 0 0 0 1px #ffd23f22,0 6px 20px #0005}',
@@ -395,11 +426,14 @@
     '.v156-wire-body{display:grid;gap:8px;align-content:start;padding:2px 12px 12px}',
     '.v156-wire-row{margin:0}',
     '.v156-wire-row.is-important{border-left:3px solid #ffd23f;background:#211f16}',
-    '.v156-wire-toast{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:200005;display:flex;align-items:center;gap:9px;width:min(440px,calc(100% - 28px));box-sizing:border-box;padding:10px 12px;border:1px solid #ffd23f66;border-left:3px solid #ffd23f;border-radius:13px;background:#141a22;color:#e8ecf1;text-align:left;font-family:inherit;box-shadow:0 14px 40px #0008;cursor:pointer;animation:v156WireDrop .32s cubic-bezier(.2,1.15,.35,1)}',
+    '.v156-wire-toasts{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:200005;display:flex;flex-direction:column;gap:8px;width:min(440px,calc(100% - 28px));pointer-events:none}',
+    '.v156-wire-toast{pointer-events:auto;display:flex;align-items:center;gap:9px;width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid #ffd23f66;border-left:3px solid #ffd23f;border-radius:13px;background:#141a22;color:#e8ecf1;text-align:left;font-family:inherit;box-shadow:0 14px 40px #0008;cursor:pointer;animation:v156WireDrop .32s cubic-bezier(.2,1.15,.35,1)}',
+    '.v156-wire-toast.is-out{animation:v156WireToastOut .22s ease-in forwards}',
     '.v156-wire-toast small{flex:none;font-size:9px;font-weight:900;color:#101318;background:#ffd23f;border-radius:6px;padding:2px 6px}',
     '.v156-wire-toast span{flex:1;min-width:0;font-size:11px;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
     '.v156-wire-toast i{flex:none;font-style:normal;font-size:9px;color:#ffd23f}',
-    '@keyframes v156WireDrop{0%{opacity:0;transform:translate(-50%,-140%)}68%{opacity:1;transform:translate(-50%,4px)}100%{opacity:1;transform:translate(-50%,0)}}',
+    '@keyframes v156WireDrop{0%{opacity:0;transform:translateY(-140%)}70%{opacity:1;transform:translateY(4px)}100%{opacity:1;transform:translateY(0)}}',
+    '@keyframes v156WireToastOut{to{opacity:0;transform:translateY(-12px)}}',
     '@media(max-width:380px){.v156-wirebar b{font-size:11px}}'
   ].join('');
   document.head.appendChild(css);
