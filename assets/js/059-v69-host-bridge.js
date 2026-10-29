@@ -377,13 +377,26 @@ function v69ReasonText(reason,fallback){
   return map[reason]||fallback||'广告未完成，奖励未发放';
 }
 
+/* iOS 的 WKWebView / Lamps 容器不一定会在 UA 里带 LampsSDK。
+   不要再只靠 UA 判断，否则 iOS 上点击广告会被这里直接拦掉。 */
+function v69HasLampsAd(){
+  try{
+    if(!(window.LampsGame&&typeof window.LampsGame.showRewardedVideo==='function'))return false;
+    if(window.__LAMPS_NATIVE_REWARDED__)return true;
+    var ua=String(navigator.userAgent||'').indexOf('LampsSDK')!==-1;
+    var framed=false;
+    try{framed=!!(window.parent&&window.parent!==window)}catch(e){}
+    return ua||framed;
+  }catch(e){return false}
+}
+window.__v69HasLampsAd=v69HasLampsAd;
+
 /* 返回 true 表示「可以发放奖励」；任何失败都返回 false 并已提示 */
 async function v69RewardRequest(reason){
   var label=REASON_LABEL[reason]||'奖励';
   if(adBusy){v69Toast('广告正在进行中，请稍候');return false}
-  var lampsSDK=String(navigator.userAgent||'').indexOf('LampsSDK')!==-1;
-  if(!lampsSDK||!(window.LampsGame&&typeof window.LampsGame.showRewardedVideo==='function')){
-    v69Toast('激励视频需在 Lamps 内打开后可用');return false;
+  if(!v69HasLampsAd()){
+    v69Toast('请从 Lamps App 内打开；如果已在 App 内，请更新到最新版本');return false;
   }
   adBusy=true;
   try{var btn=document.querySelector('.v69-ad-lock');if(btn)btn.setAttribute('disabled','')}catch(e){}

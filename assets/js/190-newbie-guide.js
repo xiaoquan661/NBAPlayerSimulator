@@ -20,11 +20,17 @@
   var finished = {};
   var lastKey = '';
   var pendingPlace = 0;
+  var retryTimer = 0;
+  var warnTimer = 0;
 
   function clearPending() {
     if (pendingPlace) {
-      try { cancelAnimationFrame(pendingPlace); } catch (e) {}
+      try { clearTimeout(pendingPlace); } catch (e) {}
       pendingPlace = 0;
+    }
+    if (retryTimer) {
+      clearTimeout(retryTimer);
+      retryTimer = 0;
     }
   }
 
@@ -63,7 +69,8 @@
       title: '先选一个开始方式',
       text: '想直接玩真实球星，点「模拟明星球员」；想自己捏一个人，点「自建球员」。',
       placement: 'bottom',
-      nextText: '知道了'
+      nextText: '知道了',
+      ready: function () { return true; }
     },
     {
       id: 'select',
@@ -80,21 +87,43 @@
           ? '点一位球星卡片，查看他的能力、天赋和专属故事，然后点底部按钮继续。'
           : '按页面里的 01—04 步完成出身、打法、天赋和难度。每一步都会决定这段生涯的起点。';
       },
-      placement: 'top'
+      placement: 'top',
+      nextText: function () {
+        return mode() === 'star' ? '选好球星后继续' : '完成 01—04 后继续';
+      },
+      ready: function () {
+        if (mode() === 'star') {
+          var u = uiSafe();
+          return !!(u && !u.starAwaitingPick);
+        }
+        var CG = window.__CREATOR__ || {};
+        return Number(CG.step) >= 3;
+      },
+      hint: function () {
+        return mode() === 'star' ? '先在下面点一位球星，再继续。' : '先完成出身、打法、难度和确认。';
+      }
     },
     {
       id: 'talents',
       target: function () { return document.querySelector('.v184-talents') || document.querySelector('.v184-sec'); },
       title: '选一个天赋',
       text: '四张天赋选 1 张；免费刷新用完后，可以看奖励视频再换一组。天赋会影响这一整段生涯。',
-      placement: 'top'
+      placement: 'top',
+      nextText: '选好天赋后继续',
+      ready: function () {
+        var u = uiSafe();
+        return !!(u && (u.talentPick != null || u.allTalents));
+      },
+      hint: '先点一张天赋，再继续。'
     },
     {
       id: 'draft',
       target: function () { return document.querySelector('.draft-text') || document.querySelector('.draft-inner'); },
       title: '看完选秀夜',
       text: '台词会自动播放，最后一步会停在「开始职业生涯」，点一下正式进入联盟。',
-      placement: 'top'
+      placement: 'top',
+      nextText: '看完后继续',
+      ready: function () { return true; }
     },
     {
       id: 'season',
@@ -103,14 +132,22 @@
       },
       title: '开始打比赛',
       text: '点「模拟下一场」推进一场；想连续看结果就用「连续模拟」，随时可以暂停。',
-      placement: 'top'
+      placement: 'top',
+      nextText: '打完一场后继续',
+      ready: function () {
+        var c = careerSafe();
+        return !!(c && (Number(c.games) || 0) >= 1);
+      },
+      hint: '先点「模拟下一场」打完一场，再继续。'
     },
     {
       id: 'focus',
       target: function () { return document.getElementById('focus-fab') || playerTab(); },
       title: '专精点用在这里',
       text: '赛季结束会发专精点。点「专精面板」或底部「球员」页，把点数投到你想提升的能力上。',
-      placement: 'top'
+      placement: 'top',
+      nextText: '完成',
+      ready: function () { return true; }
     }
   ];
 
@@ -148,19 +185,46 @@
   function tipHTML(step, idx) {
     var title = typeof step.title === 'function' ? step.title() : step.title;
     var text = typeof step.text === 'function' ? step.text() : step.text;
+    var nextText = typeof step.nextText === 'function' ? step.nextText() : (step.nextText || '下一步');
     return '<div class="v190-arrow" aria-hidden="true"></div>'
       + '<div class="v190-kicker">NEW PLAYER GUIDE · ' + (idx + 1) + '/' + STEPS.length + '</div>'
       + '<h3>' + title + '</h3>'
       + '<p>' + text + '</p>'
+      + '<div class="v190-warn" aria-live="polite"></div>'
       + '<div class="v190-actions"><button class="v190-skip" onclick="v190Guide.skip()">跳过</button>'
-      + '<button class="v190-next" onclick="v190Guide.next()">' + (step.nextText || '下一步') + '</button></div>';
+      + '<button class="v190-next" onclick="v190Guide.next()">' + nextText + '</button></div>';
   }
 
-  function place(step, idx) {
+  function warn(step) {
+    ensureNodes();
+    var msg = typeof step.hint === 'function' ? step.hint() : (step.hint || '先完成这一步，再点下一步。');
+    var box = tip.querySelector('.v190-warn');
+    if (box) box.textContent = msg;
+    tip.classList.add('is-warn');
+    if (warnTimer) clearTimeout(warnTimer);
+    warnTimer = setTimeout(function () {
+      if (tip) tip.classList.remove('is-warn');
+    }, 1900);
+  }
+
+  function place(step, idx, attempt) {
+    attempt = attempt || 0;
     var target = step.target();
-    if (!target || !target.getBoundingClientRect) { hide(); return; }
-    var r = target.getBoundingClientRect();
-    if (r.width < 2 || r.height < 2) { hide(); return; }
+    var r = target && target.getBoundingClientRect ? target.getBoundingClientRect() : null;
+    if (!r || r.width < 2 || r.height < 2) {
+      /* 新页面可能还没渲染完，短暂重试，避免导引直接消失。 */
+      if (attempt < 6) {
+        if (retryTimer) clearTimeout(retryTimer);
+        retryTimer = setTimeout(function () {
+          retryTimer = 0;
+          place(step, idx, attempt + 1);
+        }, 80);
+      } else {
+        hide();
+      }
+      return;
+    }
+    retryTimer = 0;
     ensureNodes();
     var pad = 4;
     spot.style.display = 'block';
@@ -210,8 +274,16 @@
 
   function hide() {
     clearPending();
+    if (warnTimer) {
+      clearTimeout(warnTimer);
+      warnTimer = 0;
+    }
     if (spot) spot.style.display = 'none';
-    if (tip) { tip.style.display = 'none'; tip.innerHTML = ''; }
+    if (tip) {
+      tip.style.display = 'none';
+      tip.innerHTML = '';
+      tip.classList.remove('is-warn');
+    }
     current = -1;
     lastKey = '';
   }
@@ -234,13 +306,13 @@
          避免高亮框从上一页的位置滑到新位置。 */
       hide();
       lastKey = key;
-      pendingPlace = requestAnimationFrame(function () {
-        pendingPlace = requestAnimationFrame(function () {
-          pendingPlace = 0;
-          if (done) return;
-          try { place(step, idx); } catch (e) { hide(); }
-        });
-      });
+      /* 等新页面完成布局后再定位。用 setTimeout 而不是 rAF：
+         后台标签页/部分 WebView 会暂停 rAF，导致导引不出现。 */
+      pendingPlace = setTimeout(function () {
+        pendingPlace = 0;
+        if (done) return;
+        try { place(step, idx); } catch (e) { hide(); }
+      }, 60);
     } catch (e) { hide(); }
   }
 
@@ -258,7 +330,20 @@
   }
 
   function next() {
-    if (current >= 0 && STEPS[current]) finished[STEPS[current].id] = true;
+    var idx = stepIndex();
+    if (idx < 0) { refresh(); return; }
+    var step = STEPS[idx];
+    if (!step) { refresh(); return; }
+    if (current < 0) { refresh(); return; }
+    var ready = true;
+    try {
+      if (typeof step.ready === 'function') ready = !!step.ready();
+    } catch (e) { ready = true; }
+    if (!ready) {
+      warn(step);
+      return;
+    }
+    finished[step.id] = true;
     var allDone = true;
     for (var i = 0; i < STEPS.length; i++) {
       if (!finished[STEPS[i].id]) { allDone = false; break; }
@@ -298,6 +383,10 @@
     '.v190-kicker{font-size:8px;letter-spacing:.16em;color:#ffd23f;font-weight:900}',
     '.v190-tip h3{margin:5px 0 0;font-size:16px;line-height:1.25;color:#fff}',
     '.v190-tip p{margin:7px 0 0;font-size:11px;line-height:1.65;color:#b8c3cf}',
+    '.v190-warn{display:none;margin-top:8px;padding:7px 8px;border-radius:9px;border:1px solid rgba(255,210,63,.30);background:rgba(255,210,63,.08);color:#ffd98a;font-size:10.5px;line-height:1.55}',
+    '.v190-tip.is-warn .v190-warn{display:block}',
+    '.v190-tip.is-warn{animation:v190Nudge .32s ease}',
+    '@keyframes v190Nudge{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}',
     '.v190-actions{display:flex;gap:8px;margin-top:12px}',
     '.v190-actions button{flex:1;height:36px;border-radius:11px;font-family:inherit;font-size:10.5px;font-weight:900;cursor:pointer}',
     '.v190-skip{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:#9aa3b2}',

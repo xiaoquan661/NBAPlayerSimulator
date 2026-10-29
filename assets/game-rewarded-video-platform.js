@@ -62,7 +62,13 @@
   }
 
   var api = global.LampsGame || {};
-  api.showRewardedVideo = showRewardedVideo;
+  /* iOS 上宿主可能注入的是原生 showRewardedVideo。
+     绝不能再用 postMessage 版本覆盖它，否则点击广告不会弹窗。 */
+  if (typeof api.showRewardedVideo === "function") {
+    global.__LAMPS_NATIVE_REWARDED__ = true;
+  } else {
+    api.showRewardedVideo = showRewardedVideo;
+  }
   if (!api.bridge) api.bridge = bridge;
   global.LampsGame = api;
 })(typeof window !== "undefined" ? window : globalThis);
