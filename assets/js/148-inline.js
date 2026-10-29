@@ -795,8 +795,8 @@
       + '</button>';
   }
 
-  function originStoryInfo() {
-    const id = CG.origin || 'undrafted';
+  function originStoryInfo(originKey) {
+    const id = originKey || CG.originRoll || CG.origin || 'undrafted';
     try {
       if (typeof window.v167OriginStoryInfo === 'function') return window.v167OriginStoryInfo(id);
     } catch (e) {}
@@ -934,8 +934,12 @@
     const talents = Array.isArray(ui.talents) ? ui.talents : [];
     const freeUsed = Number(ui.talentFreeUsed) || 0;
     const refreshText = freeUsed < 2 ? '刷新天赋 · 免费 ' + (2 - freeUsed) + ' 次' : '看广告刷新天赋';
-    const originUnlocked = !!(ui.originStoryUnlocked || CG.originStoryUnlocked);
-    const info = originStoryInfo();
+    const originKey = (o && o.id) || CG.originRoll || CG.origin;
+    const originUnlocked = !!(originKey && (
+      (ui && ui.originStoryUnlockedFor === originKey) ||
+      CG.originStoryUnlockedFor === originKey
+    ));
+    const info = originStoryInfo(originKey);
 
     const positionSec = '<section class="v184-sec">'
       + '<div class="v184-sec-head"><b>01 位置</b><span>' + (style ? style.n : '未选择') + '</span></div>'

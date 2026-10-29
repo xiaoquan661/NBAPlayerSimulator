@@ -18,6 +18,15 @@
   var arrow = null;
   var current = -1;
   var finished = {};
+  var lastKey = '';
+  var pendingPlace = 0;
+
+  function clearPending() {
+    if (pendingPlace) {
+      try { cancelAnimationFrame(pendingPlace); } catch (e) {}
+      pendingPlace = 0;
+    }
+  }
 
   function uiSafe() {
     try { return typeof ui !== 'undefined' && ui ? ui : null; } catch (e) { return null; }
@@ -200,9 +209,11 @@
   }
 
   function hide() {
+    clearPending();
     if (spot) spot.style.display = 'none';
     if (tip) { tip.style.display = 'none'; tip.innerHTML = ''; }
     current = -1;
+    lastKey = '';
   }
 
   function refresh() {
@@ -214,7 +225,22 @@
       for (var i = 0; i < idx; i++) finished[STEPS[i].id] = true;
       var step = STEPS[idx];
       if (finished[step.id]) { hide(); return; }
-      place(step, idx);
+      var key = idx + ':' + step.id;
+      if (key === lastKey) {
+        if (!pendingPlace) place(step, idx);
+        return;
+      }
+      /* 跨页面时先把旧高亮收掉，等新页面完成布局后再出现，
+         避免高亮框从上一页的位置滑到新位置。 */
+      hide();
+      lastKey = key;
+      pendingPlace = requestAnimationFrame(function () {
+        pendingPlace = requestAnimationFrame(function () {
+          pendingPlace = 0;
+          if (done) return;
+          try { place(step, idx); } catch (e) { hide(); }
+        });
+      });
     } catch (e) { hide(); }
   }
 
@@ -267,7 +293,7 @@
   var st = document.createElement('style');
   st.id = 'v190-guide-style';
   st.textContent = [
-    '.v190-spot{position:fixed;z-index:200000;pointer-events:none;border:2px solid #ffd23f;border-radius:15px;box-shadow:0 0 0 9999px rgba(2,5,10,.74),0 0 28px rgba(255,210,63,.26);transition:all .18s ease;display:none}',
+    '.v190-spot{position:fixed;z-index:200000;pointer-events:none;border:2px solid #ffd23f;border-radius:15px;box-shadow:0 0 0 9999px rgba(2,5,10,.74),0 0 28px rgba(255,210,63,.26);display:none}',
     '.v190-tip{position:fixed;z-index:200001;box-sizing:border-box;padding:14px 15px 13px;border-radius:17px;border:1px solid rgba(255,210,63,.34);background:linear-gradient(160deg,#111b28,#070b12);color:#e8ecf1;box-shadow:0 20px 60px rgba(0,0,0,.55);display:none}',
     '.v190-kicker{font-size:8px;letter-spacing:.16em;color:#ffd23f;font-weight:900}',
     '.v190-tip h3{margin:5px 0 0;font-size:16px;line-height:1.25;color:#fff}',

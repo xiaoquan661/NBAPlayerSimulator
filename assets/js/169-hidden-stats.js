@@ -33,10 +33,7 @@
     if (typeof career === 'undefined' || !career) return '';
     var confidence = Math.round(clamp(num(career.confidence, 50), 0, 100));
     var health = Math.round(clamp(num(career.health, 80), 0, 100));
-    var gmRaw = num(career.gmSatisfaction, 0);
-    var trust = gmRaw > 0
-      ? Math.round(clamp(gmRaw, 0, 100))
-      : Math.round(clamp((num(career.trust, 50) + confidence) / 2, 0, 100));
+    var trust = Math.round(clamp(num(career.trust, 50), 0, 100));
     var w = usage();
     var wTxt = (Math.round(w * 100) / 100).toFixed(2);
     return '<div class="v169-hidden-stats">'

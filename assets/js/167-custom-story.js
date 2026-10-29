@@ -366,6 +366,10 @@
     catch (e) { console.error('[167] text resolve failed', e); return ''; }
   }
 
+  function v167EchoLine(s) {
+    return String(s == null ? '' : s).replace(/[。！？；，,\s]+$/g, '');
+  }
+
   function v167Num(v) {
     v = Number(v);
     return isFinite(v) ? v : 0;
@@ -374,11 +378,12 @@
   function originId() {
     try {
       var CG = window.__CREATOR__ || {};
-      if (CG.origin) return CG.origin;
       if (career && career.__arch && career.__arch.origin) return career.__arch.origin;
       if (career && career.customStory && career.customStory.origin && career.customStory.origin.id) {
         return career.customStory.origin.id;
       }
+      if (CG.originRoll) return CG.originRoll;
+      if (CG.origin) return CG.origin;
     } catch (e) {}
     return 'undrafted';
   }
@@ -541,10 +546,6 @@
       if (Array.isArray(c.feed)) c.feed.unshift('故事从你现在的阶段继续。');
     }
     var cs = c.customStory;
-    if (c.playerId === 'custom' && c.exclusive && !c.originStoryUnlocked) {
-      c.originStoryUnlocked = true;
-      if (Array.isArray(c.talents)) c.talents = c.talents.filter(function (x) { return x !== 'custom_x'; });
-    }
     if (c.playerId === 'custom') c.exclusive = false;
     if (!cs.origin || typeof cs.origin !== 'object') cs.origin = { id: originId(), unlocked: !!c.originStoryUnlocked, chainStep: 0 };
     if (!cs.origin.id) cs.origin.id = originId();
@@ -708,9 +709,11 @@
       var def = BY_ID[q.id];
       if (!def) { q.used = true; continue; }
       def.__window = q.window || [24, 66];
+      cs.__echoLabel = q.sourceLabel || '';
       var ev = buildEvent(def, c, cs, { slot: 'side', echoIndex: i });
       ev.__echoSource = q.sourceEvent;
       ev.__echoChoice = q.sourceChoice;
+      ev.__echoLabel = q.sourceLabel || '';
       return ev;
     }
     return null;
@@ -1350,7 +1353,10 @@
     var origin = originId();
     var info = originInfo(origin);
     var unlocked = false;
-    try { unlocked = !!(ui.originStoryUnlocked || (window.__CREATOR__ && window.__CREATOR__.originStoryUnlocked)); } catch (e) {}
+    try {
+      var cgNow = window.__CREATOR__ || {};
+      unlocked = !!(origin && ((ui && ui.originStoryUnlockedFor === origin) || cgNow.originStoryUnlockedFor === origin));
+    } catch (e) {}
     var btn = '<button class="v167-origin-btn" onclick="v167UnlockOriginStory()">'
       + (unlocked ? '✓ 已解锁 · 「' + v167Esc(info.n) + '」事件链已开启'
         : '🎬 看奖励视频 · 解锁「' + v167Esc(info.n) + '」事件链 + 四个天赋')
@@ -1391,7 +1397,8 @@
 
   window.v167UnlockOriginStory = async function () {
     try {
-      if (ui && ui.originStoryUnlocked) {
+      var currentOrigin = originId();
+      if (ui && ui.originStoryUnlockedFor === currentOrigin) {
         notify('这个出身的专属事件链已经解锁');
         return;
       }
@@ -1405,10 +1412,15 @@
         notify('广告未完成，未解锁出身事件链');
         return;
       }
+      var unlockedOrigin = originId();
+      ui.originStoryUnlockedFor = unlockedOrigin;
       ui.originStoryUnlocked = true;
       ui.allTalents = true;
       if (Array.isArray(ui.talents)) ui.lockedTalents = ui.talents.slice();
-      if (window.__CREATOR__) window.__CREATOR__.originStoryUnlocked = true;
+      if (window.__CREATOR__) {
+        window.__CREATOR__.originStoryUnlockedFor = unlockedOrigin;
+        window.__CREATOR__.originStoryUnlocked = true;
+      }
       render();
       notify('出身事件链已解锁 · 四个天赋一并打包');
     } catch (e) {
@@ -1603,9 +1615,18 @@
     var prevCreateCareer = createCareer;
     createCareer = function () {
       var CG = window.__CREATOR__ || {};
-      var capturedOrigin = CG.origin;
+      var capturedOrigin = CG.originRoll || CG.origin;
       var capturedVow = CG.vow;
-      var capturedUnlocked = !!(CG.originStoryUnlocked || (ui && ui.originStoryUnlocked));
+      var capturedUnlocked = false;
+      try {
+        var originKey = capturedOrigin;
+        capturedUnlocked = !!(originKey && (
+          CG.originStoryUnlockedFor === originKey ||
+          (ui && ui.originStoryUnlockedFor === originKey)
+        ));
+        /* 旧状态兼容：只有通用标记、且确实对应这个出身时才承认。 */
+        if (!capturedUnlocked && CG.originStoryUnlocked === true && CG.origin === originKey) capturedUnlocked = true;
+      } catch (e) {}
       var r = prevCreateCareer.apply(this, arguments);
       try {
         if (career && career.playerId === 'custom') {
@@ -1622,6 +1643,11 @@
           }
           ui.exclusive = false;
           ui.storyEvent = null;
+          /* 这一局的解锁已经写进 career.originStoryUnlocked，创建器状态必须清掉，
+             否则下一局会继承上一局的广告解锁。 */
+          CG.originStoryUnlocked = false;
+          CG.originStoryUnlockedFor = null;
+          if (ui) { ui.originStoryUnlocked = false; ui.originStoryUnlockedFor = null; }
           if (Array.isArray(career.feed)) {
             career.feed = career.feed.filter(function (x) {
               return String(x).indexOf('本局未解锁状元专属天赋') < 0;
@@ -1644,8 +1670,14 @@
     if (typeof prevOpenModes === 'function') {
       window.openModes = function () {
         try {
-          if (window.__CREATOR__) window.__CREATOR__.originStoryUnlocked = false;
-          if (typeof ui !== 'undefined' && ui) ui.originStoryUnlocked = false;
+          if (window.__CREATOR__) {
+            window.__CREATOR__.originStoryUnlocked = false;
+            window.__CREATOR__.originStoryUnlockedFor = null;
+          }
+          if (typeof ui !== 'undefined' && ui) {
+            ui.originStoryUnlocked = false;
+            ui.originStoryUnlockedFor = null;
+          }
         } catch (e) {}
         return prevOpenModes.apply(this, arguments);
       };
@@ -1744,14 +1776,14 @@
     b: function (c) {
       var role = c && c.role ? String(c.role) : '轮换边缘';
       if (role === '边缘球员') {
-        return '训练结束，教练把录像关了。\n他说：你现在还不在轮换里。想留下，先做一件事。';
+        return '训练结束，教练把录像倒回你被一步过掉的那一球，停住。\n他说：明天对面那个后卫场均 24 分。你要么让他难受，要么继续在这间屋子看录像。';
       }
       if (role === '轮换球员') {
         return '训练结束，教练把录像关了。\n他说：你现在只是轮换里的一员，但不是不可替代。想留下，先做一件事。';
       }
       return '训练结束，教练把录像关了。\n他说：你现在是' + role + '，但别以为位置稳了。想坐稳，先做一件事。';
     },
-    stakes: '你的第一个身份，从这里开始。',
+    stakes: '明天那个后卫场均 24 分。教练要看你今晚先做出哪种选择。',
     c: [
       { key: 'scorer', label: '给我球。打不进我认。', effectText: '自信 +6 · 信任 -2 · OVR 修正 +1', fx: { c: 6, tr: -2, o: 1 }, flags: [['prove_role', 'scorer']], echo: { id: 'prove_echo', dueSeason: '+1', window: [24, 66] }, next: 'prove_02' },
       { key: 'stopper', label: '我先防守。教练让我防谁我就防谁。', effectText: '防守 +2 · 信任 +7', fx: { a: { defense: 2 }, tr: 7 }, flags: [['prove_role', 'stopper']], echo: { id: 'prove_echo', dueSeason: '+1', window: [24, 66] }, next: 'prove_02' },
@@ -1776,11 +1808,11 @@
       var g = v167Num(c.games) || 25;
       return '第 ' + g + ' 场。对手知道你的惯用手，也知道你下一步要做什么。\n你的数据在掉。教练没有安慰你。';
     },
-    stakes: '你要用哪种方式，熬过这段被研究透的日子。',
+    stakes: '下一场开始，对手会继续放你一步。你要怎么把这一步拿回来。',
     c: [
       { key: 'rebuild', label: '改动作。哪怕这个赛季更难。', effectText: '投射 +3 · 自信 -3', fx: { a: { shooting: 3 }, c: -3 }, flags: [['prove_wall', 'rebuild']], next: 'prove_03' },
       { key: 'body', label: '用身体硬凿。先把分拿到。', effectText: '终结 +3 · 健康 -4', fx: { a: { finishing: 3 }, h: -4 }, flags: [['prove_wall', 'body']], next: 'prove_03' },
-      { key: 'wait', label: '接受轮换缩短。等下一次机会。', effectText: '心态 +4 · 信任 +3', fx: { a: { mentality: 4 }, tr: 3 }, flags: [['prove_wall', 'wait']], next: 'prove_03' }
+      { key: 'wait', label: '接受少打。把每次上场当成考试。', effectText: '心态 +4 · 信任 +3 · 自信 -2', fx: { a: { mentality: 4 }, tr: 3, c: -2 }, flags: [['prove_wall', 'wait']], next: 'prove_03' }
     ]
   });
 
@@ -1944,11 +1976,11 @@
     b: function (c) {
       return '球馆屏幕放起你的旧画面。\n' + contractLine(c) + '\n你开始想：如果这是最后一个主场，你要怎么走？';
     },
-    stakes: '你想象中的离开方式，会成为别人记住你的最后一段。',
+    stakes: '球馆屏幕已经切到你的旧画面。接下来两分钟，全场会记住你怎么走。',
     c: [
-      { key: 'tour', label: '如果这是最后一年，我想要一场告别巡演。', effectText: '名气 +10 · 自信 +6', fx: { fame: 10, c: 6 }, flags: [['leave_end', 'tour']], echo: { id: 'leave_echo2', dueSeason: '+1', window: [24, 66] } },
-      { key: 'quiet', label: '如果这是最后一年，我想安静地走。', effectText: '心态 +8', fx: { a: { mentality: 8 } }, flags: [['leave_end', 'quiet']], echo: { id: 'leave_echo2', dueSeason: '+1', window: [24, 66] } },
-      { key: 'handover', label: '如果这是最后一年，我把位置交给年轻人。', effectText: '信任 +8 · 组织 +2', fx: { tr: 8, a: { playmaking: 2 } }, flags: [['leave_end', 'handover']], echo: { id: 'leave_echo2', dueSeason: '+1', window: [24, 66] } }
+      { key: 'tour', label: '如果这是最后一年，我想要一场告别巡演。', effectText: '名气 +10 · 自信 +6 · 健康 -4', fx: { fame: 10, c: 6, h: -4 }, flags: [['leave_end', 'tour']], echo: { id: 'leave_echo2', dueSeason: '+1', window: [24, 66] } },
+      { key: 'quiet', label: '如果这是最后一年，我想安静地走。', effectText: '心态 +8 · 名气 -4', fx: { a: { mentality: 8 }, fame: -4 }, flags: [['leave_end', 'quiet']], echo: { id: 'leave_echo2', dueSeason: '+1', window: [24, 66] } },
+      { key: 'handover', label: '如果这是最后一年，我把位置交给年轻人。', effectText: '信任 +8 · 组织 +2 · 自信 -3', fx: { tr: 8, a: { playmaking: 2 }, c: -3 }, flags: [['leave_end', 'handover']], echo: { id: 'leave_echo2', dueSeason: '+1', window: [24, 66] } }
     ]
   });
 
@@ -2157,11 +2189,11 @@
 
   reg({
     id: 'become_injury_01', act: 'become', kind: 'main', minSeason: 4, window: [6, 82], once: true, priority: 390,
-    t: '身体第一次明确报警',
+    t: '核磁结果出来，队医先看了一眼门口',
     scene: '医疗室 · 清晨',
     speaker: '队医',
-    b: '队医把片子放在灯下。\n他说：你可以打，但每一次落地都在透支以后。',
-    stakes: '这是你第一次真正决定，身体和胜利哪个更重要。',
+    b: '队医把片子放在灯下，先看了一眼门口。\n他说：你可以打，但这一次，恢复时间会比以前长一倍。',
+    stakes: '你还能赶上这轮系列赛，但代价可能会留到下个赛季。',
     c: [
       { key: 'manage', label: '减负荷。我还想打久一点。', effectText: '健康 +8 · 信任 -2', fx: { h: 8, tr: -2 }, flags: [['become_way', 'team']], echo: { id: 'become_echo', dueSeason: '+1', window: [24, 66] } },
       { key: 'push', label: '继续打。现在不能停。', effectText: '信任 +5 · 健康 -6', fx: { tr: 5, h: -6 }, flags: [['become_way', 'self']], echo: { id: 'become_echo', dueSeason: '+1', window: [24, 66] } },
@@ -2178,13 +2210,13 @@
     scene: '训练馆 · 录像室',
     speaker: '主教练',
     b: function (c, cs) {
-      var line = { scorer: '给我球，打不进我认', stopper: '我先防守，再谈球权', learner: '先问怎么活下来' }[cs.flags.prove_role] || '你想留下';
-      return '一年前你说过：' + line + '。\n今天教练把同一段录像又放了一遍。他问：你还这么想吗？';
+      var line = v167EchoLine(cs.__echoLabel || { scorer: '给我球，打不进我认', stopper: '我先防守，再谈球权', learner: '先问怎么活下来' }[cs.flags.prove_role] || '你想留下');
+      return '一年前你在这间屋子说：「' + line + '」。\n今天教练把同一段录像又放了一遍。他问：还按那条路打吗？';
     },
-    stakes: '上一次的选择，会在这里得到回答。',
+    stakes: '你当年的回答，现在要变成这一季的轮换和球权。',
     c: [
-      { key: 'kept', label: '我照我说的做了。', effectText: '信任 +5 · 自信 +3', fx: { tr: 5, c: 3 }, flags: [['prove_kept', 1]] },
-      { key: 'changed', label: '我改了。现在的我更适合另一种角色。', effectText: '心态 +4 · 信任 +2', fx: { a: { mentality: 4 }, tr: 2 }, flags: [['prove_changed', 1]] }
+      { key: 'kept', label: '继续按那条路打。位置变了，我认。', effectText: '信任 +4 · 自信 +3 · 本季风险上升', fx: { tr: 4, c: 3 }, seasonMod: { risk: 1.06 }, flags: [['prove_kept', 1]] },
+      { key: 'changed', label: '改角色。先保住轮换。', effectText: '心态 +4 · 信任 +2 · 本季得分下降', fx: { a: { mentality: 4 }, tr: 2 }, seasonMod: { pts: 0.94, ast: 1.04, risk: 0.92 }, flags: [['prove_changed', 1]] }
     ]
   });
 
@@ -2197,8 +2229,8 @@
     b: '又是最后两分钟。队友把球发给你，然后退到一边。\n他们没有说话，但意思很清楚：这次还是你。',
     stakes: '上一次你怎么处理最后一球，这次会有人记得。',
     c: [
-      { key: 'again', label: '还是我来。', effectText: '自信 +5 · 信任 +2', fx: { c: 5, tr: 2 }, flags: [['prove_clutch_again', 1]] },
-      { key: 'share', label: '这次我传。', effectText: '信任 +5 · 组织 +2', fx: { tr: 5, a: { playmaking: 2 } }, flags: [['prove_clutch_share', 1]] }
+      { key: 'again', label: '还是我来。', effectText: '自信 +5 · 信任 +1 · 健康 -2', fx: { c: 5, tr: 1, h: -2 }, flags: [['prove_clutch_again', 1]] },
+      { key: 'share', label: '这次我传。', effectText: '信任 +5 · 组织 +2 · 自信 -2', fx: { tr: 5, a: { playmaking: 2 }, c: -2 }, flags: [['prove_clutch_share', 1]] }
     ]
   });
 
@@ -2209,13 +2241,13 @@
     scene: '赛季中段 · 录像课',
     speaker: '主教练',
     b: function (c, cs) {
-      var line = { team: '按球队的目标打', self: '按自己的方式打', mentor: '把球交出去' }[cs.flags.become_way] || '按你的方式打';
-      return '你当初说：' + line + '。\n球队真的这么做了。结果有好有坏。更衣室里有人开始服你，也有人开始抱怨。';
+      var line = v167EchoLine(cs.__echoLabel || { team: '按球队的目标打', self: '按自己的方式打', mentor: '把球交出去' }[cs.flags.become_way] || '按你的方式打');
+      return '你当初说：「' + line + '」。\n球队真的这么做了。更衣室里有人开始服你，也有人开始抱怨。';
     },
-    stakes: '你选的方式，正在变成这一季的代价。',
+    stakes: '你的打法已经写进轮换，现在要决定要不要继续付这个代价。',
     c: [
-      { key: 'paid', label: '这就是我要的。', effectText: '自信 +5 · 信任 +2', fx: { c: 5, tr: 2 }, flags: [['become_paid', 1]] },
-      { key: 'cost', label: '我错了。我得改。', effectText: '心态 +4 · 信任 +3', fx: { a: { mentality: 4 }, tr: 3 }, flags: [['become_paid', 'cost']] }
+      { key: 'paid', label: '这就是我要的。继续。', effectText: '自信 +5 · 信任 +2 · 交易压力 +1', fx: { c: 5, tr: 2, teamTrade: 1 }, flags: [['become_paid', 1]] },
+      { key: 'cost', label: '我错了。我得改。', effectText: '心态 +4 · 信任 +3 · 自信 -2', fx: { a: { mentality: 4 }, tr: 3, c: -2 }, flags: [['become_paid', 'cost']] }
     ]
   });
 
@@ -2226,13 +2258,13 @@
     scene: '客场 · 赛前采访',
     speaker: '记者',
     b: function (c, cs) {
-      var line = { stay: '留下', money: '拿钱', wait: '拖到赛季结束' }[cs.flags.become_contract] || '留下';
-      return '一年前你选择' + line + '。\n现在有人说你忠诚，有人说你傻。你坐在采访席上，等自己回答。';
+      var line = v167EchoLine(cs.__echoLabel || { stay: '留下', money: '拿钱', wait: '拖到赛季结束' }[cs.flags.become_contract] || '留下');
+      return '一年前你选择「' + line + '」。\n现在有人说你忠诚，有人说你傻。你坐在采访席上，等自己回答。';
     },
-    stakes: '你怎么看当初那份合同，会影响你后面怎么选。',
+    stakes: '这份合同已经变成别人评价你的标签，你要决定认不认。',
     c: [
-      { key: 'worth', label: '我选的我认。', effectText: '自信 +4 · 心态 +2', fx: { c: 4, a: { mentality: 2 } }, flags: [['contract_worth', 1]] },
-      { key: 'regret', label: '如果再来一次，我会走。', effectText: '心态 +3 · 信任 -1', fx: { a: { mentality: 3 }, tr: -1 }, flags: [['contract_regret', 1]] }
+      { key: 'worth', label: '我选的我认。', effectText: '自信 +4 · 心态 +2 · 交易压力 +1', fx: { c: 4, a: { mentality: 2 }, teamTrade: 1 }, flags: [['contract_worth', 1]] },
+      { key: 'regret', label: '如果再来一次，我会走。', effectText: '心态 +3 · 信任 -1 · 自信 -2', fx: { a: { mentality: 3 }, tr: -1, c: -2 }, flags: [['contract_regret', 1]] }
     ]
   });
 
@@ -2243,13 +2275,13 @@
     scene: '赛后 · 媒体区',
     speaker: '记者',
     b: function (c, cs) {
-      var line = { one_team: '我想在这支球队退役', ring: '一个冠军，别的都不算', path: '让后来的人走得更顺' }[cs.flags.legacy] || '你想留下点什么';
-      return '你当年说：' + line + '。\n现在他们把这句话翻出来，问你：现在还这么想吗？';
+      var line = v167EchoLine(cs.__echoLabel || { one_team: '我想在这支球队退役', ring: '一个冠军，别的都不算', path: '让后来的人走得更顺' }[cs.flags.legacy] || '你想留下点什么');
+      return '你当年说：「' + line + '」。\n现在他们把这句话翻出来，问你：现在还这么想吗？';
     },
-    stakes: '你给这段生涯定的答案，会在这里再被确认一次。',
+    stakes: '你给这段生涯定的答案，会决定退役后别人怎么介绍你。',
     c: [
-      { key: 'same', label: '一样。', effectText: '信任 +4 · 自信 +3', fx: { tr: 4, c: 3 }, flags: [['legacy_true', 'same']] },
-      { key: 'different', label: '人变了。答案也变了。', effectText: '心态 +4', fx: { a: { mentality: 4 } }, flags: [['legacy_true', 'changed']] }
+      { key: 'same', label: '一样。', effectText: '信任 +4 · 自信 +3 · 健康 -2', fx: { tr: 4, c: 3, h: -2 }, flags: [['legacy_true', 'same']] },
+      { key: 'different', label: '人变了。答案也变了。', effectText: '心态 +4 · 名气 -2', fx: { a: { mentality: 4 }, fame: -2 }, flags: [['legacy_true', 'changed']] }
     ]
   });
 
@@ -2262,8 +2294,8 @@
     b: '赛季结束后的第一个月。闹钟没有响，你还是六点醒了。\n有人给你打电话，问你要不要回来做点事。',
     stakes: '篮球暂时停下了，但你和篮球的关系还没有。',
     c: [
-      { key: 'yes', label: '回去。篮球还没结束。', effectText: '名气 +5 · 心态 +4', fx: { fame: 5, a: { mentality: 4 } }, flags: [['afterlife_ready', 1]] },
-      { key: 'no', label: '先过一段没有比赛的日子。', effectText: '健康 +5 · 心态 +5', fx: { h: 5, a: { mentality: 5 } }, flags: [['afterlife_ready', 0]] }
+      { key: 'yes', label: '回去。篮球还没结束。', effectText: '名气 +5 · 心态 +4 · 健康 -3', fx: { fame: 5, a: { mentality: 4 }, h: -3 }, flags: [['afterlife_ready', 1]] },
+      { key: 'no', label: '先过一段没有比赛的日子。', effectText: '健康 +5 · 心态 +5 · 名气 -3', fx: { h: 5, a: { mentality: 5 }, fame: -3 }, flags: [['afterlife_ready', 0]] }
     ]
   });
 
@@ -2275,9 +2307,9 @@
     b: '你第一次出手，球砸在篮筐前沿。\n主场看台传来嘘声。你听得很清楚。',
     stakes: '你可以躲，也可以把这一场打成回答。',
     c: [
-      { key: 'work', label: '继续投。下一次我会进。', effectText: '自信 +4 · 投射 +1', fx: { c: 4, a: { shooting: 1 } } },
-      { key: 'defense', label: '先防下来。让嘘声停。', effectText: '防守 +2 · 信任 +4', fx: { a: { defense: 2 }, tr: 4 } },
-      { key: 'hide', label: '把球交出去。今晚不属于我。', effectText: '心态 +3 · 自信 -2', fx: { a: { mentality: 3 }, c: -2 } }
+      { key: 'work', label: '继续投。下一次我会进。', effectText: '自信 +4 · 投射 +1 · 信任 -1', fx: { c: 4, a: { shooting: 1 }, tr: -1 } },
+      { key: 'defense', label: '先防下来。让嘘声停。', effectText: '防守 +2 · 信任 +4 · 健康 -2', fx: { a: { defense: 2 }, tr: 4, h: -2 } },
+      { key: 'hide', label: '把球交出去。今晚不属于我。', effectText: '心态 +3 · 健康 +2 · 自信 -2', fx: { a: { mentality: 3 }, h: 2, c: -2 } }
     ]
   });
 
@@ -2301,7 +2333,7 @@
     c: [
       { key: 'teach', label: '教他。下一次我防回来。', effectText: '信任 +5 · 心态 +4', fx: { tr: 5, a: { mentality: 4 } } },
       { key: 'crush', label: '打回去。位置是我的。', effectText: '自信 +5 · 信任 -2', fx: { c: 5, tr: -2 } },
-      { key: 'yield', label: '让位。他比我更需要机会。', effectText: '心态 +5 · 信任 +3', fx: { a: { mentality: 5 }, tr: 3 } }
+      { key: 'yield', label: '让位。他比我更需要机会。', effectText: '心态 +5 · 信任 +3 · 自信 -2', fx: { a: { mentality: 5 }, tr: 3, c: -2 } }
     ]
   });
 
@@ -2313,7 +2345,7 @@
     c: [
       { key: 'call', label: '打电话让他们别等。', effectText: '心态 +5 · 健康 +2', fx: { a: { mentality: 5 }, h: 2 } },
       { key: 'play', label: '那今晚就打给他们看。', effectText: '自信 +5 · 健康 -2', fx: { c: 5, h: -2 } },
-      { key: 'off', label: '关机。明天再说。', effectText: '心态 +3 · 信任 +2', fx: { a: { mentality: 3 }, tr: 2 } }
+      { key: 'off', label: '关机。明天再说。', effectText: '心态 +3 · 信任 +2 · 自信 -2', fx: { a: { mentality: 3 }, tr: 2, c: -2 } }
     ]
   });
 
@@ -2336,7 +2368,7 @@
     stakes: '你可以说句话，也可以什么都不说。',
     c: [
       { key: 'support', label: '公开支持教练。', effectText: '信任 +6 · 管理层压力 +2', fx: { tr: 6, teamTrade: 2 } },
-      { key: 'silent', label: '不说话。这是他们的事。', effectText: '心态 +4', fx: { a: { mentality: 4 } } },
+      { key: 'silent', label: '不说话。这是他们的事。', effectText: '心态 +4 · 信任 -1', fx: { a: { mentality: 4 }, tr: -1 } },
       { key: 'ask', label: '去找管理层，问球队方向。', effectText: '信任 +3 · 心态 +3', fx: { tr: 3, a: { mentality: 3 } } }
     ]
   });
@@ -2359,7 +2391,7 @@
     b: '总经理说：球队需要空间。你可以降薪留下，也可以去市场上看看。\n他没有催你。',
     stakes: '钱、位置、城市，你只能先选两个。',
     c: [
-      { key: 'accept', label: '接受。我想留在这里。', effectText: '信任 +6 · 心态 +3', fx: { tr: 6, a: { mentality: 3 } } },
+      { key: 'accept', label: '接受。我想留在这里。', effectText: '信任 +6 · 心态 +3 · 自信 -2', fx: { tr: 6, a: { mentality: 3 }, c: -2 } },
       { key: 'refuse', label: '拒绝。我值这个价。', effectText: '自信 +5 · 信任 -3', fx: { c: 5, tr: -3 } },
       { key: 'market', label: '去市场看看。', effectText: '自信 +4 · 球队交易压力 +2', fx: { c: 4, teamTrade: 2 } }
     ]

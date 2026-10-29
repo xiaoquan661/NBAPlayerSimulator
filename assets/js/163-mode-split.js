@@ -34,6 +34,8 @@
     CG.englishName = null;
     CG.playerNameZh = null;
     CG.nameKind = '';
+    CG.originStoryUnlocked = false;
+    CG.originStoryUnlockedFor = null;
     CG.talentReady = false;
     CG.player = null;
     CG.playerJson = null;
@@ -57,6 +59,8 @@
       ui.selected = 'bennett';
       ui.starAwaitingPick = false;
       ui.exclusive = false;
+      ui.originStoryUnlocked = false;
+      ui.originStoryUnlockedFor = null;
       ui.allTalents = false;
       ui.talentPick = null;
       ui.talentDrawCount = 1;
@@ -75,6 +79,8 @@
         ui.starAwaitingPick = true;
         ui.selected = 'bennett';
         ui.exclusive = false;
+        ui.originStoryUnlocked = false;
+        ui.originStoryUnlockedFor = null;
         ui.allTalents = false;
         ui.talentPick = null;
       } catch (e) {}
@@ -92,6 +98,7 @@
       ui.exclusive = false;
       ui.allTalents = false;
       ui.originStoryUnlocked = false;
+      ui.originStoryUnlockedFor = null;
     } catch (e) {}
     ui.screen = 'select';
     render();
