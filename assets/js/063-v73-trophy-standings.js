@@ -165,18 +165,28 @@ try{
 /* 队徽已本地化：assets/logos/<ABBR>.png（素材来自用户提供的「NBA 队徽（新版）」），
    不再外链虎扑图床——外链在本地与 Lamps 平台环境都加载不到。 */
 var V73_LOGO={"ATL":"assets/logos/ATL.png","BOS":"assets/logos/BOS.png","BKN":"assets/logos/BKN.png","CHA":"assets/logos/CHA.png","CHI":"assets/logos/CHI.png","CLE":"assets/logos/CLE.png","DAL":"assets/logos/DAL.png","DEN":"assets/logos/DEN.png","DET":"assets/logos/DET.png","GSW":"assets/logos/GSW.png","HOU":"assets/logos/HOU.png","IND":"assets/logos/IND.png","LAC":"assets/logos/LAC.png","LAL":"assets/logos/LAL.png","MEM":"assets/logos/MEM.png","MIA":"assets/logos/MIA.png","MIL":"assets/logos/MIL.png","MIN":"assets/logos/MIN.png","NOP":"assets/logos/NOP.png","NYK":"assets/logos/NYK.png","OKC":"assets/logos/OKC.png","ORL":"assets/logos/ORL.png","PHI":"assets/logos/PHI.png","PHX":"assets/logos/PHX.png","POR":"assets/logos/POR.png","SAC":"assets/logos/SAC.png","SAS":"assets/logos/SAS.png","TOR":"assets/logos/TOR.png","UTA":"assets/logos/UTA.png","WAS":"assets/logos/WAS.png"};
+/* 连续模拟每场都会重建赛季页。第一次画榜单时把队徽解码进缓存，
+   避免之后新 <img> 在绘制时先闪出一排空白/白底方块。 */
+var V73_LOGO_CACHE={},V73_LOGO_CACHE_READY=false;
+function v73WarmLogos(){
+  if(V73_LOGO_CACHE_READY)return;
+  V73_LOGO_CACHE_READY=true;
+  try{Object.keys(V73_LOGO).forEach(function(k){var im=new Image();im.decoding='sync';im.src=V73_LOGO[k];V73_LOGO_CACHE[k]=im})}catch(e){}
+}
+window.__v73LogoCache=V73_LOGO_CACHE;
 
 /* 东/西部划分（与表格 conference 对应） */
 var V73_EAST=['ATL','BOS','BKN','CHA','CHI','CLE','DET','IND','MIA','MIL','NYK','ORL','PHI','TOR','WAS'];
 var V73_WEST=['DAL','DEN','GSW','HOU','LAC','LAL','MEM','MIN','NOP','OKC','PHX','POR','SAC','SAS','UTA'];
 
 function v73Logo(abbr){
+  v73WarmLogos();
   var u=V73_LOGO[abbr];
   /* 活动页在虎扑容器里是 https：http 图会被按「混合内容」直接拦掉（实测全部裂图）。
      统一升到 https；外面再套一层缩写底牌，图真挂掉时仍能看到球队标识。 */
   if(u&&u.indexOf('http://')===0)u='https://'+u.slice(7);
   if(!u)return '<span class="v73-logo v73-logo-miss">'+abbr+'</span>';
-  return '<span class="v73-logo-wrap"><i>'+abbr+'</i><img class="v73-logo" src="'+u+'" alt="'+abbr+'" onerror="this.style.display=\'none\'"></span>';
+  return '<span class="v73-logo-wrap"><i>'+abbr+'</i><img class="v73-logo" src="'+u+'" alt="'+abbr+'" loading="eager" decoding="sync" onerror="this.style.display=\'none\'"></span>';
 }
 
 /* 非玩家球队的 projectedWins 是「整季投影」—— 一个赛季里一场都不变，
@@ -296,8 +306,8 @@ try{
       '.v73-row span{flex:none;font-weight:1000;color:#6d5c50;font-size:10px}',
       '.v73-row.me{background:#fff0e8;outline:1px solid #f0c7b9}',
       '.v73-row.me b{color:#b3543e;font-weight:1000}',
-      '.v73-logo{width:14px;height:14px;flex:none;object-fit:contain;border-radius:3px;background:#fff;border:0.5px solid #eee0d4}',
-      '.v73-logo-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center;flex:none;line-height:0;vertical-align:middle;min-width:14px;min-height:14px}',
+      '.v73-logo{width:14px;height:14px;flex:none;object-fit:contain;border-radius:3px;background:#fff;border:0.5px solid #eee0d4;backface-visibility:hidden;transform:translateZ(0);transition:none!important;animation:none!important}',
+      '.v73-logo-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center;flex:none;line-height:0;vertical-align:middle;min-width:14px;min-height:14px;contain:layout paint;backface-visibility:hidden}',
       '.v73-logo-wrap>i{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#f4ece3;border-radius:3px;font-size:6px;font-style:normal;color:#8b7565;font-weight:1000}',
       /* 图片保持「在流内」→ 外框尺寸跟着图片走。
          写死宽高会被调用方（v79 用行内样式放大到 44×44）顶破，

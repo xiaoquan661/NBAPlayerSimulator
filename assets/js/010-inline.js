@@ -13,7 +13,7 @@
     let friendly=t.replace(/主视觉/g,'主视觉').replace(/人物立绘/g,'人物形象').replace(/奖杯图标/g,'荣誉徽章');
     const ph=`<div class="asset-fallback"><b>${esc(friendly)}</b><span>画面将在这里呈现</span></div>`;
     const file=typeof assetFile==='function'?assetFile(title):null;
-    if(file)return `<div class="asset-slot v212-asset ${cls} has-img"><img src="${file}" alt="${esc(String(title))}" loading="lazy" onerror="this.parentNode.classList.remove('has-img');this.remove()">${ph}</div>`;
+    if(file)return `<div class="asset-slot v212-asset ${cls} has-img"><img src="${file}" alt="${esc(String(title))}" loading="lazy" decoding="sync" onerror="this.parentNode.classList.remove('has-img');this.remove()">${ph}</div>`;
     return `<div class="asset-slot v212-asset ${cls}">${ph}</div>`;
   };
 

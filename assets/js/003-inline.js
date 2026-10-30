@@ -111,7 +111,7 @@ function asset(title,desc,cls=''){
  if(HIDDEN_ASSET_TITLE.test(String(title||'')))return '';
  const ph=`<div class="asset-fallback"><b>${esc(title)}</b>${esc(desc)}</div>`;
  const file=assetFile(title);
- if(file)return `<div class="asset-slot ${cls} has-img"><img src="${file}" alt="${esc(String(title))}" loading="lazy" onerror="this.parentNode.classList.remove('has-img');this.remove()">${ph}</div>`;
+ if(file)return `<div class="asset-slot ${cls} has-img"><img src="${file}" alt="${esc(String(title))}" loading="lazy" decoding="sync" onerror="this.parentNode.classList.remove('has-img');this.remove()">${ph}</div>`;
  return `<div class="asset-slot ${cls}">${ph}</div>`;
 }
 function currentP(){return playerBy(career?.playerId||ui.selected)}
