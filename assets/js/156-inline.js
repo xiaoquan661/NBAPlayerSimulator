@@ -9,6 +9,7 @@
   var KIND = { attr: '成长', game: '比赛', team: '球队', season: '赛季', info: '动态' };
   var wireExpanded = false;
   var wireFilter = 'all';
+  var wirePanelScroll = 0;
 
   function esc2(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
@@ -224,6 +225,10 @@
   window.v156WireToggle = function () {
     var panel = document.getElementById('v156-wire-panel');
     if (!panel) return;
+    /* 手动开合才加动画类，重绘出来的 open 面板直接到位，避免每场闪一下。 */
+    panel.classList.add('v156-anim');
+    if (panel.__v156AnimTimer) clearTimeout(panel.__v156AnimTimer);
+    panel.__v156AnimTimer = setTimeout(function () { panel.classList.remove('v156-anim'); }, 360);
     wireExpanded = !wireExpanded;
     panel.classList.toggle('open', wireExpanded);
     var box = document.querySelector('.v156-wirebox');
@@ -397,7 +402,15 @@
     var prevRender = render;
     render = function () {
       try { window.__hookFeed(); } catch (e) {}
+      try {
+        var oldPanel = document.querySelector('.v156-wire-panel');
+        if (oldPanel && wireExpanded) wirePanelScroll = Number(oldPanel.scrollTop) || 0;
+      } catch (e) {}
       var r = prevRender.apply(this, arguments);
+      try {
+        var newPanel = document.querySelector('.v156-wire-panel');
+        if (newPanel && wireExpanded) newPanel.scrollTop = wirePanelScroll;
+      } catch (e) {}
       try {
         var fab = document.getElementById('focus-fab');
         if (fab) fab.remove();
@@ -472,7 +485,9 @@
     '.v156-wirebar-tag.team{color:#ffb27a!important;background:#ff9f4318!important;border-color:#ff9f4355!important}',
     '.v156-wirebar-tag.info{color:#aab4c2!important;background:#5f6b7a18!important;border-color:#5f6b7a55!important}',
     '.v156-wirebar-tag.is-important{color:#ffd23f!important;background:#ffd23f1c!important;border-color:#ffd23f99!important;box-shadow:0 0 10px #ffd23f33}',
-    '.v156-wire-panel{max-height:0;opacity:0;overflow:hidden;border:1px solid transparent;border-top:0;border-radius:0 0 13px 13px;background:#10161d;transition:max-height .3s ease,opacity .18s ease,border-color .2s ease;margin-top:-1px}',
+    '.v156-wire-panel{max-height:0;opacity:0;overflow:hidden;border:1px solid transparent;border-top:0;border-radius:0 0 13px 13px;background:#10161d;transition:none;margin-top:-1px}',
+    /* 只有玩家手动展开时才播放动画；模拟中的整页重绘不应把面板从 0 再展开一次。 */
+    '.v156-wire-panel.v156-anim{transition:max-height .3s ease,opacity .18s ease,border-color .2s ease}',
     '.v156-wire-panel.open{max-height:min(52dvh,460px);opacity:1;border-color:#2f3742;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}',
     '.v156-wire-panel-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:10px 12px 0}',
     '.v156-wire-panel-head small{font-size:9px;letter-spacing:1.5px;color:#ffd23f;font-weight:800}',
