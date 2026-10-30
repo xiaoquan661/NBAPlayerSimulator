@@ -19,6 +19,7 @@
   var arrow = null;
   var current = -1;
   var lastKey = '';
+  var lastPlaceSig = '';
   var pendingPlace = 0;
   var retryTimer = 0;
 
@@ -181,6 +182,13 @@
     }
     retryTimer = 0;
     ensureNodes();
+    /* 连续模拟每场都会 render；目标位置没变时不要反复重画高亮和遮罩，
+       否则全屏 box-shadow 会随着每次定位闪一下。 */
+    var sig = idx + ':' + Math.round(r.left) + ',' + Math.round(r.top) + ','
+      + Math.round(r.width) + ',' + Math.round(r.height) + ':'
+      + window.innerWidth + 'x' + window.innerHeight;
+    if (sig === lastPlaceSig) return;
+    lastPlaceSig = sig;
     var pad = 4;
     spot.style.display = 'block';
     spot.style.left = (r.left - pad) + 'px';
@@ -233,11 +241,15 @@
     if (tip) { tip.style.display = 'none'; tip.innerHTML = ''; }
     current = -1;
     lastKey = '';
+    lastPlaceSig = '';
   }
 
   function refresh() {
     try {
       if (done) { hide(); return; }
+      /* 连续模拟时把全屏高亮遮罩收起来，避免它跟着每场重绘一起闪。 */
+      var u = uiSafe();
+      if (u && u.sim) { hide(); return; }
       var idx = stepIndex();
       if (idx < 0) { hide(); return; }
       var step = STEPS[idx];
