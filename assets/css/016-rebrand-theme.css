@@ -64,6 +64,9 @@ nav button.active{color:#ffd23f!important}
 .choice b{color:#ffffff!important}
 .choice span{color:#9aa3b2!important}
 .choice.danger{border-color:#ff5a5f66!important}
+.choice.selected{border-color:#ffd23f!important;background:#2a261b!important;box-shadow:inset 0 0 0 1px #ffd23f!important}
+.choice.selected b{color:#ffd23f!important}
+.choice.selected span{color:#c9d1dc!important}
 
 /* ---- 训练加点 ---- */
 .add-btn{background:#212730!important;color:#e8ecf1!important;border:1px solid #2f3742!important}
