@@ -10,6 +10,8 @@
   color:#e8ecf1!important;
   box-shadow:0 24px 70px rgba(0,0,0,.55)!important;
 }
+/* 长剧情（如蔡恩的路线选择）要能在弹层内稳定上下滑动。 */
+.v167-overlay .v167-sheet{max-height:88dvh;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y;scroll-padding-bottom:calc(24px + env(safe-area-inset-bottom))}
 
 .v167-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
 .v167-top small{display:block;font-size:9px;letter-spacing:.16em;color:#ffd23f!important;font-weight:900}

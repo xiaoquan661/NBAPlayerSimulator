@@ -298,6 +298,41 @@ th{background:#212730!important}
 .v135-dialog header button{background:#212730!important;color:#ffd23f!important;border-color:#2f3742!important}
 .v135-skill-strip{background:linear-gradient(110deg,#212730,#1a2028)!important;color:#e8ecf1!important;border-color:#2f3742!important}
 .v135-skill-strip small{color:#9aa3b2!important}
+/* v135 专属技能弹窗内部（v151 组件原本是米色/粉色旧皮肤） */
+.v151-dialog .v135-dialog-body{background:transparent!important;color:#e8ecf1!important}
+.v151-skill-status span{background:#212730!important;border-color:#3a4452!important;color:#ffd23f!important}
+.v151-skill-status>b{color:#ffffff!important}
+.v151-metric-grid>div{background:#1c2129!important;border-color:#2f3742!important}
+.v151-metric-grid small{color:#9aa3b2!important}
+.v151-metric-grid strong{color:#ffd23f!important}
+.v151-condition{background:#212730!important;border-left-color:#ffd23f!important;color:#d6dbe3!important}
+.v151-action-title{color:#ffffff!important}
+.v151-choice{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
+.v151-choice b{color:#ffffff!important}
+.v151-choice small{color:#9aa3b2!important}
+.v151-choice.is-selected{border-color:#ffd23f!important;background:#2a261b!important;box-shadow:inset 0 0 0 1px #ffd23f!important}
+.v151-footnote{color:#7d8794!important}
+.v151-transform>div{background:#1c2129!important;border-color:#2f3742!important}
+.v151-transform i{color:#ffd23f!important}
+.v151-transform b{color:#e8ecf1!important}
+.v151-transform small{color:#9aa3b2!important}
+.v151-transform .done{border-color:#ffd23f!important;background:#2a261b!important}
+.v151-rule-grid>div{border-bottom-color:#2f3742!important}
+.v151-rule-grid b{color:#e8ecf1!important}
+.v151-rule-grid small{color:#9aa3b2!important}
+.v151-empty{color:#9aa3b2!important}
+.v151-dialog header>img{border-color:#3a4452!important}
+/* 专属技能卡原本沿用罗斯的玫红皮肤，统一成深色主题。 */
+.v123-bar.v151-skill-card{background:linear-gradient(145deg,#1b2028,#151a21)!important;border:1px solid #2f3742!important;color:#e8ecf1!important;box-shadow:0 8px 18px rgba(0,0,0,.30)!important}
+.v123-bar.v151-skill-card .v123-top b{color:#ffffff!important}
+.v123-bar.v151-skill-card .v123-top em{color:#ffd23f!important}
+.v123-bar.v151-skill-card .v123-dots i{background:#2f3742!important}
+.v123-bar.v151-skill-card .v123-dots i.on{background:linear-gradient(90deg,#ffd23f,#ffb84d)!important}
+.v123-bar.v151-skill-card .v123-btn{background:linear-gradient(180deg,#ffe07a,#ffd23f)!important;color:#101318!important}
+.v123-bar.v151-skill-card .v123-btn[disabled]{background:#333a44!important;color:#8b95a3!important}
+.v123-bar.v151-skill-card .v151-benefits{color:#9aa3b2!important}
+.v123-bar.v151-skill-card .v151-benefits b{color:#ffd23f!important}
+.v123-bar.v151-skill-card .v123-note{color:#9aa3b2!important}
 .v133-dialog .v133-content{background:transparent!important}
 .v133-dialog .v133-plans article,.v133-dialog .v133-player,.v142-moves section,.v133-kpis>div,.v152-draft-summary{background:#1c2129!important;border-color:#2f3742!important;color:#e8ecf1!important}
 .v133-dialog .v133-plans article.is-selected{background:#ffd23f14!important;border-color:#ffd23f!important;box-shadow:inset 0 3px #ffd23f!important}

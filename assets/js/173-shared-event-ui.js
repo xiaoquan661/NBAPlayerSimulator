@@ -106,10 +106,8 @@
     var choicesHtml = choices.map(function (c, i) {
       if (!Array.isArray(c)) return '';
       var label = plain(resolveText(c[0], '继续'));
-      var effect = plain(resolveText(c[1], ''));
       return '<button type="button" class="v167-choice" onclick="pickStoryChoice(' + i + ');return false">'
         + '<b>' + esc(label) + '</b>'
-        + (effect ? '<span>' + esc(effect) + '</span>' : '')
         + '</button>';
     }).join('');
 

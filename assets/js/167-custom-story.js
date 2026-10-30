@@ -1190,7 +1190,6 @@
     var choices = (ev.__choices || []).map(function (ch, i) {
       return '<button type="button" class="v167-choice" onclick="storyChoice(' + i + ');return false">'
         + '<b>' + v167Esc(ch.label) + '</b>'
-        + '<span>' + v167Esc(ch.effectText || '') + '</span>'
         + '</button>';
     }).join('');
     var lens = lensBlock(career, ev, cs);
