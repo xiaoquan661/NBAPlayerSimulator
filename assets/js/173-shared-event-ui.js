@@ -132,6 +132,8 @@
       ? data.impact.map(function (x) { return plain(resolveText(x, '')); }).filter(Boolean).join(' · ')
       : '';
     var follow = plain(resolveText(data.follow, ''));
+    /* 结果正文和“后面会怎样”同文时只保留一次，避免整段话说两遍。 */
+    if (follow && (follow === effect || follow === impact)) follow = '';
     var kicker = '故事结果';
     try { if (!career.exclusive) kicker = '事件结果'; } catch (e) {}
     return '<div class="overlay v167-overlay"><div class="sheet v167-outcome"><div class="sheet-handle"></div>'
