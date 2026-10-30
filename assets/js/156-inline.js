@@ -397,6 +397,38 @@
     };
   } catch (e) {}
 
+  /* 连续模拟 + 播报展开时只替换比赛相关区块，避免整页重建。 */
+  function refreshSimSections() {
+    try {
+      if (typeof renderCareer !== 'function' || !career) return;
+      var app = document.getElementById('app');
+      if (!app) return;
+      var tmp = document.createElement('div');
+      tmp.innerHTML = renderCareer();
+      var score = app.querySelector('.season-brief-score');
+      if (score) {
+        var sb = score.querySelector('b');
+        var ss = score.querySelector('span');
+        if (sb) sb.textContent = (Number(career.games) || 0) + '/82';
+        if (ss) ss.textContent = (Number(career.wins) || 0) + '胜' + (Number(career.losses) || 0) + '负';
+      }
+      ['.v26-simbar', '.v52-usage', '.v26-statbox'].forEach(function (sel) {
+        var olds = app.querySelectorAll(sel);
+        var news = tmp.querySelectorAll(sel);
+        for (var i = 0; i < olds.length && i < news.length; i++) {
+          if (olds[i] && news[i] && olds[i].parentNode) olds[i].parentNode.replaceChild(news[i], olds[i]);
+        }
+      });
+      var oldNews = app.querySelectorAll('.news-stage');
+      var newNews = tmp.querySelectorAll('.news-stage');
+      for (var j = 0; j < oldNews.length && j < newNews.length; j++) {
+        if (oldNews[j] && newNews[j] && !oldNews[j].querySelector('img') && oldNews[j].parentNode) {
+          oldNews[j].parentNode.replaceChild(newNews[j], oldNews[j]);
+        }
+      }
+    } catch (e) {}
+  }
+
   /* 底部导航恢复原版：自建球员也保留「主线」页；播报仍挂在赛季页 */
   try {
     var prevRender = render;
@@ -421,6 +453,7 @@
             oldBox.parentNode.replaceChild(newBox, oldBox);
             var lp = newBox.querySelector('.v156-wire-panel');
             if (lp) lp.scrollTop = wirePanelScroll;
+            refreshSimSections();
           } else {
             lightWire = false;
           }
