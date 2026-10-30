@@ -80,6 +80,9 @@
     try { window.__hookFeed(); } catch (e) {}
     var wire = Array.isArray(career.wire) ? career.wire : [];
     var feed = Array.isArray(career.feed) ? career.feed.filter(function (t) {
+      /* 旧档里同一条赛季荣誉同时写进了 feed 和 wire，播报合并时会显示两遍。 */
+      var m = /^赛季荣誉（(.+?)）：/.exec(String(t || ''));
+      if (m && wire.some(function (e) { return String(e.text || '').indexOf(m[1]) >= 0; })) return false;
       return !feedNoise(t);
     }) : [];
     var seqMap = career.feedSeq || {};

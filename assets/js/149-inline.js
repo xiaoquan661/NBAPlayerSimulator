@@ -996,8 +996,9 @@ ${confirmPanel}
     if (n <= 0) return 0;
     career.focusPts = (Number(career.focusPts) || 0) + n;
     career.feed = career.feed || [];
-    career.feed.unshift('赛季荣誉（' + reason + '）：额外获得 ' + n + ' 个专精点。');
+    /* 播报条优先写 wire；旧环境没有 wire 时才退回 feed，避免同一条荣誉出现两次。 */
     if (window.__wireLog) window.__wireLog('season', '赛季荣誉 · ' + reason + ' · 专精点 +' + n);
+    else career.feed.unshift('赛季荣誉（' + reason + '）：额外获得 ' + n + ' 个专精点。');
     return n;
   }
 
