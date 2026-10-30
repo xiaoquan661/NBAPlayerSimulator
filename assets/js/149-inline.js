@@ -1044,6 +1044,10 @@ ${confirmPanel}
     const r = __gOldEnd.apply(this, arguments);
     try {
       if (career && !career.retired) {
+        /* 052 会把本季基础 devPoints 补到 8。先把它记下来并清零，避免
+           ensureGrowth 把这 8 点又按 2:1 折成 4 个专精点，造成赛季末多发一次。 */
+        const endDevPoints = Number(career.devPoints) || 0;
+        career.devPoints = 0;
         ensureGrowth(career);
         const s = career.seasonStats || {};
         const gp = Number(s.gp) || 0;
@@ -1063,9 +1067,8 @@ ${confirmPanel}
         // 属性成长已改由每场固定概率接管，这部分不能再换专精点。只把超出该基础值的额外奖励（赛季目标、
         // 联盟奖励等）按 2:1 转换。注意：这里不要按年龄再封顶，否则会把 052 留下的 8 点误当奖励。
         const baseDp = 8 + (career.allStar ? 1 : 0) + ((Number(career.ovr) || 0) >= 90 ? 1 : 0);
-        const extraDp = Math.max(0, (Number(career.devPoints) || 0) - baseDp);
+        const extraDp = Math.max(0, endDevPoints - baseDp);
         const extraFocus = extraDp > 0 ? Math.ceil(extraDp / 2) : 0;
-        career.devPoints = 0;
         const gain = pts + extraFocus;
         career.focusPts = (career.focusPts || 0) + gain;
         career.feed.unshift(`休赛期：获得 ${gain} 个专精点（基础 3 + 表现奖励 ${Math.min(4, perf)}${why.length ? '：' + why.join('/') : ''}${extraFocus ? ' + 天赋成长点转化 ' + extraFocus : ''}）。`);
