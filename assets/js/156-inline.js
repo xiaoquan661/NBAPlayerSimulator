@@ -406,7 +406,27 @@
         var oldPanel = document.querySelector('.v156-wire-panel');
         if (oldPanel && wireExpanded) wirePanelScroll = Number(oldPanel.scrollTop) || 0;
       } catch (e) {}
-      var r = prevRender.apply(this, arguments);
+      /* 连续模拟 + 播报面板展开时，只刷新播报本身。
+         整页 innerHTML 重建会让展开的面板反复重排，这是屏闪的根源。 */
+      var lightWire = false;
+      try {
+        lightWire = !!(ui && ui.sim && wireExpanded && typeof career !== 'undefined' && career
+          && career.stage === 'regular' && !ui.modal && !ui.storyEvent);
+        if (lightWire) {
+          var oldBox = document.querySelector('.v156-wirebox');
+          if (oldBox) {
+            var tmp = document.createElement('div');
+            tmp.innerHTML = bar();
+            var newBox = tmp.firstElementChild;
+            oldBox.parentNode.replaceChild(newBox, oldBox);
+            var lp = newBox.querySelector('.v156-wire-panel');
+            if (lp) lp.scrollTop = wirePanelScroll;
+          } else {
+            lightWire = false;
+          }
+        }
+      } catch (e) { lightWire = false; }
+      var r = lightWire ? undefined : prevRender.apply(this, arguments);
       try {
         var newPanel = document.querySelector('.v156-wire-panel');
         if (newPanel && wireExpanded) newPanel.scrollTop = wirePanelScroll;
